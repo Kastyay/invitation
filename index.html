@@ -18,11 +18,10 @@
             line-height: 1.5;
             padding: 24px 16px;
             min-height: 100vh;
-            background: linear-gradient(135deg, #fef7f0 0%, #f9efE5 100%);
+            background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             position: relative;
         }
 
-        /* Лёгкая текстурная наложка */
         body::before {
             content: '';
             position: fixed;
@@ -84,7 +83,7 @@
             color: #6b4e3a;
         }
 
-        .date-badge {
+        .clickable-date {
             display: inline-block;
             background: #ffffffcc;
             backdrop-filter: blur(4px);
@@ -94,6 +93,15 @@
             font-weight: 500;
             color: #4f3527;
             margin-top: 24px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+        .clickable-date:hover {
+            background: #ffffffdd;
+            transform: scale(1.02);
+        }
+        .clickable-date:active {
+            transform: scale(0.98);
         }
 
         .timer-section {
@@ -208,26 +216,6 @@
             background: #e6b17e40;
         }
 
-        .calendar-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: #e6b17e;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.2s;
-            text-decoration: none;
-            margin-top: 8px;
-        }
-        .calendar-button:hover {
-            background: #d49c63;
-        }
-
         .attendance-buttons {
             display: flex;
             gap: 16px;
@@ -246,12 +234,22 @@
             transition: all 0.2s ease;
             border: 1px solid #e2d4ca;
             font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
         .attendance-btn.selected {
             background: #e6b17e;
             color: white;
             border-color: #e6b17e;
             box-shadow: 0 4px 10px rgba(230, 177, 126, 0.3);
+        }
+        /* Специальный стиль для выбранной кнопки "Не смогу" */
+        .attendance-btn[data-value="Не смогу"].selected {
+            background: #c96f4a;
+            border-color: #c96f4a;
+            box-shadow: 0 4px 10px rgba(201, 111, 74, 0.3);
         }
         .attendance-btn input {
             display: none;
@@ -283,6 +281,16 @@
             outline: none;
             border-color: #e6b17e;
             box-shadow: 0 0 0 3px #e6b17e30;
+        }
+
+        /* Скрываем textarea, используем input */
+        textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+        /* Для музыки используем input, а не textarea */
+        input.music-input {
+            resize: none;
         }
 
         button[type="submit"] {
@@ -350,6 +358,7 @@
             }
             .attendance-btn {
                 padding: 12px 16px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -359,7 +368,7 @@
     <div class="hero">
         <h1>Екатерина & Максим</h1>
         <p>приглашают вас разделить с нами радость</p>
-        <div class="date-badge">
+        <div class="clickable-date" id="clickableDate">
             📅 25 июня 2026, 16:00
         </div>
     </div>
@@ -404,14 +413,6 @@
                         </span>
                     </div>
                 </div>
-                <div class="detail-row">
-                    <div class="detail-icon">📅</div>
-                    <div class="detail-text">
-                        <button id="addToCalendarBtn" class="calendar-button">
-                            📆 Добавить в календарь
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -422,8 +423,8 @@
                   method="POST" 
                   target="hidden-iframe">
                 <div class="form-group">
-                    <label>Ваше имя и фамилия</label>
-                    <input type="text" name="name" placeholder="Например: Анна Смирнова" required>
+                    <label>Фамилия, имя, отчество</label>
+                    <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
                 </div>
                 <div class="form-group">
                     <label>Сможете присутствовать?</label>
@@ -435,8 +436,7 @@
                 </div>
                 <div class="form-group">
                     <label>🎵 Ваша музыкальная заявка</label>
-                    <textarea name="music" rows="3" placeholder="Напишите песню (исполнитель и название), которую хотели бы услышать в этот вечер"></textarea>
-                    <small style="color: #8f6e55;">(Вы можете предложить одну композицию)</small>
+                    <input type="text" name="music" class="music-input" placeholder="Напишите песню (исполнитель и название)" />
                 </div>
                 <button type="submit">Отправить</button>
                 <div id="form-status" class="status"></div>
@@ -512,14 +512,14 @@
         statusDiv.innerHTML = '<div class="status">⏳ Отправка...</div>';
     });
 
-    // Добавление в календарь (универсальная ссылка Google Calendar)
-    const calendarBtn = document.getElementById('addToCalendarBtn');
-    calendarBtn.addEventListener('click', function() {
+    // Добавление в календарь по клику на дату
+    const dateElement = document.getElementById('clickableDate');
+    dateElement.addEventListener('click', function() {
         const eventTitle = 'Свадьба Екатерины и Максима';
         const eventDescription = 'Приглашаем вас разделить с нами этот день! Подробности: https://kastyay.github.io/invitation/';
         const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
         const startDate = '20260625T130000Z'; // 25 июня 2026 16:00 MSK = 13:00 UTC
-        const endDate = '20260625T180000Z';    // предположим до 21:00 MSK = 18:00 UTC
+        const endDate = '20260625T180000Z';    // до 21:00 MSK = 18:00 UTC
 
         const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
         window.open(googleUrl, '_blank');
