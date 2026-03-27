@@ -2,93 +2,291 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Приглашение</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Екатерина & Максим | Приглашение</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fef7f0;
+            font-family: 'Poppins', sans-serif;
+            color: #2e241f;
+            line-height: 1.5;
+            padding: 24px 16px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), 0 5px 12px rgba(0, 0, 0, 0.03);
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+
+        /* Декоративный верх */
+        .hero {
+            background: linear-gradient(135deg, #f5e6d3 0%, #f0dfce 100%);
+            padding: 48px 24px 56px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #3b2a23;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #6b4e3a;
+            font-weight: 400;
+        }
+
+        .hero .date-badge {
+            display: inline-block;
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4f3527;
+            margin-top: 24px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Основной контент */
+        .content {
+            padding: 32px 28px;
+        }
+
+        .section {
+            margin-bottom: 36px;
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #3b2a23;
+            border-left: 4px solid #e6b17e;
+            padding-left: 16px;
+            margin-bottom: 20px;
+        }
+
+        .details-card {
+            background: #fefaf5;
+            border-radius: 24px;
             padding: 20px;
-            background: #f9f4e8;
+            margin-top: 8px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .detail-icon {
+            font-size: 1.6rem;
+            width: 36px;
             text-align: center;
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+        .detail-text {
+            font-size: 1.05rem;
+            color: #2e241f;
+            flex: 1;
         }
-        img {
-            max-width: 100%;
-            border-radius: 12px;
+
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e6b17e20;
+            padding: 8px 18px;
+            border-radius: 40px;
+            text-decoration: none;
+            color: #b46f3a;
+            font-weight: 500;
+            transition: background 0.2s;
+            margin-top: 8px;
         }
-        .details {
-            margin: 20px 0;
-            text-align: left;
+
+        .map-link:hover {
+            background: #e6b17e40;
         }
+
+        /* Форма */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #3b2a23;
+        }
+
         input, select, textarea {
             width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-family: inherit;
+            padding: 14px 16px;
+            border: 1px solid #e2d4ca;
+            border-radius: 28px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: #fff;
+            transition: 0.2s;
         }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #e6b17e;
+            box-shadow: 0 0 0 3px #e6b17e30;
+        }
+
         button {
             background: #e6b17e;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 18px;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
             cursor: pointer;
-            margin-top: 10px;
+            width: 100%;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
+
         button:hover {
             background: #d49c63;
         }
-        .success {
-            color: green;
-            margin-top: 10px;
+
+        button:active {
+            transform: scale(0.98);
         }
-        .error {
-            color: red;
-            margin-top: 10px;
+
+        .status {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .success {
+            color: #2b7a4b;
+            background: #e0f2e9;
+            padding: 12px;
+            border-radius: 40px;
+        }
+
+        .footer {
+            background: #faf5ed;
+            text-align: center;
+            padding: 24px;
+            font-size: 0.85rem;
+            color: #8f6e55;
+            border-top: 1px solid #f0e2d4;
+        }
+
+        @media (max-width: 550px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .content {
+                padding: 24px 20px;
+            }
+            .section h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Анна и Алексей</h1>
-    <p>приглашают вас на свадьбу</p>
-    <p><strong>20 августа 2026, 16:00</strong></p>
-    <img src="https://via.placeholder.com/600x400?text=Ваше+фото" alt="Фото" style="max-width:100%; border-radius:12px;">
-    <div class="details">
-        <h3>Место проведения</h3>
-        <p>Ресторан "Уют", г. Москва, ул. Цветочная, 10</p>
-        <p><a href="https://maps.app.goo.gl/..." target="_blank">Открыть карту</a></p>
-        <h3>Дресс-код</h3>
-        <p>Вечерний, приветствуются пастельные тона</p>
+    <div class="hero">
+        <h1>Екатерина & Максим</h1>
+        <p>приглашают вас разделить с нами радость</p>
+        <div class="date-badge">
+            📅 25 июня 2026, 16:00
+        </div>
     </div>
 
-    <h3>Пожалуйста, подтвердите присутствие</h3>
-    <form id="rsvp-form" 
-          action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
-          method="POST" 
-          target="hidden-iframe">
-        <input type="text" name="name" placeholder="Ваше ФИО" required>
-        <select name="attending" required>
-            <option value="">Выберите ответ</option>
-            <option value="Приду">Приду</option>
-            <option value="Не смогу прийти">Не смогу прийти</option>
-        </select>
-        <textarea name="music" rows="3" placeholder="Ваши музыкальные пожелания (какую песню хотели бы услышать?)"></textarea>
-        <button type="submit">Отправить</button>
-    </form>
-    <div id="form-status"></div>
+    <div class="content">
+        <div class="section">
+            <h2>О событии</h2>
+            <div class="details-card">
+                <div class="detail-row">
+                    <div class="detail-icon">📍</div>
+                    <div class="detail-text">
+                        <strong>Место проведения</strong><br>
+                        Ресторан «Fazenda»<br>
+                        г. Саранск, Лямбирское ш., 10В
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">🗺️</div>
+                    <div class="detail-text">
+                        <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
+                            Открыть карту → 
+                        </a>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-icon">💐</div>
+                    <div class="detail-text">
+                        <strong>Дресс-код:</strong> вечерний, приветствуются пастельные и природные оттенки
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Ваш ответ</h2>
+            <form id="rsvp-form" 
+                  action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
+                  method="POST" 
+                  target="hidden-iframe">
+                <div class="form-group">
+                    <label>Ваше имя и фамилия</label>
+                    <input type="text" name="name" placeholder="Например: Анна Смирнова" required>
+                </div>
+                <div class="form-group">
+                    <label>Сможете присутствовать?</label>
+                    <select name="attending" required>
+                        <option value="">Выберите вариант</option>
+                        <option value="Приду">✅ Приду</option>
+                        <option value="Не смогу">❌ Не смогу прийти</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Музыкальные пожелания (какую песню хотели бы услышать?)</label>
+                    <textarea name="music" rows="3" placeholder="Ваши идеи"></textarea>
+                </div>
+                <button type="submit">Отправить</button>
+                <div id="form-status" class="status"></div>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        С нетерпением ждём встречи! 💫
+    </div>
 </div>
 
 <iframe name="hidden-iframe" style="display:none;"></iframe>
@@ -99,12 +297,12 @@
     const statusDiv = document.getElementById('form-status');
 
     iframe.addEventListener('load', function() {
-        statusDiv.innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
+        statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
         form.reset();
     });
 
     form.addEventListener('submit', function() {
-        statusDiv.innerHTML = '<div class="success">Отправка...</div>';
+        statusDiv.innerHTML = '<div class="status">⏳ Отправка...</div>';
     });
 </script>
 </body>
