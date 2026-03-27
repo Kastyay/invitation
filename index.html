@@ -65,7 +65,8 @@
     <h1>Анна и Алексей</h1>
     <p>приглашают вас на свадьбу</p>
     <p><strong>20 августа 2026, 16:00</strong></p>
-    <img src="https://via.placeholder.com/600x400?text=Ваше+фото" alt="Фото">
+    <!-- Замените ссылку на реальное фото, если есть -->
+    <img src="https://via.placeholder.com/600x400?text=Ваше+фото" alt="Фото" style="max-width:100%; border-radius:12px;">
     <div class="details">
         <h3>Место проведения</h3>
         <p>Ресторан "Уют", г. Москва, ул. Цветочная, 10</p>
@@ -75,7 +76,10 @@
     </div>
 
     <h3>Пожалуйста, подтвердите присутствие</h3>
-    <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbwBcaLK6oe1QZvLv_I40gv_dRAWBma7GLSzMe9Kzs0SB2FJSU1qKRE74eRH-qzd1xq8pA/exec" method="POST" target="hidden-iframe">
+    <form id="rsvp-form" 
+          action="https://script.google.com/macros/s/AKfycbwBcaLK6oe1QZvLv_I40gv_dRAWBma7GLSzMe9Kzs0SB2FJSU1qKRE74eRH-qzd1xq8pA/exec" 
+          method="POST" 
+          target="hidden-iframe">
         <input type="text" name="name" placeholder="Ваше ФИО" required>
         <select name="attending" required>
             <option value="">Выберите ответ</option>
@@ -88,14 +92,23 @@
     <div id="form-status"></div>
 </div>
 
-<iframe name="hidden-iframe" style="display:none;" onload="handleResponse()"></iframe>
+<iframe name="hidden-iframe" style="display:none;"></iframe>
 
 <script>
-    function handleResponse() {
-        // После отправки iframe загрузит ответ от Apps Script
-        document.getElementById('form-status').innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
-        document.getElementById('rsvp-form').reset();
-    }
+    // Обработчик загрузки iframe
+    const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+    const form = document.getElementById('rsvp-form');
+    const statusDiv = document.getElementById('form-status');
+
+    iframe.addEventListener('load', function() {
+        // После отправки iframe получит ответ от Apps Script
+        statusDiv.innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
+        form.reset();
+    });
+
+    form.addEventListener('submit', function() {
+        statusDiv.innerHTML = '<div class="success">Отправка...</div>';
+    });
 </script>
 </body>
 </html>
