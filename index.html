@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приглашение</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f9f4e8;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        img {
+            max-width: 100%;
+            border-radius: 12px;
+        }
+        .details {
+            margin: 20px 0;
+            text-align: left;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        button {
+            background: #e6b17e;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #d49c63;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Анна и Алексей</h1>
+    <p>приглашают вас на свадьбу</p>
+    <p><strong>20 августа 2026, 16:00</strong></p>
+    <img src="https://via.placeholder.com/600x400?text=Ваше+фото" alt="Фото">
+    <div class="details">
+        <h3>Место проведения</h3>
+        <p>Ресторан "Уют", г. Москва, ул. Цветочная, 10</p>
+        <p><a href="https://maps.app.goo.gl/..." target="_blank">Открыть карту</a></p>
+        <h3>Дресс-код</h3>
+        <p>Вечерний, приветствуются пастельные тона</p>
+    </div>
+
+    <h3>Пожалуйста, подтвердите присутствие</h3>
+    <form id="rsvp-form">
+        <input type="text" name="name" placeholder="Ваше ФИО" required>
+        <select name="attending" required>
+            <option value="">Выберите ответ</option>
+            <option value="yes">Приду</option>
+            <option value="no">Не смогу прийти</option>
+        </select>
+        <textarea name="music" rows="3" placeholder="Ваши музыкальные пожелания (какую песню хотели бы услышать?)"></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+    <div id="form-status"></div>
+</div>
+
+<script>
+    document.getElementById('rsvp-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = Object.fromEntries(formData.entries());
+
+        // Ваш URL веб-приложения Google Apps Script
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwBcaLK6oe1QZvLv_I40gv_dRAWBma7GLSzMe9Kzs0SB2FJSU1qKRE74eRH-qzd1xq8pA/exec';
+
+        try {
+            const response = await fetch(scriptUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                document.getElementById('form-status').innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
+                this.reset();
+            } else {
+                document.getElementById('form-status').innerHTML = '<div class="error">Ошибка. Попробуйте ещё раз.</div>';
+            }
+        } catch (error) {
+            document.getElementById('form-status').innerHTML = '<div class="error">Ошибка соединения. Проверьте интернет.</div>';
+        }
+    });
+</script>
+</body>
+</html>
