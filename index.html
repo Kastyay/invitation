@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Екатерина & Максим | Приглашение</title>
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -22,28 +21,25 @@
         }
 
         .container {
-            max-width: 700px;
+            max-width: 900px;
             margin: 0 auto;
             background: #ffffff;
             border-radius: 32px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), 0 5px 12px rgba(0, 0, 0, 0.03);
             overflow: hidden;
-            transition: transform 0.2s ease;
         }
 
-        /* Декоративный верх */
+        /* Герой */
         .hero {
             background: linear-gradient(135deg, #f5e6d3 0%, #f0dfce 100%);
             padding: 48px 24px 56px;
             text-align: center;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .hero h1 {
             font-family: 'Playfair Display', serif;
             font-size: 2.8rem;
             font-weight: 600;
-            letter-spacing: -0.5px;
             color: #3b2a23;
             margin-bottom: 12px;
         }
@@ -51,10 +47,9 @@
         .hero p {
             font-size: 1.2rem;
             color: #6b4e3a;
-            font-weight: 400;
         }
 
-        .hero .date-badge {
+        .date-badge {
             display: inline-block;
             background: #ffffffcc;
             backdrop-filter: blur(4px);
@@ -64,7 +59,53 @@
             font-weight: 500;
             color: #4f3527;
             margin-top: 24px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        /* Таймер */
+        .timer-section {
+            background: #ffffff;
+            padding: 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0e2d4;
+        }
+
+        .timer-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #b46f3a;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .timer-block {
+            background: #fefaf5;
+            border-radius: 24px;
+            padding: 16px 20px;
+            min-width: 90px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .timer-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            color: #3b2a23;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8f6e55;
+            margin-top: 8px;
         }
 
         /* Основной контент */
@@ -73,7 +114,7 @@
         }
 
         .section {
-            margin-bottom: 36px;
+            margin-bottom: 48px;
         }
 
         .section h2 {
@@ -83,21 +124,20 @@
             color: #3b2a23;
             border-left: 4px solid #e6b17e;
             padding-left: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .details-card {
             background: #fefaf5;
             border-radius: 24px;
-            padding: 20px;
-            margin-top: 8px;
+            padding: 24px;
         }
 
         .detail-row {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
 
@@ -109,7 +149,6 @@
 
         .detail-text {
             font-size: 1.05rem;
-            color: #2e241f;
             flex: 1;
         }
 
@@ -124,11 +163,32 @@
             color: #b46f3a;
             font-weight: 500;
             transition: background 0.2s;
-            margin-top: 8px;
         }
 
         .map-link:hover {
             background: #e6b17e40;
+        }
+
+        /* Галерея */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .gallery img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         /* Форма */
@@ -215,6 +275,13 @@
             .section h2 {
                 font-size: 1.5rem;
             }
+            .timer-block {
+                padding: 12px 16px;
+                min-width: 70px;
+            }
+            .timer-number {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -228,7 +295,19 @@
         </div>
     </div>
 
+    <!-- Таймер -->
+    <div class="timer-section">
+        <div class="timer-title">До нашей свадьбы осталось</div>
+        <div class="timer" id="timer">
+            <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
+            <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
+            <div class="timer-block"><span class="timer-number" id="minutes">00</span><div class="timer-label">минут</div></div>
+            <div class="timer-block"><span class="timer-number" id="seconds">00</span><div class="timer-label">секунд</div></div>
+        </div>
+    </div>
+
     <div class="content">
+        <!-- Детали -->
         <div class="section">
             <h2>О событии</h2>
             <div class="details-card">
@@ -244,19 +323,34 @@
                     <div class="detail-icon">🗺️</div>
                     <div class="detail-text">
                         <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
-                            Открыть карту → 
+                            Открыть карту →
                         </a>
                     </div>
                 </div>
                 <div class="detail-row">
-                    <div class="detail-icon">💐</div>
+                    <div class="detail-icon">👗</div>
                     <div class="detail-text">
-                        <strong>Дресс-код:</strong> вечерний, приветствуются пастельные и природные оттенки
+                        <strong>Дресс-код:</strong> элегантный, приветствуются пастельные тона, природные оттенки, цветочные мотивы.<br>
+                        <span style="color: #b46f3a;">✖️ Пожалуйста, без белого и чёрного</span>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Фотогалерея -->
+        <div class="section">
+            <h2>Наши моменты</h2>
+            <div class="gallery" id="gallery">
+                <!-- Замените src на свои фото, сохраняя пропорции -->
+                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+1" alt="Фото 1">
+                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+2" alt="Фото 2">
+                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+3" alt="Фото 3">
+                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+4" alt="Фото 4">
+            </div>
+            <p style="font-size: 0.8rem; margin-top: 12px; text-align: center; color: #8f6e55;">(вы можете заменить фото на свои)</p>
+        </div>
+
+        <!-- Форма -->
         <div class="section">
             <h2>Ваш ответ</h2>
             <form id="rsvp-form" 
@@ -292,6 +386,35 @@
 <iframe name="hidden-iframe" style="display:none;"></iframe>
 
 <script>
+    // Таймер
+    function updateTimer() {
+        const targetDate = new Date(2026, 5, 25, 16, 0, 0); // 25 июня 2026 16:00 (месяц 5 = июнь)
+        const now = new Date();
+        const diff = targetDate - now;
+
+        if (diff <= 0) {
+            document.getElementById('days').innerText = '00';
+            document.getElementById('hours').innerText = '00';
+            document.getElementById('minutes').innerText = '00';
+            document.getElementById('seconds').innerText = '00';
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+        document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+        document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+        document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    // Обработка отправки формы (как было)
     const iframe = document.querySelector('iframe[name="hidden-iframe"]');
     const form = document.getElementById('rsvp-form');
     const statusDiv = document.getElementById('form-status');
