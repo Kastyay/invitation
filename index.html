@@ -13,11 +13,27 @@
         }
 
         body {
-            background: #fef7f0;
             font-family: 'Poppins', sans-serif;
             color: #2e241f;
             line-height: 1.5;
             padding: 24px 16px;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fef7f0 0%, #f9efE5 100%);
+            position: relative;
+        }
+
+        /* Лёгкая текстурная наложка */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
@@ -27,12 +43,32 @@
             border-radius: 32px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), 0 5px 12px rgba(0, 0, 0, 0.03);
             overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero {
             background: linear-gradient(135deg, #f5e6d3 0%, #f0dfce 100%);
             padding: 48px 24px 56px;
             text-align: center;
+            animation: fadeIn 0.6s ease-out 0.1s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .hero h1 {
@@ -65,6 +101,7 @@
             padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid #f0e2d4;
+            animation: fadeIn 0.6s ease-out 0.2s both;
         }
 
         .timer-title {
@@ -88,6 +125,10 @@
             padding: 16px 20px;
             min-width: 90px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s;
+        }
+        .timer-block:hover {
+            transform: scale(1.02);
         }
 
         .timer-number {
@@ -112,6 +153,7 @@
 
         .section {
             margin-bottom: 48px;
+            animation: fadeIn 0.6s ease-out 0.3s both;
         }
 
         .section h2 {
@@ -166,7 +208,26 @@
             background: #e6b17e40;
         }
 
-        /* Стили для кнопок выбора */
+        .calendar-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #e6b17e;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+            margin-top: 8px;
+        }
+        .calendar-button:hover {
+            background: #d49c63;
+        }
+
         .attendance-buttons {
             display: flex;
             gap: 16px;
@@ -224,7 +285,7 @@
             box-shadow: 0 0 0 3px #e6b17e30;
         }
 
-        button {
+        button[type="submit"] {
             background: #e6b17e;
             color: white;
             border: none;
@@ -239,11 +300,11 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
-        button:hover {
+        button[type="submit"]:hover {
             background: #d49c63;
         }
 
-        button:active {
+        button[type="submit"]:active {
             transform: scale(0.98);
         }
 
@@ -267,6 +328,7 @@
             font-size: 0.85rem;
             color: #8f6e55;
             border-top: 1px solid #f0e2d4;
+            animation: fadeIn 0.6s ease-out 0.4s both;
         }
 
         @media (max-width: 550px) {
@@ -342,6 +404,14 @@
                         </span>
                     </div>
                 </div>
+                <div class="detail-row">
+                    <div class="detail-icon">📅</div>
+                    <div class="detail-text">
+                        <button id="addToCalendarBtn" class="calendar-button">
+                            📆 Добавить в календарь
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -364,8 +434,9 @@
                     <input type="hidden" name="attending" id="attending-input" required>
                 </div>
                 <div class="form-group">
-                    <label>Музыкальные пожелания (какую песню хотели бы услышать?)</label>
-                    <textarea name="music" rows="3" placeholder="Ваши идеи"></textarea>
+                    <label>🎵 Ваша музыкальная заявка</label>
+                    <textarea name="music" rows="3" placeholder="Напишите песню (исполнитель и название), которую хотели бы услышать в этот вечер"></textarea>
+                    <small style="color: #8f6e55;">(Вы можете предложить одну композицию)</small>
                 </div>
                 <button type="submit">Отправить</button>
                 <div id="form-status" class="status"></div>
@@ -420,7 +491,7 @@
         });
     });
 
-    // Отправка формы (без изменений)
+    // Отправка формы (через iframe)
     const iframe = document.querySelector('iframe[name="hidden-iframe"]');
     const form = document.getElementById('rsvp-form');
     const statusDiv = document.getElementById('form-status');
@@ -432,12 +503,26 @@
         attendingInput.value = '';
     });
 
-    form.addEventListener('submit', function() {
+    form.addEventListener('submit', function(e) {
         if (!attendingInput.value) {
             alert('Пожалуйста, выберите, сможете ли вы присутствовать');
+            e.preventDefault();
             return false;
         }
         statusDiv.innerHTML = '<div class="status">⏳ Отправка...</div>';
+    });
+
+    // Добавление в календарь (универсальная ссылка Google Calendar)
+    const calendarBtn = document.getElementById('addToCalendarBtn');
+    calendarBtn.addEventListener('click', function() {
+        const eventTitle = 'Свадьба Екатерины и Максима';
+        const eventDescription = 'Приглашаем вас разделить с нами этот день! Подробности: https://kastyay.github.io/invitation/';
+        const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
+        const startDate = '20260625T130000Z'; // 25 июня 2026 16:00 MSK = 13:00 UTC
+        const endDate = '20260625T180000Z';    // предположим до 21:00 MSK = 18:00 UTC
+
+        const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
+        window.open(googleUrl, '_blank');
     });
 </script>
 </body>
