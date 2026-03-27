@@ -21,7 +21,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 700px;
             margin: 0 auto;
             background: #ffffff;
             border-radius: 32px;
@@ -29,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* Герой */
         .hero {
             background: linear-gradient(135deg, #f5e6d3 0%, #f0dfce 100%);
             padding: 48px 24px 56px;
@@ -61,7 +60,6 @@
             margin-top: 24px;
         }
 
-        /* Таймер */
         .timer-section {
             background: #ffffff;
             padding: 32px 20px;
@@ -108,7 +106,6 @@
             margin-top: 8px;
         }
 
-        /* Основной контент */
         .content {
             padding: 32px 28px;
         }
@@ -169,31 +166,38 @@
             background: #e6b17e40;
         }
 
-        /* Галерея */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        /* Стили для кнопок выбора */
+        .attendance-buttons {
+            display: flex;
             gap: 16px;
-            margin-top: 16px;
+            margin: 20px 0;
+            flex-wrap: wrap;
         }
-
-        .gallery img {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            border-radius: 20px;
-            transition: transform 0.2s, box-shadow 0.2s;
+        .attendance-btn {
+            flex: 1;
+            text-align: center;
+            padding: 14px 20px;
+            border-radius: 60px;
+            background: #f5ede5;
+            color: #5e3e2c;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e2d4ca;
+            font-size: 1rem;
+        }
+        .attendance-btn.selected {
+            background: #e6b17e;
+            color: white;
+            border-color: #e6b17e;
+            box-shadow: 0 4px 10px rgba(230, 177, 126, 0.3);
+        }
+        .attendance-btn input {
+            display: none;
         }
 
-        .gallery img:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Форма */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         label {
@@ -203,7 +207,7 @@
             color: #3b2a23;
         }
 
-        input, select, textarea {
+        input, textarea {
             width: 100%;
             padding: 14px 16px;
             border: 1px solid #e2d4ca;
@@ -214,7 +218,7 @@
             transition: 0.2s;
         }
 
-        input:focus, select:focus, textarea:focus {
+        input:focus, textarea:focus {
             outline: none;
             border-color: #e6b17e;
             box-shadow: 0 0 0 3px #e6b17e30;
@@ -282,6 +286,9 @@
             .timer-number {
                 font-size: 1.8rem;
             }
+            .attendance-btn {
+                padding: 12px 16px;
+            }
         }
     </style>
 </head>
@@ -295,7 +302,6 @@
         </div>
     </div>
 
-    <!-- Таймер -->
     <div class="timer-section">
         <div class="timer-title">До нашей свадьбы осталось</div>
         <div class="timer" id="timer">
@@ -307,7 +313,6 @@
     </div>
 
     <div class="content">
-        <!-- Детали -->
         <div class="section">
             <h2>О событии</h2>
             <div class="details-card">
@@ -330,27 +335,16 @@
                 <div class="detail-row">
                     <div class="detail-icon">👗</div>
                     <div class="detail-text">
-                        <strong>Дресс-код:</strong> элегантный, приветствуются пастельные тона, природные оттенки, цветочные мотивы.<br>
-                        <span style="color: #b46f3a;">✖️ Пожалуйста, без белого и чёрного</span>
+                        <strong>Дресс-код</strong><br>
+                        Приветствуются светлые оттенки, нежные пастельные тона, цветочные мотивы.<br>
+                        <span style="background: #fef1e6; display: inline-block; padding: 4px 12px; border-radius: 30px; margin-top: 8px;">
+                            ✨ Пожалуйста, избегайте белого и чёрного ✨
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Фотогалерея -->
-        <div class="section">
-            <h2>Наши моменты</h2>
-            <div class="gallery" id="gallery">
-                <!-- Замените src на свои фото, сохраняя пропорции -->
-                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+1" alt="Фото 1">
-                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+2" alt="Фото 2">
-                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+3" alt="Фото 3">
-                <img src="https://via.placeholder.com/400x400?text=Ваше+фото+4" alt="Фото 4">
-            </div>
-            <p style="font-size: 0.8rem; margin-top: 12px; text-align: center; color: #8f6e55;">(вы можете заменить фото на свои)</p>
-        </div>
-
-        <!-- Форма -->
         <div class="section">
             <h2>Ваш ответ</h2>
             <form id="rsvp-form" 
@@ -363,11 +357,11 @@
                 </div>
                 <div class="form-group">
                     <label>Сможете присутствовать?</label>
-                    <select name="attending" required>
-                        <option value="">Выберите вариант</option>
-                        <option value="Приду">✅ Приду</option>
-                        <option value="Не смогу">❌ Не смогу прийти</option>
-                    </select>
+                    <div class="attendance-buttons" id="attendance-buttons">
+                        <div class="attendance-btn" data-value="Приду">✅ Приду</div>
+                        <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
+                    </div>
+                    <input type="hidden" name="attending" id="attending-input" required>
                 </div>
                 <div class="form-group">
                     <label>Музыкальные пожелания (какую песню хотели бы услышать?)</label>
@@ -388,7 +382,7 @@
 <script>
     // Таймер
     function updateTimer() {
-        const targetDate = new Date(2026, 5, 25, 16, 0, 0); // 25 июня 2026 16:00 (месяц 5 = июнь)
+        const targetDate = new Date(2026, 5, 25, 16, 0, 0);
         const now = new Date();
         const diff = targetDate - now;
 
@@ -414,7 +408,19 @@
     updateTimer();
     setInterval(updateTimer, 1000);
 
-    // Обработка отправки формы (как было)
+    // Кастомные кнопки выбора
+    const attendanceBtns = document.querySelectorAll('.attendance-btn');
+    const attendingInput = document.getElementById('attending-input');
+
+    attendanceBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            attendanceBtns.forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            attendingInput.value = this.getAttribute('data-value');
+        });
+    });
+
+    // Отправка формы (без изменений)
     const iframe = document.querySelector('iframe[name="hidden-iframe"]');
     const form = document.getElementById('rsvp-form');
     const statusDiv = document.getElementById('form-status');
@@ -422,9 +428,15 @@
     iframe.addEventListener('load', function() {
         statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
         form.reset();
+        attendanceBtns.forEach(b => b.classList.remove('selected'));
+        attendingInput.value = '';
     });
 
     form.addEventListener('submit', function() {
+        if (!attendingInput.value) {
+            alert('Пожалуйста, выберите, сможете ли вы присутствовать');
+            return false;
+        }
         statusDiv.innerHTML = '<div class="status">⏳ Отправка...</div>';
     });
 </script>
