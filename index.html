@@ -16,29 +16,23 @@
             font-family: 'Poppins', sans-serif;
             color: #2e241f;
             line-height: 1.5;
-            padding: 24px 16px;
             min-height: 100vh;
             position: relative;
             transition: background 0.8s ease;
-        }
-
-        /* Базовый фон (будет переопределён скриптом) */
-        body {
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
+            padding: 24px 16px;
         }
 
-        /* Текстурная наложка */
-        body::before {
-            content: '';
+        /* Canvas для падающих частиц */
+        #particles-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: radial-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
-            background-size: 20px 20px;
             pointer-events: none;
             z-index: 0;
+            opacity: 0.5;
         }
 
         .container {
@@ -365,7 +359,6 @@
             width: 100%;
         }
 
-        /* Спиннер */
         .spinner {
             display: inline-block;
             width: 24px;
@@ -415,193 +408,245 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="hero">
-        <h1>Екатерина & Максим</h1>
-        <p>приглашают вас разделить с нами радость</p>
-        <div class="date-badge" id="calendarTrigger">
-            📅 25 июня 2026, 16:00
-        </div>
-    </div>
-
-    <div class="timer-section">
-        <div class="timer-title">До нашей свадьбы осталось</div>
-        <div class="timer" id="timer">
-            <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
-            <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
-            <div class="timer-block"><span class="timer-number" id="minutes">00</span><div class="timer-label">минут</div></div>
-            <div class="timer-block"><span class="timer-number" id="seconds">00</span><div class="timer-label">секунд</div></div>
-        </div>
-    </div>
-
-    <div class="content">
-        <div class="section">
-            <h2>О событии</h2>
-            <div class="details-card">
-                <div class="detail-row">
-                    <div class="detail-icon">📍</div>
-                    <div class="detail-text">
-                        <strong>Место проведения</strong><br>
-                        Ресторан «Fazenda»<br>
-                        г. Саранск, Лямбирское ш., 10В
-                    </div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-icon">🗺️</div>
-                    <div class="detail-text">
-                        <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
-                            Открыть карту →
-                        </a>
-                    </div>
-                </div>
-                <div class="detail-row">
-                    <div class="detail-icon">👗</div>
-                    <div class="detail-text">
-                        <strong>Дресс-код</strong><br>
-                        Приветствуются светлые оттенки, нежные пастельные тона, цветочные мотивы.<br>
-                        <span style="background: rgba(254, 241, 230, 0.8); backdrop-filter: blur(4px); display: inline-block; padding: 4px 12px; border-radius: 30px; margin-top: 8px;">
-                            ✨ Пожалуйста, избегайте белого и чёрного ✨
-                        </span>
-                    </div>
-                </div>
+    <canvas id="particles-canvas"></canvas>
+    <div class="container">
+        <div class="hero">
+            <h1>Екатерина & Максим</h1>
+            <p>приглашают вас разделить с нами радость</p>
+            <div class="date-badge" id="calendarTrigger">
+                📅 25 июня 2026, 16:00
             </div>
         </div>
 
-        <div class="section">
-            <h2>Ваш ответ</h2>
-            <form id="rsvp-form" 
-                  action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
-                  method="POST" 
-                  target="hidden-iframe">
-                <div class="form-group">
-                    <label>Фамилия, имя, отчество</label>
-                    <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
-                </div>
-                <div class="form-group">
-                    <label>Сможете присутствовать?</label>
-                    <div class="attendance-buttons" id="attendance-buttons">
-                        <div class="attendance-btn" data-value="Приду">✅ Приду</div>
-                        <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
+        <div class="timer-section">
+            <div class="timer-title">До нашей свадьбы осталось</div>
+            <div class="timer" id="timer">
+                <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
+                <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
+                <div class="timer-block"><span class="timer-number" id="minutes">00</span><div class="timer-label">минут</div></div>
+                <div class="timer-block"><span class="timer-number" id="seconds">00</span><div class="timer-label">секунд</div></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>О событии</h2>
+                <div class="details-card">
+                    <div class="detail-row">
+                        <div class="detail-icon">📍</div>
+                        <div class="detail-text">
+                            <strong>Место проведения</strong><br>
+                            Ресторан «Fazenda»<br>
+                            г. Саранск, Лямбирское ш., 10В
+                        </div>
                     </div>
-                    <input type="hidden" name="attending" id="attending-input" required>
+                    <div class="detail-row">
+                        <div class="detail-icon">🗺️</div>
+                        <div class="detail-text">
+                            <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
+                                Открыть карту →
+                            </a>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">👗</div>
+                        <div class="detail-text">
+                            <strong>Дресс-код</strong><br>
+                            Приветствуются светлые оттенки, нежные пастельные тона, цветочные мотивы.<br>
+                            <span style="background: rgba(254, 241, 230, 0.8); backdrop-filter: blur(4px); display: inline-block; padding: 4px 12px; border-radius: 30px; margin-top: 8px;">
+                                ✨ Пожалуйста, избегайте белого и чёрного ✨
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>🎵 Ваша музыкальная заявка</label>
-                    <input type="text" name="music" placeholder="Исполнитель — Название песни">
-                    <small style="color: #8f6e55;">(Вы можете предложить одну композицию)</small>
-                </div>
-                <button type="submit">Отправить</button>
-                <div id="form-status" class="status"></div>
-            </form>
+            </div>
+
+            <div class="section">
+                <h2>Ваш ответ</h2>
+                <form id="rsvp-form" 
+                      action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
+                      method="POST" 
+                      target="hidden-iframe">
+                    <div class="form-group">
+                        <label>Фамилия, имя, отчество</label>
+                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Сможете присутствовать?</label>
+                        <div class="attendance-buttons" id="attendance-buttons">
+                            <div class="attendance-btn" data-value="Приду">✅ Приду</div>
+                            <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
+                        </div>
+                        <input type="hidden" name="attending" id="attending-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>🎵 Ваша музыкальная заявка</label>
+                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
+                        <small style="color: #8f6e55;">(Вы можете предложить одну композицию)</small>
+                    </div>
+                    <button type="submit">Отправить</button>
+                    <div id="form-status" class="status"></div>
+                </form>
+            </div>
+        </div>
+        <div class="footer">
+            С нетерпением ждём встречи! 💫
         </div>
     </div>
-    <div class="footer">
-        С нетерпением ждём встречи! 💫
-    </div>
-</div>
 
-<iframe name="hidden-iframe" style="display:none;"></iframe>
+    <iframe name="hidden-iframe" style="display:none;"></iframe>
 
-<script>
-    // --- Смена фона по времени суток ---
-    function setTimeOfDayBackground() {
-        const now = new Date();
-        const hours = now.getHours();
-        let gradient;
+    <script>
+        // --- Падающие частицы (лепестки/кружочки) ---
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId = null;
 
-        if (hours >= 6 && hours < 12) {
-            // Утро: светлый, нежно-розовый
-            gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
-        } else if (hours >= 12 && hours < 18) {
-            // День: нейтральный, тёплый
-            gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
-        } else if (hours >= 18 && hours < 24) {
-            // Вечер: более насыщенный, золотистый
-            gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
-        } else {
-            // Ночь: тёмный, приглушённый
-            gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
 
-        document.body.style.background = gradient;
-    }
-
-    setTimeOfDayBackground();
-
-    // --- Таймер ---
-    function updateTimer() {
-        const targetDate = new Date(2026, 5, 25, 16, 0, 0);
-        const now = new Date();
-        const diff = targetDate - now;
-
-        if (diff <= 0) {
-            document.getElementById('days').innerText = '00';
-            document.getElementById('hours').innerText = '00';
-            document.getElementById('minutes').innerText = '00';
-            document.getElementById('seconds').innerText = '00';
-            return;
+        function initParticles() {
+            const particleCount = 50;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 4 + 2,
+                    speedY: Math.random() * 0.8 + 0.4,
+                    opacity: Math.random() * 0.4 + 0.2,
+                    color: `rgba(230, 177, 126, ${Math.random() * 0.3 + 0.2})`
+                });
+            }
         }
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        function drawParticles() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of particles) {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+                // движение вниз
+                p.y += p.speedY;
+                if (p.y > canvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * canvas.width;
+                }
+            }
+            animationId = requestAnimationFrame(drawParticles);
+        }
 
-        document.getElementById('days').innerText = days < 10 ? '0' + days : days;
-        document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
-        document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
-        document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
-    }
+        function startParticles() {
+            resizeCanvas();
+            initParticles();
+            drawParticles();
+        }
 
-    updateTimer();
-    setInterval(updateTimer, 1000);
-
-    // --- Кастомные кнопки выбора ---
-    const attendanceBtns = document.querySelectorAll('.attendance-btn');
-    const attendingInput = document.getElementById('attending-input');
-
-    attendanceBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            attendanceBtns.forEach(b => b.classList.remove('selected'));
-            this.classList.add('selected');
-            attendingInput.value = this.getAttribute('data-value');
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            // перезапускаем частицы с новыми размерами (опционально)
+            particles = [];
+            initParticles();
         });
-    });
 
-    // --- Отправка формы со спиннером ---
-    const iframe = document.querySelector('iframe[name="hidden-iframe"]');
-    const form = document.getElementById('rsvp-form');
-    const statusDiv = document.getElementById('form-status');
+        startParticles();
 
-    iframe.addEventListener('load', function() {
-        statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
-        form.reset();
-        attendanceBtns.forEach(b => b.classList.remove('selected'));
-        attendingInput.value = '';
-    });
+        // --- Смена фона по времени суток ---
+        function setTimeOfDayBackground() {
+            const now = new Date();
+            const hours = now.getHours();
+            let gradient;
 
-    form.addEventListener('submit', function(e) {
-        if (!attendingInput.value) {
-            alert('Пожалуйста, выберите, сможете ли вы присутствовать');
-            e.preventDefault();
-            return false;
+            if (hours >= 6 && hours < 12) {
+                gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
+            } else if (hours >= 12 && hours < 18) {
+                gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
+            } else if (hours >= 18 && hours < 24) {
+                gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
+            } else {
+                gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
+            }
+            document.body.style.background = gradient;
         }
-        // Показываем спиннер
-        statusDiv.innerHTML = '<div class="spinner"></div>';
-    });
+        setTimeOfDayBackground();
 
-    // --- Добавление в календарь по клику на дату ---
-    const calendarTrigger = document.getElementById('calendarTrigger');
-    calendarTrigger.addEventListener('click', function() {
-        const eventTitle = 'Свадьба Екатерины и Максима';
-        const eventDescription = 'Приглашаем вас разделить с нами этот день! Подробности: https://kastyay.github.io/invitation/';
-        const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
-        const startDate = '20260625T130000Z';
-        const endDate = '20260625T180000Z';
+        // --- Таймер ---
+        function updateTimer() {
+            const targetDate = new Date(2026, 5, 25, 16, 0, 0);
+            const now = new Date();
+            const diff = targetDate - now;
 
-        const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
-        window.open(googleUrl, '_blank');
-    });
-</script>
+            if (diff <= 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // --- Кастомные кнопки выбора ---
+        const attendanceBtns = document.querySelectorAll('.attendance-btn');
+        const attendingInput = document.getElementById('attending-input');
+
+        attendanceBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                attendanceBtns.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                attendingInput.value = this.getAttribute('data-value');
+            });
+        });
+
+        // --- Отправка формы со спиннером ---
+        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+        const form = document.getElementById('rsvp-form');
+        const statusDiv = document.getElementById('form-status');
+
+        iframe.addEventListener('load', function() {
+            statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
+            form.reset();
+            attendanceBtns.forEach(b => b.classList.remove('selected'));
+            attendingInput.value = '';
+        });
+
+        form.addEventListener('submit', function(e) {
+            if (!attendingInput.value) {
+                alert('Пожалуйста, выберите, сможете ли вы присутствовать');
+                e.preventDefault();
+                return false;
+            }
+            statusDiv.innerHTML = '<div class="spinner"></div>';
+        });
+
+        // --- Добавление в календарь по клику на дату ---
+        const calendarTrigger = document.getElementById('calendarTrigger');
+        calendarTrigger.addEventListener('click', function() {
+            const eventTitle = 'Свадьба Екатерины и Максима';
+            const eventDescription = 'Приглашаем вас разделить с нами этот день! Подробности: https://kastyay.github.io/invitation/';
+            const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
+            const startDate = '20260625T130000Z';
+            const endDate = '20260625T180000Z';
+
+            const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
+            window.open(googleUrl, '_blank');
+        });
+    </script>
 </body>
 </html>
