@@ -62,11 +62,10 @@
 </head>
 <body>
 <div class="container">
-    <h1>Екатерина и Максим</h1>
+    <h1>Анна и Алексей</h1>
     <p>приглашают вас на свадьбу</p>
-    <p><strong>25 июля 2026, 16:00</strong></p>
-    <!-- Замените ссылку на реальное фото, если есть -->
-    <img src="https://tsvet-ok.ru/wp-content/uploads/2021/11/1.jpg">
+    <p><strong>20 августа 2026, 16:00</strong></p>
+    <img src="https://via.placeholder.com/600x400?text=Ваше+фото" alt="Фото" style="max-width:100%; border-radius:12px;">
     <div class="details">
         <h3>Место проведения</h3>
         <p>Ресторан "Уют", г. Москва, ул. Цветочная, 10</p>
@@ -77,14 +76,14 @@
 
     <h3>Пожалуйста, подтвердите присутствие</h3>
     <form id="rsvp-form" 
-          action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
+          action="https://script.google.com/macros/s/AKfycbwBcaLK6oe1QZvLv_I40gv_dRAWBma7GLSzMe9Kzs0SB2FJSU1qKRE74eRH-qzd1xq8pA/exec" 
           method="POST" 
           target="hidden-iframe">
         <input type="text" name="name" placeholder="Ваше ФИО" required>
         <select name="attending" required>
             <option value="">Выберите ответ</option>
-            <option value="yes">Приду</option>
-            <option value="no">Не смогу прийти</option>
+            <option value="Приду">Приду</option>
+            <option value="Не смогу прийти">Не смогу прийти</option>
         </select>
         <textarea name="music" rows="3" placeholder="Ваши музыкальные пожелания (какую песню хотели бы услышать?)"></textarea>
         <button type="submit">Отправить</button>
@@ -95,13 +94,11 @@
 <iframe name="hidden-iframe" style="display:none;"></iframe>
 
 <script>
-    // Обработчик загрузки iframe
     const iframe = document.querySelector('iframe[name="hidden-iframe"]');
     const form = document.getElementById('rsvp-form');
     const statusDiv = document.getElementById('form-status');
 
     iframe.addEventListener('load', function() {
-        // После отправки iframe получит ответ от Apps Script
         statusDiv.innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
         form.reset();
     });
