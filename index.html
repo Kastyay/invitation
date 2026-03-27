@@ -18,8 +18,13 @@
             line-height: 1.5;
             padding: 24px 16px;
             min-height: 100vh;
-            background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             position: relative;
+            transition: background 0.8s ease;
+        }
+
+        /* Базовый фон (будет переопределён скриптом) */
+        body {
+            background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
         }
 
         /* Текстурная наложка */
@@ -251,7 +256,9 @@
         .attendance-btn {
             flex: 1;
             min-width: 160px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 14px 20px;
             border-radius: 60px;
             background: rgba(245, 237, 229, 0.8);
@@ -262,6 +269,8 @@
             transition: all 0.2s ease;
             border: 1px solid rgba(226, 212, 202, 0.6);
             font-size: 1rem;
+            text-align: center;
+            line-height: 1.2;
         }
         .attendance-btn:hover {
             transform: translateY(-2px);
@@ -341,6 +350,10 @@
             margin-top: 16px;
             text-align: center;
             font-size: 0.95rem;
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .success {
@@ -349,6 +362,21 @@
             backdrop-filter: blur(4px);
             padding: 12px;
             border-radius: 60px;
+            width: 100%;
+        }
+
+        /* Спиннер */
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(230, 177, 126, 0.3);
+            border-radius: 50%;
+            border-top-color: #e6b17e;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .footer {
@@ -381,7 +409,7 @@
             }
             .attendance-btn {
                 min-width: 140px;
-                text-align: center;
+                padding: 12px 16px;
             }
         }
     </style>
@@ -475,7 +503,32 @@
 <iframe name="hidden-iframe" style="display:none;"></iframe>
 
 <script>
-    // Таймер
+    // --- Смена фона по времени суток ---
+    function setTimeOfDayBackground() {
+        const now = new Date();
+        const hours = now.getHours();
+        let gradient;
+
+        if (hours >= 6 && hours < 12) {
+            // Утро: светлый, нежно-розовый
+            gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
+        } else if (hours >= 12 && hours < 18) {
+            // День: нейтральный, тёплый
+            gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
+        } else if (hours >= 18 && hours < 24) {
+            // Вечер: более насыщенный, золотистый
+            gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
+        } else {
+            // Ночь: тёмный, приглушённый
+            gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
+        }
+
+        document.body.style.background = gradient;
+    }
+
+    setTimeOfDayBackground();
+
+    // --- Таймер ---
     function updateTimer() {
         const targetDate = new Date(2026, 5, 25, 16, 0, 0);
         const now = new Date();
@@ -503,7 +556,7 @@
     updateTimer();
     setInterval(updateTimer, 1000);
 
-    // Кастомные кнопки выбора
+    // --- Кастомные кнопки выбора ---
     const attendanceBtns = document.querySelectorAll('.attendance-btn');
     const attendingInput = document.getElementById('attending-input');
 
@@ -515,7 +568,7 @@
         });
     });
 
-    // Отправка формы
+    // --- Отправка формы со спиннером ---
     const iframe = document.querySelector('iframe[name="hidden-iframe"]');
     const form = document.getElementById('rsvp-form');
     const statusDiv = document.getElementById('form-status');
@@ -533,10 +586,11 @@
             e.preventDefault();
             return false;
         }
-        statusDiv.innerHTML = '<div class="status">⏳ Отправка...</div>';
+        // Показываем спиннер
+        statusDiv.innerHTML = '<div class="spinner"></div>';
     });
 
-    // Добавление в календарь по клику на дату
+    // --- Добавление в календарь по клику на дату ---
     const calendarTrigger = document.getElementById('calendarTrigger');
     calendarTrigger.addEventListener('click', function() {
         const eventTitle = 'Свадьба Екатерины и Максима';
