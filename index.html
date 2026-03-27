@@ -173,10 +173,10 @@
         }
 
         .section {
-            margin-bottom: 36px;  /* уменьшил отступ между секциями */
+            margin-bottom: 36px;
         }
         .section:last-of-type {
-            margin-bottom: 0;      /* у последней секции отступа нет */
+            margin-bottom: 0;
         }
 
         .section h2 {
@@ -330,7 +330,6 @@
             width: 100%;
             transition: all 0.2s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 8px;
         }
 
         button[type="submit"]:hover {
@@ -343,14 +342,20 @@
             transform: translateY(0);
         }
 
+        /* Стили для статуса — изначально скрыт, появляется плавно */
         .status {
-            margin-top: 8px;
             text-align: center;
             font-size: 0.95rem;
-            min-height: 52px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            transition: all 0.2s ease;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        .status.show {
+            opacity: 1;
+            max-height: 100px;
+            margin-top: 16px;
         }
 
         .success {
@@ -359,27 +364,53 @@
             backdrop-filter: blur(4px);
             padding: 12px;
             border-radius: 60px;
-            width: 100%;
         }
 
-        .spinner {
+        /* Красивый спиннер в виде лепестка */
+        .petal-spinner {
             display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(230, 177, 126, 0.3);
-            border-radius: 50%;
-            border-top-color: #e6b17e;
-            animation: spin 0.8s linear infinite;
+            width: 32px;
+            height: 32px;
+            position: relative;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .petal-spinner::before,
+        .petal-spinner::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #e6b17e;
+            border-radius: 50% 50% 0 50%;
+            transform-origin: bottom left;
+            animation: spinPetal 1.2s linear infinite;
+        }
+        .petal-spinner::before {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+        .petal-spinner::after {
+            top: 0;
+            left: 20px;
+            transform: rotate(90deg);
+            animation-delay: 0.3s;
+        }
+        @keyframes spinPetal {
+            0% {
+                transform: rotate(0deg) scale(0.8);
+                opacity: 0.6;
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+                opacity: 1;
+            }
         }
 
         .footer {
             background: rgba(250, 245, 237, 0.8);
             backdrop-filter: blur(4px);
             text-align: center;
-            padding: 20px 24px;   /* уменьшил вертикальные отступы */
+            padding: 20px 24px;
             font-size: 0.85rem;
             color: #8f6e55;
             border-top: 1px solid #e6d5c4;
@@ -500,7 +531,7 @@
     <iframe name="hidden-iframe" style="display:none;"></iframe>
 
     <script>
-        // --- Лепестки (на canvas) ---
+        // --- Лепестки на canvas (каплевидные) ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -516,7 +547,6 @@
             ctx.translate(x, y);
             ctx.rotate(angle);
             ctx.beginPath();
-            // рисуем каплевидную форму (лепесток)
             ctx.moveTo(0, 0);
             ctx.quadraticCurveTo(size * 0.6, size * 0.4, 0, size);
             ctx.quadraticCurveTo(-size * 0.6, size * 0.4, 0, 0);
@@ -535,7 +565,6 @@
                     angle: Math.random() * Math.PI * 2,
                     speedY: Math.random() * 0.6 + 0.3,
                     speedRotate: (Math.random() - 0.5) * 0.02,
-                    opacity: Math.random() * 0.4 + 0.3,
                     color: `rgba(230, 177, 126, ${Math.random() * 0.4 + 0.2})`
                 });
             }
@@ -575,7 +604,6 @@
             const now = new Date();
             const hours = now.getHours();
             let gradient;
-
             if (hours >= 6 && hours < 12) {
                 gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
             } else if (hours >= 12 && hours < 18) {
@@ -594,7 +622,6 @@
             const targetDate = new Date(2026, 5, 25, 16, 0, 0);
             const now = new Date();
             const diff = targetDate - now;
-
             if (diff <= 0) {
                 document.getElementById('days').innerText = '00';
                 document.getElementById('hours').innerText = '00';
@@ -602,25 +629,21 @@
                 document.getElementById('seconds').innerText = '00';
                 return;
             }
-
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
             document.getElementById('days').innerText = days < 10 ? '0' + days : days;
             document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-
         updateTimer();
         setInterval(updateTimer, 1000);
 
         // --- Кастомные кнопки выбора ---
         const attendanceBtns = document.querySelectorAll('.attendance-btn');
         const attendingInput = document.getElementById('attending-input');
-
         attendanceBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 attendanceBtns.forEach(b => b.classList.remove('selected'));
@@ -629,16 +652,24 @@
             });
         });
 
-        // --- Отправка формы со спиннером ---
+        // --- Отправка формы с красивым спиннером ---
         const iframe = document.querySelector('iframe[name="hidden-iframe"]');
         const form = document.getElementById('rsvp-form');
         const statusDiv = document.getElementById('form-status');
 
         iframe.addEventListener('load', function() {
             statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
+            statusDiv.classList.add('show');
             form.reset();
             attendanceBtns.forEach(b => b.classList.remove('selected'));
             attendingInput.value = '';
+            // Скрываем сообщение через 3 секунды
+            setTimeout(() => {
+                statusDiv.classList.remove('show');
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 200);
+            }, 3000);
         });
 
         form.addEventListener('submit', function(e) {
@@ -647,7 +678,9 @@
                 e.preventDefault();
                 return false;
             }
-            statusDiv.innerHTML = '<div class="spinner"></div>';
+            // Показываем спиннер
+            statusDiv.innerHTML = '<div class="petal-spinner"></div>';
+            statusDiv.classList.add('show');
         });
 
         // --- Добавление в календарь по клику на дату ---
@@ -658,7 +691,6 @@
             const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
             const startDate = '20260625T130000Z';
             const endDate = '20260625T180000Z';
-
             const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
             window.open(googleUrl, '_blank');
         });
