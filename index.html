@@ -75,7 +75,7 @@
     </div>
 
     <h3>Пожалуйста, подтвердите присутствие</h3>
-    <form id="rsvp-form">
+    <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbwBcaLK6oe1QZvLv_I40gv_dRAWBma7GLSzMe9Kzs0SB2FJSU1qKRE74eRH-qzd1xq8pA/exec" method="POST" target="hidden-iframe">
         <input type="text" name="name" placeholder="Ваше ФИО" required>
         <select name="attending" required>
             <option value="">Выберите ответ</option>
@@ -88,32 +88,14 @@
     <div id="form-status"></div>
 </div>
 
+<iframe name="hidden-iframe" style="display:none;" onload="handleResponse()"></iframe>
+
 <script>
-    document.getElementById('rsvp-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        const data = Object.fromEntries(formData.entries());
-
-        // Ваш URL веб-приложения Google Apps Script
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwBcaLK6oe1QZvLv_I40gv_dRAWBma7GLSzMe9Kzs0SB2FJSU1qKRE74eRH-qzd1xq8pA/exec';
-
-        try {
-            const response = await fetch(scriptUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-
-            if (response.ok) {
-                document.getElementById('form-status').innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
-                this.reset();
-            } else {
-                document.getElementById('form-status').innerHTML = '<div class="error">Ошибка. Попробуйте ещё раз.</div>';
-            }
-        } catch (error) {
-            document.getElementById('form-status').innerHTML = '<div class="error">Ошибка соединения. Проверьте интернет.</div>';
-        }
-    });
+    function handleResponse() {
+        // После отправки iframe загрузит ответ от Apps Script
+        document.getElementById('form-status').innerHTML = '<div class="success">Спасибо! Ваш ответ сохранён.</div>';
+        document.getElementById('rsvp-form').reset();
+    }
 </script>
 </body>
 </html>
