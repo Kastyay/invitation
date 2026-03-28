@@ -60,52 +60,46 @@
         }
 
         .hero {
-            background: linear-gradient(135deg, rgba(245,230,211,0.7) 0%, rgba(240,223,206,0.7) 100%);
-            padding: 48px 24px 56px;
+            position: relative;
+            width: 100%;
+            height: auto;
+        }
+        .hero-image {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 1 / 1; /* квадрат, фото обрезается по центру */
+            transition: transform 0.3s ease;
+        }
+        .hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+            padding: 32px 24px 24px;
             text-align: center;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.6s ease-out 0.1s both;
+            pointer-events: none;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            font-weight: 600;
-            color: #3b2a23;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-        }
-
-        .hero p {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 400;
-            color: #6b4e3a;
-        }
-
         .date-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.75);
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(8px);
-            padding: 8px 28px;
+            padding: 12px 32px;
             border-radius: 60px;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 1.3rem;
+            font-weight: 600;
             font-family: 'Montserrat', sans-serif;
             color: #4f3527;
-            margin-top: 24px;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(230, 177, 126, 0.4);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            pointer-events: auto;
+            letter-spacing: 0.5px;
         }
         .date-badge:hover {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             transform: scale(1.02);
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             border-color: #e6b17e;
@@ -210,7 +204,6 @@
             transform: translateY(-4px);
         }
 
-        /* Новый стиль для блоков с информацией */
         .info-block {
             display: flex;
             align-items: center;
@@ -464,8 +457,8 @@
         }
 
         @media (max-width: 550px) {
-            .hero h1 {
-                font-size: 2rem;
+            .hero-image {
+                aspect-ratio: 1 / 1;
             }
             .content {
                 padding: 24px 20px;
@@ -491,6 +484,10 @@
                 font-size: 1.5rem;
                 width: 40px;
             }
+            .date-badge {
+                font-size: 1rem;
+                padding: 8px 24px;
+            }
         }
     </style>
 </head>
@@ -498,10 +495,11 @@
     <canvas id="petals-canvas"></canvas>
     <div class="container">
         <div class="hero">
-            <h1>Екатерина & Максим</h1>
-            <p>приглашают вас разделить с нами радость</p>
-            <div class="date-badge" id="calendarTrigger">
-                📅 25 июня 2026, 16:00
+            <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
+            <div class="hero-overlay">
+                <div class="date-badge" id="calendarTrigger">
+                    📅 25 июня 2026, 16:00
+                </div>
             </div>
         </div>
 
@@ -519,7 +517,6 @@
             <div class="section">
                 <h2>О событии</h2>
                 <div class="details-card">
-                    <!-- Блок с адресом -->
                     <div class="info-block">
                         <div class="info-icon">📍</div>
                         <div class="info-content">
@@ -530,7 +527,6 @@
                             </a>
                         </div>
                     </div>
-                    <!-- Блок с дресс-кодом (без цветочка, с маленькой буквы) -->
                     <div class="info-block">
                         <div class="info-icon">👗</div>
                         <div class="info-content">
@@ -577,7 +573,7 @@
     <iframe name="hidden-iframe" style="display:none;"></iframe>
 
     <script>
-        // --- Лепестки на canvas (каплевидные) ---
+        // --- Лепестки на canvas ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
