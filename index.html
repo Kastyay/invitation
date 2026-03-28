@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Екатерина & Максим | Приглашение</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Montserrat', sans-serif;
             color: #2e241f;
             line-height: 1.5;
             min-height: 100vh;
@@ -21,7 +21,7 @@
             transition: background 0.8s ease;
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             padding: 24px 16px;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         #petals-canvas {
@@ -82,9 +82,9 @@
         }
 
         .hero p {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 500;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 400;
             color: #6b4e3a;
         }
 
@@ -202,34 +202,62 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(230, 177, 126, 0.2);
             transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
         .details-card:hover {
             transform: translateY(-4px);
         }
 
-        .detail-row {
+        /* Новый стиль для блоков с информацией */
+        .info-block {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            padding: 16px 20px;
+            border: 1px solid rgba(230, 177, 126, 0.2);
+            transition: all 0.2s;
         }
-
-        .detail-icon {
+        .info-block:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(4px);
+        }
+        .info-icon {
             font-size: 1.8rem;
-            width: 44px;
+            width: 48px;
             text-align: center;
-            transition: transform 0.2s ease;
+            flex-shrink: 0;
         }
-        .detail-row:hover .detail-icon {
-            transform: scale(1.1) rotate(3deg);
-        }
-
-        .detail-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            font-weight: 500;
+        .info-content {
             flex: 1;
+            text-align: left;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+        .info-content strong {
+            font-weight: 600;
+            color: #3b2a23;
+        }
+        .address-text {
+            display: block;
+            margin-top: 4px;
+        }
+        .dresscode-text {
+            background: rgba(230, 177, 126, 0.1);
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #b46f3a;
+            font-weight: 500;
+            text-align: center;
+            margin-top: 6px;
         }
 
         .map-link {
@@ -237,13 +265,15 @@
             align-items: center;
             gap: 8px;
             background: rgba(230, 177, 126, 0.2);
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 40px;
             text-decoration: none;
             color: #b46f3a;
             font-weight: 500;
             transition: all 0.2s;
             font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            margin-top: 8px;
         }
         .map-link:hover {
             background: rgba(230, 177, 126, 0.4);
@@ -454,6 +484,13 @@
                 min-width: 140px;
                 padding: 12px 16px;
             }
+            .info-block {
+                padding: 12px 16px;
+            }
+            .info-icon {
+                font-size: 1.5rem;
+                width: 40px;
+            }
         }
     </style>
 </head>
@@ -482,29 +519,23 @@
             <div class="section">
                 <h2>О событии</h2>
                 <div class="details-card">
-                    <div class="detail-row">
-                        <div class="detail-icon">📍</div>
-                        <div class="detail-text">
-                            <strong>Место проведения</strong><br>
-                            Ресторан «Fazenda»<br>
-                            г. Саранск, Лямбирское ш., 10В
-                        </div>
-                    </div>
-                    <div class="detail-row">
-                        <div class="detail-icon">🗺️</div>
-                        <div class="detail-text">
+                    <!-- Блок с адресом -->
+                    <div class="info-block">
+                        <div class="info-icon">📍</div>
+                        <div class="info-content">
+                            <strong>Место проведения</strong>
+                            <div class="address-text">Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</div>
                             <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
                                 Открыть карту →
                             </a>
                         </div>
                     </div>
-                    <div class="detail-row">
-                        <div class="detail-icon">👗</div>
-                        <div class="detail-text">
-                            <strong>Дресс-код</strong><br>
-                            <span style="background: rgba(230, 177, 126, 0.1); display: inline-block; padding: 4px 14px; border-radius: 30px; margin-top: 6px; font-size: 0.9rem; color: #b46f3a; font-family: 'Montserrat', sans-serif;">
-                                🌸 без белого и чёрного
-                            </span>
+                    <!-- Блок с дресс-кодом (без цветочка, с маленькой буквы) -->
+                    <div class="info-block">
+                        <div class="info-icon">👗</div>
+                        <div class="info-content">
+                            <strong>Дресс-код</strong>
+                            <div class="dresscode-text">без белого и чёрного</div>
                         </div>
                     </div>
                 </div>
