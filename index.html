@@ -35,46 +35,30 @@
             opacity: 0.6;
         }
 
-        /* Обёртка для рамки и контейнера */
-        .frame-wrapper {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Декоративная рамка (венок) */
-        .frame-decoration {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 105%; /* чуть больше контейнера, чтобы обрамлять */
-            max-width: 740px; /* ограничиваем, чтобы не вылезала на мобильных */
-            height: auto;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .frame-decoration img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
         .container {
             max-width: 700px;
-            width: 100%;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(2px);
             border-radius: 48px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(230, 177, 126, 0.2) inset, 0 0 0 2px rgba(255,255,240,0.6) inset;
             overflow: hidden;
             position: relative;
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
+            /* Рамка-венок: несколько слоёв тени + градиентная граница */
+            box-shadow: 
+                0 0 0 2px rgba(230, 177, 126, 0.2),
+                0 0 0 6px rgba(245, 210, 160, 0.1),
+                0 0 0 12px rgba(245, 210, 160, 0.05),
+                0 25px 45px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .container:hover {
+            box-shadow: 
+                0 0 0 2px rgba(230, 177, 126, 0.4),
+                0 0 0 8px rgba(245, 210, 160, 0.2),
+                0 0 0 16px rgba(245, 210, 160, 0.1),
+                0 30px 50px rgba(0, 0, 0, 0.12);
         }
 
         @keyframes fadeInUp {
@@ -517,96 +501,85 @@
                 font-size: 1rem;
                 padding: 8px 24px;
             }
-            .frame-decoration {
-                width: 108%;
-                max-width: 95%;
-            }
         }
     </style>
 </head>
 <body>
     <canvas id="petals-canvas"></canvas>
-
-    <!-- Обёртка с рамкой -->
-    <div class="frame-wrapper">
-        <div class="frame-decoration">
-            <img src="images/wreath.png" alt="Декоративная рамка">
+    <div class="container">
+        <div class="hero">
+            <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
+            <div class="hero-overlay">
+                <div class="date-badge" id="calendarTrigger">
+                    📅 25 июня 2026, 16:00
+                </div>
+            </div>
         </div>
-        <div class="container">
-            <div class="hero">
-                <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
-                <div class="hero-overlay">
-                    <div class="date-badge" id="calendarTrigger">
-                        📅 25 июня 2026, 16:00
+
+        <div class="timer-section">
+            <div class="timer-title">До нашей свадьбы осталось</div>
+            <div class="timer" id="timer">
+                <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
+                <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
+                <div class="timer-block"><span class="timer-number" id="minutes">00</span><div class="timer-label">минут</div></div>
+                <div class="timer-block"><span class="timer-number" id="seconds">00</span><div class="timer-label">секунд</div></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>О событии</h2>
+                <div class="details-card">
+                    <div class="info-block">
+                        <div class="info-icon">📍</div>
+                        <div class="info-content">
+                            <strong>Место проведения</strong>
+                            <div class="address-text">Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</div>
+                            <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
+                                Открыть карту →
+                            </a>
+                        </div>
+                    </div>
+                    <div class="info-block">
+                        <div class="info-icon">👗</div>
+                        <div class="info-content">
+                            <strong>Дресс-код</strong>
+                            <div class="dresscode-text">без белого и чёрного</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="timer-section">
-                <div class="timer-title">До нашей свадьбы осталось</div>
-                <div class="timer" id="timer">
-                    <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
-                    <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
-                    <div class="timer-block"><span class="timer-number" id="minutes">00</span><div class="timer-label">минут</div></div>
-                    <div class="timer-block"><span class="timer-number" id="seconds">00</span><div class="timer-label">секунд</div></div>
-                </div>
-            </div>
-
-            <div class="content">
-                <div class="section">
-                    <h2>О событии</h2>
-                    <div class="details-card">
-                        <div class="info-block">
-                            <div class="info-icon">📍</div>
-                            <div class="info-content">
-                                <strong>Место проведения</strong>
-                                <div class="address-text">Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</div>
-                                <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
-                                    Открыть карту →
-                                </a>
-                            </div>
-                        </div>
-                        <div class="info-block">
-                            <div class="info-icon">👗</div>
-                            <div class="info-content">
-                                <strong>Дресс-код</strong>
-                                <div class="dresscode-text">без белого и чёрного</div>
-                            </div>
-                        </div>
+            <div class="section">
+                <h2>Ваш ответ</h2>
+                <form id="rsvp-form" 
+                      action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
+                      method="POST" 
+                      target="hidden-iframe">
+                    <div class="form-group">
+                        <label>Фамилия, имя, отчество</label>
+                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
                     </div>
-                </div>
-
-                <div class="section">
-                    <h2>Ваш ответ</h2>
-                    <form id="rsvp-form" 
-                          action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
-                          method="POST" 
-                          target="hidden-iframe">
-                        <div class="form-group">
-                            <label>Фамилия, имя, отчество</label>
-                            <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
+                    <div class="form-group">
+                        <label>Сможете присутствовать?</label>
+                        <div class="attendance-buttons" id="attendance-buttons">
+                            <div class="attendance-btn" data-value="Приду">✅ Приду</div>
+                            <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
                         </div>
-                        <div class="form-group">
-                            <label>Сможете присутствовать?</label>
-                            <div class="attendance-buttons" id="attendance-buttons">
-                                <div class="attendance-btn" data-value="Приду">✅ Приду</div>
-                                <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
-                            </div>
-                            <input type="hidden" name="attending" id="attending-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label>🎵 Ваша музыкальная заявка</label>
-                            <input type="text" name="music" placeholder="Исполнитель — Название песни">
-                            <small>(Вы можете предложить одну композицию)</small>
-                        </div>
-                        <button type="submit">Отправить</button>
-                        <div id="form-status" class="status"></div>
-                    </form>
-                </div>
+                        <input type="hidden" name="attending" id="attending-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label>🎵 Ваша музыкальная заявка</label>
+                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
+                        <small>(Вы можете предложить одну композицию)</small>
+                    </div>
+                    <button type="submit">Отправить</button>
+                    <div id="form-status" class="status"></div>
+                </form>
             </div>
-            <div class="footer">
-                С нетерпением ждём встречи! 💫
-            </div>
+        </div>
+        <div class="footer">
+            С нетерпением ждём встречи! 💫
         </div>
     </div>
 
