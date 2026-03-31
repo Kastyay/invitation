@@ -35,25 +35,6 @@
             opacity: 0.6;
         }
 
-        /* Венок (рамка) */
-        .wreath {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 780px;
-            height: auto;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.8;
-        }
-        .wreath img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
         .container {
             max-width: 700px;
             margin: 0 auto;
@@ -87,7 +68,7 @@
             width: 100%;
             display: block;
             object-fit: cover;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 1 / 1; /* квадрат, фото обрезается по центру */
             transition: transform 0.3s ease;
         }
         .hero-overlay {
@@ -507,21 +488,11 @@
                 font-size: 1rem;
                 padding: 8px 24px;
             }
-            .wreath {
-                width: 95%;
-                max-width: 600px;
-            }
         }
     </style>
 </head>
 <body>
     <canvas id="petals-canvas"></canvas>
-
-    <!-- Венок -->
-    <div class="wreath">
-        <img src="images/wreath.png" alt="Декоративная рамка">
-    </div>
-
     <div class="container">
         <div class="hero">
             <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
