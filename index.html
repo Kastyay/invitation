@@ -6,22 +6,15 @@
     <title>Екатерина & Максим | Приглашение</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Montserrat', sans-serif;
             color: #2e241f;
             line-height: 1.5;
             min-height: 100vh;
-            position: relative;
-            transition: background 0.8s ease;
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             padding: 24px 16px;
-            font-weight: 400;
         }
 
         #petals-canvas {
@@ -49,14 +42,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero {
@@ -69,7 +56,6 @@
             display: block;
             object-fit: cover;
             aspect-ratio: 1 / 1;
-            transition: transform 0.3s ease;
         }
         .hero-overlay {
             position: absolute;
@@ -89,23 +75,16 @@
             border-radius: 60px;
             font-size: 1.3rem;
             font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
             color: #4f3527;
             cursor: pointer;
             transition: all 0.3s ease;
             border: 1px solid rgba(230, 177, 126, 0.4);
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             pointer-events: auto;
-            letter-spacing: 0.5px;
         }
         .date-badge:hover {
             background: rgba(255, 255, 255, 0.95);
             transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            border-color: #e6b17e;
-        }
-        .date-badge:active {
-            transform: scale(0.98);
         }
 
         .timer-section {
@@ -114,26 +93,20 @@
             padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid #e6d5c4;
-            animation: fadeIn 0.6s ease-out 0.2s both;
         }
-
         .timer-title {
-            font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             font-weight: 500;
             color: #b46f3a;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
             text-transform: uppercase;
+            margin-bottom: 20px;
         }
-
         .timer {
             display: flex;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
         }
-
         .timer-block {
             background: rgba(255, 250, 245, 0.8);
             backdrop-filter: blur(4px);
@@ -141,28 +114,17 @@
             padding: 16px 20px;
             min-width: 90px;
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
             border: 1px solid rgba(230, 177, 126, 0.2);
         }
-        .timer-block:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-            border-color: #e6b17e;
-        }
-
         .timer-number {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
             font-weight: 700;
             color: #3b2a23;
-            line-height: 1;
         }
-
         .timer-label {
-            font-family: 'Montserrat', sans-serif;
             font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
             color: #8f6e55;
             margin-top: 8px;
         }
@@ -170,14 +132,9 @@
         .content {
             padding: 32px 28px;
         }
-
         .section {
             margin-bottom: 36px;
         }
-        .section:last-of-type {
-            margin-bottom: 0;
-        }
-
         .section h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -187,7 +144,6 @@
             padding-left: 16px;
             margin-bottom: 24px;
         }
-
         .details-card {
             background: rgba(254, 250, 245, 0.7);
             backdrop-filter: blur(4px);
@@ -195,15 +151,10 @@
             padding: 28px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
             border: 1px solid rgba(230, 177, 126, 0.2);
-            transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
             gap: 24px;
         }
-        .details-card:hover {
-            transform: translateY(-4px);
-        }
-
         .info-block {
             display: flex;
             align-items: center;
@@ -213,32 +164,17 @@
             border-radius: 40px;
             padding: 16px 20px;
             border: 1px solid rgba(230, 177, 126, 0.2);
-            transition: all 0.2s;
-        }
-        .info-block:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateX(4px);
         }
         .info-icon {
             font-size: 1.8rem;
             width: 48px;
             text-align: center;
-            flex-shrink: 0;
         }
         .info-content {
             flex: 1;
-            text-align: left;
-            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.4;
-        }
-        .info-content strong {
-            font-weight: 600;
-            color: #3b2a23;
         }
         .address-text {
-            display: block;
             margin-top: 4px;
         }
         .dresscode-text {
@@ -248,11 +184,8 @@
             border-radius: 30px;
             font-size: 0.9rem;
             color: #b46f3a;
-            font-weight: 500;
-            text-align: center;
             margin-top: 6px;
         }
-
         .map-link {
             display: inline-flex;
             align-items: center;
@@ -263,14 +196,8 @@
             text-decoration: none;
             color: #b46f3a;
             font-weight: 500;
-            transition: all 0.2s;
-            font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             margin-top: 8px;
-        }
-        .map-link:hover {
-            background: rgba(230, 177, 126, 0.4);
-            transform: translateX(4px);
         }
 
         .attendance-buttons {
@@ -293,16 +220,8 @@
             color: #5e3e2c;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
             border: 1px solid rgba(226, 212, 202, 0.6);
             font-size: 1rem;
-            text-align: center;
-            line-height: 1.2;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .attendance-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
         }
         .attendance-btn.selected[data-value="Приду"] {
             background: #e6b17e;
@@ -316,22 +235,17 @@
             border-color: #e6b17e;
             box-shadow: 0 4px 12px rgba(230, 177, 126, 0.3);
         }
-        .attendance-btn input {
-            display: none;
-        }
+        .attendance-btn input { display: none; }
 
         .form-group {
             margin-bottom: 24px;
         }
-
         label {
             display: block;
-            font-family: 'Montserrat', sans-serif;
             font-weight: 500;
             margin-bottom: 8px;
             color: #3b2a23;
         }
-
         input, textarea {
             width: 100%;
             padding: 14px 18px;
@@ -340,16 +254,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             background: rgba(255, 255, 255, 0.8);
-            transition: 0.2s;
         }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #e6b17e;
-            box-shadow: 0 0 0 3px rgba(230, 177, 126, 0.2);
-            background: white;
-        }
-
         button[type="submit"] {
             background: #e6b17e;
             color: white;
@@ -358,95 +263,13 @@
             border-radius: 60px;
             font-size: 1.1rem;
             font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            transition: background 0.2s;
         }
-
         button[type="submit"]:hover {
             background: #d49c63;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
-
-        button[type="submit"]:active {
-            transform: translateY(0);
-        }
-
-        .status {
-            text-align: center;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            margin-top: 0;
-        }
-        .status.show {
-            opacity: 1;
-            max-height: 100px;
-            margin-top: 16px;
-        }
-
-        .success {
-            color: #2b7a4b;
-            background: rgba(224, 242, 233, 0.8);
-            backdrop-filter: blur(4px);
-            padding: 12px;
-            border-radius: 60px;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .error-message {
-            color: #c95a49;
-            background: rgba(249, 215, 205, 0.8);
-            backdrop-filter: blur(4px);
-            padding: 12px;
-            border-radius: 60px;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .petal-spinner {
-            display: inline-block;
-            width: 32px;
-            height: 32px;
-            position: relative;
-        }
-        .petal-spinner::before,
-        .petal-spinner::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background: #e6b17e;
-            border-radius: 50% 50% 0 50%;
-            transform-origin: bottom left;
-            animation: spinPetal 1.2s linear infinite;
-        }
-        .petal-spinner::before {
-            top: 0;
-            left: 0;
-            animation-delay: 0s;
-        }
-        .petal-spinner::after {
-            top: 0;
-            left: 20px;
-            transform: rotate(90deg);
-            animation-delay: 0.3s;
-        }
-        @keyframes spinPetal {
-            0% {
-                transform: rotate(0deg) scale(0.8);
-                opacity: 0.6;
-            }
-            100% {
-                transform: rotate(360deg) scale(1);
-                opacity: 1;
-            }
-        }
-
         .footer {
             background: rgba(250, 245, 237, 0.8);
             backdrop-filter: blur(4px);
@@ -455,48 +278,16 @@
             font-size: 0.85rem;
             color: #8f6e55;
             border-top: 1px solid #e6d5c4;
-            animation: fadeIn 0.6s ease-out 0.4s both;
-            font-family: 'Montserrat', sans-serif;
         }
-
-        small {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 0.75rem;
-        }
+        small { font-size: 0.75rem; color: #8f6e55; }
 
         @media (max-width: 550px) {
-            .hero-image {
-                aspect-ratio: 1 / 1;
-            }
-            .content {
-                padding: 24px 20px;
-            }
-            .section h2 {
-                font-size: 1.5rem;
-            }
-            .timer-block {
-                padding: 12px 16px;
-                min-width: 70px;
-            }
-            .timer-number {
-                font-size: 1.8rem;
-            }
-            .attendance-btn {
-                min-width: 140px;
-                padding: 12px 16px;
-            }
-            .info-block {
-                padding: 12px 16px;
-            }
-            .info-icon {
-                font-size: 1.5rem;
-                width: 40px;
-            }
-            .date-badge {
-                font-size: 1rem;
-                padding: 8px 24px;
-            }
+            .hero-image { aspect-ratio: 1 / 1; }
+            .content { padding: 24px 20px; }
+            .section h2 { font-size: 1.5rem; }
+            .timer-number { font-size: 1.8rem; }
+            .attendance-btn { min-width: 140px; padding: 12px 16px; }
+            .date-badge { font-size: 1rem; padding: 8px 24px; }
         }
     </style>
 </head>
@@ -548,14 +339,14 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form">
+                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbySHYLoJwv1dHG4pkuf6FOLp1wNQlvG83XYFtfYxDb5MztB_sPAPm3yMtQgVgdD13_yUg/exec" method="POST">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
-                        <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
+                        <input type="text" name="code" placeholder="Введите код с приглашения" required>
                     </div>
                     <div class="form-group">
                         <label>Фамилия, имя, отчество</label>
-                        <input type="text" name="name" id="name" placeholder="Иванова Анна Петровна" required>
+                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
                     </div>
                     <div class="form-group">
                         <label>Сможете присутствовать?</label>
@@ -567,11 +358,10 @@
                     </div>
                     <div class="form-group">
                         <label>🎵 Ваша музыкальная заявка</label>
-                        <input type="text" name="music" id="music" placeholder="Исполнитель — Название песни">
+                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
                         <small>(Вы можете предложить одну композицию)</small>
                     </div>
                     <button type="submit">Отправить</button>
-                    <div id="form-status" class="status"></div>
                 </form>
             </div>
         </div>
@@ -581,11 +371,10 @@
     </div>
 
     <script>
-        // --- Лепестки на canvas ---
+        // --- Лепестки на canvas (упрощённый) ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
-        let animationId = null;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -632,13 +421,7 @@
                     p.x = Math.random() * canvas.width;
                 }
             }
-            animationId = requestAnimationFrame(drawPetals);
-        }
-
-        function startPetals() {
-            resizeCanvas();
-            initPetals();
-            drawPetals();
+            requestAnimationFrame(drawPetals);
         }
 
         window.addEventListener('resize', () => {
@@ -646,21 +429,9 @@
             petals = [];
             initPetals();
         });
-
-        startPetals();
-
-        // --- Смена фона по времени суток ---
-        function setTimeOfDayBackground() {
-            const now = new Date();
-            const hours = now.getHours();
-            let gradient;
-            if (hours >= 6 && hours < 12) gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
-            else if (hours >= 12 && hours < 18) gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
-            else if (hours >= 18 && hours < 24) gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
-            else gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
-            document.body.style.background = gradient;
-        }
-        setTimeOfDayBackground();
+        resizeCanvas();
+        initPetals();
+        drawPetals();
 
         // --- Таймер ---
         function updateTimer() {
@@ -686,7 +457,7 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // --- Кастомные кнопки выбора ---
+        // --- Кнопки выбора присутствия ---
         const attendanceBtns = document.querySelectorAll('.attendance-btn');
         const attendingInput = document.getElementById('attending-input');
         attendanceBtns.forEach(btn => {
@@ -697,77 +468,7 @@
             });
         });
 
-        // --- Отправка формы через fetch ---
-        const form = document.getElementById('rsvp-form');
-        const statusDiv = document.getElementById('form-status');
-        // ВСТАВЬТЕ СЮДА ВАШ НОВЫЙ URL ПОСЛЕ ПЕРЕРАЗВЁРТЫВАНИЯ
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbzunCVsSrkpGDXKvSG9EibLXCmXHbzaew-7YJ-uGbRPoMv_nBaTwoYWrXNBCda-Y2YzEw/exec';
-
-        function showStatus(message, type) {
-            statusDiv.innerHTML = `<div class="${type === 'success' ? 'success' : 'error-message'}">${message}</div>`;
-            statusDiv.classList.add('show');
-            setTimeout(() => {
-                statusDiv.classList.remove('show');
-                setTimeout(() => {
-                    statusDiv.innerHTML = '';
-                }, 200);
-            }, 4000);
-        }
-
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const code = document.getElementById('code').value.trim();
-            const name = document.getElementById('name').value.trim();
-            const attending = attendingInput.value;
-            const music = document.getElementById('music').value.trim();
-
-            if (!code) {
-                showStatus('Введите код приглашения', 'error');
-                return;
-            }
-            if (!name) {
-                showStatus('Введите ваше имя', 'error');
-                return;
-            }
-            if (!attending) {
-                showStatus('Выберите, сможете ли присутствовать', 'error');
-                return;
-            }
-
-            // Показываем спиннер
-            statusDiv.innerHTML = '<div class="petal-spinner"></div>';
-            statusDiv.classList.add('show');
-
-            const formData = new URLSearchParams();
-            formData.append('code', code);
-            formData.append('name', name);
-            formData.append('attending', attending);
-            formData.append('music', music);
-
-            try {
-                const response = await fetch(scriptUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData.toString()
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    showStatus('✨ Спасибо! Ваш ответ сохранён ✨', 'success');
-                    form.reset();
-                    attendanceBtns.forEach(b => b.classList.remove('selected'));
-                    attendingInput.value = '';
-                } else {
-                    showStatus(result.error || 'Ошибка при отправке', 'error');
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                showStatus('Ошибка соединения. Попробуйте позже.', 'error');
-            }
-        });
-
-        // --- Добавление в календарь по клику на дату ---
+        // --- Календарь ---
         const calendarTrigger = document.getElementById('calendarTrigger');
         calendarTrigger.addEventListener('click', function() {
             const eventTitle = 'Свадьба Екатерины и Максима';
