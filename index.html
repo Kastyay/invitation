@@ -548,7 +548,7 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbwdfaLtyfFGx99LmkO6aepgFoBtChetlpquzncnwwpVLd6Q185MyERcA_AwMU7GQkr3tg/exec" method="POST" target="hidden-iframe">
+                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbzPX0maWjEzbzS3vviegtXRWe8Rpl1dnnj6azMvylHa6zN4NGIgZwvdZ_i7R4y9xykH2A/exec" method="POST" target="hidden-iframe">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
                         <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
@@ -716,13 +716,14 @@
         }
 
         iframe.addEventListener('load', function() {
-            // Получаем содержимое iframe (ответ от скрипта)
-            let responseText;
             try {
-                // Пытаемся получить содержимое iframe (если скрипт вернул JSON)
                 const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                responseText = iframeDoc.body.innerText || iframeDoc.body.textContent;
-                // Парсим JSON
+                let responseText = iframeDoc.body.innerText || iframeDoc.body.textContent;
+                responseText = responseText.trim();
+                if (!responseText) {
+                    showStatus('Пустой ответ от сервера', 'error');
+                    return;
+                }
                 const result = JSON.parse(responseText);
                 if (result.success) {
                     showStatus('✨ Спасибо! Ваш ответ сохранён ✨', 'success');
@@ -733,17 +734,12 @@
                     showStatus(result.error || 'Ошибка при отправке', 'error');
                 }
             } catch (e) {
-                // Если ответ не JSON, показываем его как текст (например, ошибка скрипта)
-                if (responseText && responseText.trim()) {
-                    showStatus(responseText.trim(), 'error');
-                } else {
-                    showStatus('Неизвестная ошибка', 'error');
-                }
+                console.error('Ошибка парсинга ответа:', e);
+                showStatus('Неизвестная ошибка. Попробуйте позже.', 'error');
             }
         });
 
         form.addEventListener('submit', function(e) {
-            // Валидация перед отправкой
             const code = document.getElementById('code').value.trim();
             const name = document.getElementById('name').value.trim();
             const attending = attendingInput.value;
@@ -762,7 +758,6 @@
                 showStatus('Выберите, сможете ли присутствовать', 'error');
                 return;
             }
-            // Показываем спиннер
             statusDiv.innerHTML = '<div class="petal-spinner"></div>';
             statusDiv.classList.add('show');
         });
