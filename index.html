@@ -41,24 +41,11 @@
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(2px);
             border-radius: 48px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(230, 177, 126, 0.2) inset, 0 0 0 2px rgba(255,255,240,0.6) inset;
             overflow: hidden;
             position: relative;
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
-            /* Рамка-венок: несколько слоёв тени + градиентная граница */
-            box-shadow: 
-                0 0 0 2px rgba(230, 177, 126, 0.2),
-                0 0 0 6px rgba(245, 210, 160, 0.1),
-                0 0 0 12px rgba(245, 210, 160, 0.05),
-                0 25px 45px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-        }
-        .container:hover {
-            box-shadow: 
-                0 0 0 2px rgba(230, 177, 126, 0.4),
-                0 0 0 8px rgba(245, 210, 160, 0.2),
-                0 0 0 16px rgba(245, 210, 160, 0.1),
-                0 30px 50px rgba(0, 0, 0, 0.12);
         }
 
         @keyframes fadeInUp {
@@ -412,6 +399,15 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        .error-message {
+            color: #c95a49;
+            background: rgba(249, 215, 205, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 12px;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         .petal-spinner {
             display: inline-block;
             width: 32px;
@@ -552,13 +548,14 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" 
-                      action="https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec" 
-                      method="POST" 
-                      target="hidden-iframe">
+                <form id="rsvp-form">
+                    <div class="form-group">
+                        <label>🔑 Код приглашения</label>
+                        <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
+                    </div>
                     <div class="form-group">
                         <label>Фамилия, имя, отчество</label>
-                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
+                        <input type="text" name="name" id="name" placeholder="Иванова Анна Петровна" required>
                     </div>
                     <div class="form-group">
                         <label>Сможете присутствовать?</label>
@@ -570,7 +567,7 @@
                     </div>
                     <div class="form-group">
                         <label>🎵 Ваша музыкальная заявка</label>
-                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
+                        <input type="text" name="music" id="music" placeholder="Исполнитель — Название песни">
                         <small>(Вы можете предложить одну композицию)</small>
                     </div>
                     <button type="submit">Отправить</button>
@@ -582,8 +579,6 @@
             С нетерпением ждём встречи! 💫
         </div>
     </div>
-
-    <iframe name="hidden-iframe" style="display:none;"></iframe>
 
     <script>
         // --- Лепестки на canvas ---
@@ -659,15 +654,10 @@
             const now = new Date();
             const hours = now.getHours();
             let gradient;
-            if (hours >= 6 && hours < 12) {
-                gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
-            } else if (hours >= 12 && hours < 18) {
-                gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
-            } else if (hours >= 18 && hours < 24) {
-                gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
-            } else {
-                gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
-            }
+            if (hours >= 6 && hours < 12) gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
+            else if (hours >= 12 && hours < 18) gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
+            else if (hours >= 18 && hours < 24) gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
+            else gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
             document.body.style.background = gradient;
         }
         setTimeOfDayBackground();
@@ -707,34 +697,76 @@
             });
         });
 
-        // --- Отправка формы ---
-        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+        // --- Отправка формы через fetch ---
         const form = document.getElementById('rsvp-form');
         const statusDiv = document.getElementById('form-status');
+        // URL вашего веб-приложения (после переразвертывания может не измениться)
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycby5nfAeZ1F0jdEkt8XV_LiklUiOFRW47pfW3UZm_k69aPe4t0uXAGGeMhbYpNEuob_hCQ/exec';
 
-        iframe.addEventListener('load', function() {
-            statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const code = document.getElementById('code').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const attending = attendingInput.value;
+            const music = document.getElementById('music').value.trim();
+
+            if (!code) {
+                showStatus('Введите код приглашения', 'error');
+                return;
+            }
+            if (!name) {
+                showStatus('Введите ваше имя', 'error');
+                return;
+            }
+            if (!attending) {
+                showStatus('Выберите, сможете ли присутствовать', 'error');
+                return;
+            }
+
+            // Показываем спиннер
+            statusDiv.innerHTML = '<div class="petal-spinner"></div>';
             statusDiv.classList.add('show');
-            form.reset();
-            attendanceBtns.forEach(b => b.classList.remove('selected'));
-            attendingInput.value = '';
+
+            const formData = new URLSearchParams();
+            formData.append('code', code);
+            formData.append('name', name);
+            formData.append('attending', attending);
+            formData.append('music', music);
+
+            try {
+                const response = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('✨ Спасибо! Ваш ответ сохранён ✨', 'success');
+                    form.reset();
+                    attendanceBtns.forEach(b => b.classList.remove('selected'));
+                    attendingInput.value = '';
+                } else {
+                    showStatus(result.error || 'Ошибка при отправке', 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showStatus('Ошибка соединения. Попробуйте позже.', 'error');
+            }
+        });
+
+        function showStatus(message, type) {
+            statusDiv.innerHTML = `<div class="${type === 'success' ? 'success' : 'error-message'}">${message}</div>`;
+            statusDiv.classList.add('show');
             setTimeout(() => {
                 statusDiv.classList.remove('show');
                 setTimeout(() => {
                     statusDiv.innerHTML = '';
                 }, 200);
-            }, 3000);
-        });
-
-        form.addEventListener('submit', function(e) {
-            if (!attendingInput.value) {
-                alert('Пожалуйста, выберите, сможете ли вы присутствовать');
-                e.preventDefault();
-                return false;
-            }
-            statusDiv.innerHTML = '<div class="petal-spinner"></div>';
-            statusDiv.classList.add('show');
-        });
+            }, 4000);
+        }
 
         // --- Добавление в календарь по клику на дату ---
         const calendarTrigger = document.getElementById('calendarTrigger');
