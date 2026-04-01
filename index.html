@@ -41,11 +41,24 @@
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(2px);
             border-radius: 48px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(230, 177, 126, 0.2) inset, 0 0 0 2px rgba(255,255,240,0.6) inset;
             overflow: hidden;
             position: relative;
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
+            /* Рамка-венок: несколько слоёв тени + градиентная граница */
+            box-shadow: 
+                0 0 0 2px rgba(230, 177, 126, 0.2),
+                0 0 0 6px rgba(245, 210, 160, 0.1),
+                0 0 0 12px rgba(245, 210, 160, 0.05),
+                0 25px 45px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .container:hover {
+            box-shadow: 
+                0 0 0 2px rgba(230, 177, 126, 0.4),
+                0 0 0 8px rgba(245, 210, 160, 0.2),
+                0 0 0 16px rgba(245, 210, 160, 0.1),
+                0 30px 50px rgba(0, 0, 0, 0.12);
         }
 
         @keyframes fadeInUp {
@@ -375,6 +388,69 @@
             transform: translateY(0);
         }
 
+        .status {
+            text-align: center;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        .status.show {
+            opacity: 1;
+            max-height: 100px;
+            margin-top: 16px;
+        }
+
+        .success {
+            color: #2b7a4b;
+            background: rgba(224, 242, 233, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 12px;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .petal-spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            position: relative;
+        }
+        .petal-spinner::before,
+        .petal-spinner::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #e6b17e;
+            border-radius: 50% 50% 0 50%;
+            transform-origin: bottom left;
+            animation: spinPetal 1.2s linear infinite;
+        }
+        .petal-spinner::before {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+        .petal-spinner::after {
+            top: 0;
+            left: 20px;
+            transform: rotate(90deg);
+            animation-delay: 0.3s;
+        }
+        @keyframes spinPetal {
+            0% {
+                transform: rotate(0deg) scale(0.8);
+                opacity: 0.6;
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+                opacity: 1;
+            }
+        }
+
         .footer {
             background: rgba(250, 245, 237, 0.8);
             backdrop-filter: blur(4px);
@@ -476,11 +552,10 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbySHYLoJwv1dHG4pkuf6FOLp1wNQlvG83XYFtfYxDb5MztB_sPAPm3yMtQgVgdD13_yUg/exec" method="POST">
-                    <div class="form-group">
-                        <label>🔑 Код приглашения</label>
-                        <input type="text" name="code" placeholder="Введите код с приглашения" required>
-                    </div>
+                <form id="rsvp-form" 
+                      action="https://script.google.com/macros/s/AKfycbySHYLoJwv1dHG4pkuf6FOLp1wNQlvG83XYFtfYxDb5MztB_sPAPm3yMtQgVgdD13_yUg/exec" 
+                      method="POST" 
+                      target="hidden-iframe">
                     <div class="form-group">
                         <label>Фамилия, имя, отчество</label>
                         <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
@@ -499,6 +574,7 @@
                         <small>(Вы можете предложить одну композицию)</small>
                     </div>
                     <button type="submit">Отправить</button>
+                    <div id="form-status" class="status"></div>
                 </form>
             </div>
         </div>
@@ -507,8 +583,10 @@
         </div>
     </div>
 
+    <iframe name="hidden-iframe" style="display:none;"></iframe>
+
     <script>
-        // --- Лепестки на canvas (без изменений) ---
+        // --- Лепестки на canvas ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -581,10 +659,15 @@
             const now = new Date();
             const hours = now.getHours();
             let gradient;
-            if (hours >= 6 && hours < 12) gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
-            else if (hours >= 12 && hours < 18) gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
-            else if (hours >= 18 && hours < 24) gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
-            else gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
+            if (hours >= 6 && hours < 12) {
+                gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
+            } else if (hours >= 12 && hours < 18) {
+                gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
+            } else if (hours >= 18 && hours < 24) {
+                gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
+            } else {
+                gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
+            }
             document.body.style.background = gradient;
         }
         setTimeOfDayBackground();
@@ -622,6 +705,47 @@
                 this.classList.add('selected');
                 attendingInput.value = this.getAttribute('data-value');
             });
+        });
+
+        // --- Отправка формы ---
+        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+        const form = document.getElementById('rsvp-form');
+        const statusDiv = document.getElementById('form-status');
+
+        iframe.addEventListener('load', function() {
+            statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
+            statusDiv.classList.add('show');
+            form.reset();
+            attendanceBtns.forEach(b => b.classList.remove('selected'));
+            attendingInput.value = '';
+            setTimeout(() => {
+                statusDiv.classList.remove('show');
+                setTimeout(() => {
+                    statusDiv.innerHTML = '';
+                }, 200);
+            }, 3000);
+        });
+
+        form.addEventListener('submit', function(e) {
+            if (!attendingInput.value) {
+                alert('Пожалуйста, выберите, сможете ли вы присутствовать');
+                e.preventDefault();
+                return false;
+            }
+            statusDiv.innerHTML = '<div class="petal-spinner"></div>';
+            statusDiv.classList.add('show');
+        });
+
+        // --- Добавление в календарь по клику на дату ---
+        const calendarTrigger = document.getElementById('calendarTrigger');
+        calendarTrigger.addEventListener('click', function() {
+            const eventTitle = 'Свадьба Екатерины и Максима';
+            const eventDescription = 'Приглашаем вас разделить с нами этот день! Подробности: https://kastyay.github.io/invitation/';
+            const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
+            const startDate = '20260625T130000Z';
+            const endDate = '20260625T180000Z';
+            const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
+            window.open(googleUrl, '_blank');
         });
     </script>
 </body>
