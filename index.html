@@ -45,7 +45,6 @@
             position: relative;
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
-            /* Рамка-венок: несколько слоёв тени + градиентная граница */
             box-shadow: 
                 0 0 0 2px rgba(230, 177, 126, 0.2),
                 0 0 0 6px rgba(245, 210, 160, 0.1),
@@ -412,6 +411,15 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        .error-message {
+            color: #c95a49;
+            background: rgba(249, 215, 205, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 12px;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         .petal-spinner {
             display: inline-block;
             width: 32px;
@@ -553,12 +561,16 @@
             <div class="section">
                 <h2>Ваш ответ</h2>
                 <form id="rsvp-form" 
-                      action="https://script.google.com/macros/s/AKfycbxQNucoOpdOTsl12rk498bC3U1VafHu4kyWZXJgO9apQVnNn1NiDS2cl_3oa9IlyT1csw/exec" 
+                      action="https://script.google.com/macros/s/AKfycbyCZlShv4otCy-9XTPQKbfyLk3oOswGzf3ZI44LEtiX1qTF9y61GTasqYvMURAzcnqcnw/exec" 
                       method="POST" 
                       target="hidden-iframe">
                     <div class="form-group">
+                        <label>🔑 Код приглашения</label>
+                        <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
+                    </div>
+                    <div class="form-group">
                         <label>Фамилия, имя, отчество</label>
-                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
+                        <input type="text" name="name" id="name" placeholder="Иванова Анна Петровна" required>
                     </div>
                     <div class="form-group">
                         <label>Сможете присутствовать?</label>
@@ -570,7 +582,7 @@
                     </div>
                     <div class="form-group">
                         <label>🎵 Ваша музыкальная заявка</label>
-                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
+                        <input type="text" name="music" id="music" placeholder="Исполнитель — Название песни">
                         <small>(Вы можете предложить одну композицию)</small>
                     </div>
                     <button type="submit">Отправить</button>
@@ -707,30 +719,64 @@
             });
         });
 
-        // --- Отправка формы ---
-        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+        // --- Отправка формы через iframe ---
         const form = document.getElementById('rsvp-form');
         const statusDiv = document.getElementById('form-status');
+        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
 
-        iframe.addEventListener('load', function() {
-            statusDiv.innerHTML = '<div class="success">✨ Спасибо! Ваш ответ сохранён ✨</div>';
+        function showStatus(message, type) {
+            statusDiv.innerHTML = `<div class="${type === 'success' ? 'success' : 'error-message'}">${message}</div>`;
             statusDiv.classList.add('show');
-            form.reset();
-            attendanceBtns.forEach(b => b.classList.remove('selected'));
-            attendingInput.value = '';
             setTimeout(() => {
                 statusDiv.classList.remove('show');
                 setTimeout(() => {
                     statusDiv.innerHTML = '';
                 }, 200);
-            }, 3000);
+            }, 4000);
+        }
+
+        iframe.addEventListener('load', function() {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                let responseText = iframeDoc.body.innerText || iframeDoc.body.textContent;
+                responseText = responseText.trim();
+                if (!responseText) {
+                    showStatus('Пустой ответ от сервера', 'error');
+                    return;
+                }
+                const result = JSON.parse(responseText);
+                if (result.success) {
+                    showStatus('✨ Спасибо! Ваш ответ сохранён ✨', 'success');
+                    form.reset();
+                    attendanceBtns.forEach(b => b.classList.remove('selected'));
+                    attendingInput.value = '';
+                } else {
+                    showStatus(result.error || 'Ошибка при отправке', 'error');
+                }
+            } catch (e) {
+                console.error('Ошибка парсинга ответа:', e);
+                showStatus('Неизвестная ошибка. Попробуйте позже.', 'error');
+            }
         });
 
         form.addEventListener('submit', function(e) {
-            if (!attendingInput.value) {
-                alert('Пожалуйста, выберите, сможете ли вы присутствовать');
+            const code = document.getElementById('code').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const attending = attendingInput.value;
+            if (!code) {
                 e.preventDefault();
-                return false;
+                showStatus('Введите код приглашения', 'error');
+                return;
+            }
+            if (!name) {
+                e.preventDefault();
+                showStatus('Введите ваше имя', 'error');
+                return;
+            }
+            if (!attending) {
+                e.preventDefault();
+                showStatus('Выберите, сможете ли присутствовать', 'error');
+                return;
             }
             statusDiv.innerHTML = '<div class="petal-spinner"></div>';
             statusDiv.classList.add('show');
