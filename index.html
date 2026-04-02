@@ -422,11 +422,11 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
-        .toast.show {
-            opacity: 1;
-        }
         .toast.error {
             background: #c95a49;
+        }
+        .toast.show {
+            opacity: 1;
         }
 
         @media (max-width: 550px) {
@@ -512,7 +512,7 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbyT-uBoYPJr6EsGtO05pOyeZva9qyhTn9NvbUY2uIuzxFNo78elTwWlYIxVh62cO35PSg/exec" method="POST">
+                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbwo8FxMObRuJbcP0V6diSmFeVSmslI9T4vsJVoB6pV7BCzCWHcEBsUBeAgCWv18oHaghg/exec" method="POST">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
                         <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
@@ -682,19 +682,15 @@
         // --- Показ сообщения об успехе/ошибке после редиректа ---
         const urlParams = new URLSearchParams(window.location.search);
         const toast = document.getElementById('toast');
-        const successParam = urlParams.get('success');
-        const errorParam = urlParams.get('error');
-
-        if (successParam === '1') {
+        if (urlParams.get('success') === '1') {
             toast.textContent = '✨ Спасибо! Ваш ответ сохранён ✨';
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 4000);
-            // Убираем параметры из URL
             history.replaceState(null, '', window.location.pathname);
-        } else if (errorParam) {
-            toast.textContent = '⚠️ ' + decodeURIComponent(errorParam);
+        } else if (urlParams.get('error') === '1') {
+            toast.textContent = '⚠️ Ошибка при отправке. Попробуйте ещё раз.';
             toast.classList.add('show', 'error');
-            setTimeout(() => toast.classList.remove('show', 'error'), 5000);
+            setTimeout(() => toast.classList.remove('show', 'error'), 4000);
             history.replaceState(null, '', window.location.pathname);
         }
     </script>
