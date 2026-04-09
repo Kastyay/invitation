@@ -45,30 +45,16 @@
             position: relative;
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
-            box-shadow: 
-                0 0 0 2px rgba(230, 177, 126, 0.2),
-                0 0 0 6px rgba(245, 210, 160, 0.1),
-                0 0 0 12px rgba(245, 210, 160, 0.05),
-                0 25px 45px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 0 2px rgba(230, 177, 126, 0.2), 0 0 0 6px rgba(245, 210, 160, 0.1), 0 0 0 12px rgba(245, 210, 160, 0.05), 0 25px 45px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.3s ease;
         }
         .container:hover {
-            box-shadow: 
-                0 0 0 2px rgba(230, 177, 126, 0.4),
-                0 0 0 8px rgba(245, 210, 160, 0.2),
-                0 0 0 16px rgba(245, 210, 160, 0.1),
-                0 30px 50px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 0 0 2px rgba(230, 177, 126, 0.4), 0 0 0 8px rgba(245, 210, 160, 0.2), 0 0 0 16px rgba(245, 210, 160, 0.1), 0 30px 50px rgba(0, 0, 0, 0.12);
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero {
@@ -116,9 +102,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             border-color: #e6b17e;
         }
-        .date-badge:active {
-            transform: scale(0.98);
-        }
+        .date-badge:active { transform: scale(0.98); }
 
         .timer-section {
             background: rgba(255, 255, 255, 0.6);
@@ -128,7 +112,6 @@
             border-bottom: 1px solid #e6d5c4;
             animation: fadeIn 0.6s ease-out 0.2s both;
         }
-
         .timer-title {
             font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
@@ -138,14 +121,12 @@
             margin-bottom: 20px;
             text-transform: uppercase;
         }
-
         .timer {
             display: flex;
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
         }
-
         .timer-block {
             background: rgba(255, 250, 245, 0.8);
             backdrop-filter: blur(4px);
@@ -161,7 +142,6 @@
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
             border-color: #e6b17e;
         }
-
         .timer-number {
             font-family: 'Playfair Display', serif;
             font-size: 2.5rem;
@@ -169,7 +149,6 @@
             color: #3b2a23;
             line-height: 1;
         }
-
         .timer-label {
             font-family: 'Montserrat', sans-serif;
             font-size: 0.75rem;
@@ -182,14 +161,10 @@
         .content {
             padding: 32px 28px;
         }
-
         .section {
             margin-bottom: 36px;
         }
-        .section:last-of-type {
-            margin-bottom: 0;
-        }
-
+        .section:last-of-type { margin-bottom: 0; }
         .section h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -212,9 +187,7 @@
             flex-direction: column;
             gap: 24px;
         }
-        .details-card:hover {
-            transform: translateY(-4px);
-        }
+        .details-card:hover { transform: translateY(-4px); }
 
         .info-block {
             display: flex;
@@ -240,19 +213,12 @@
         .info-content {
             flex: 1;
             text-align: left;
-            font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             font-weight: 400;
             line-height: 1.4;
         }
-        .info-content strong {
-            font-weight: 600;
-            color: #3b2a23;
-        }
-        .address-text {
-            display: block;
-            margin-top: 4px;
-        }
+        .info-content strong { font-weight: 600; color: #3b2a23; }
+        .address-text { display: block; margin-top: 4px; }
         .dresscode-text {
             background: rgba(230, 177, 126, 0.1);
             display: inline-block;
@@ -263,6 +229,17 @@
             font-weight: 500;
             text-align: center;
             margin-top: 6px;
+        }
+        .wish-text {
+            background: rgba(230, 177, 126, 0.05);
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            color: #5e3e2c;
+            font-weight: 500;
+            margin-top: 8px;
+            line-height: 1.4;
         }
 
         .map-link {
@@ -276,7 +253,6 @@
             color: #b46f3a;
             font-weight: 500;
             transition: all 0.2s;
-            font-family: 'Montserrat', sans-serif;
             font-size: 0.9rem;
             margin-top: 8px;
         }
@@ -310,7 +286,6 @@
             font-size: 1rem;
             text-align: center;
             line-height: 1.2;
-            font-family: 'Montserrat', sans-serif;
         }
         .attendance-btn:hover {
             transform: translateY(-2px);
@@ -328,22 +303,15 @@
             border-color: #e6b17e;
             box-shadow: 0 4px 12px rgba(230, 177, 126, 0.3);
         }
-        .attendance-btn input {
-            display: none;
-        }
+        .attendance-btn input { display: none; }
 
-        .form-group {
-            margin-bottom: 24px;
-        }
-
+        .form-group { margin-bottom: 24px; }
         label {
             display: block;
-            font-family: 'Montserrat', sans-serif;
             font-weight: 500;
             margin-bottom: 8px;
             color: #3b2a23;
         }
-
         input, textarea {
             width: 100%;
             padding: 14px 18px;
@@ -354,14 +322,12 @@
             background: rgba(255, 255, 255, 0.8);
             transition: 0.2s;
         }
-
         input:focus, textarea:focus {
             outline: none;
             border-color: #e6b17e;
             box-shadow: 0 0 0 3px rgba(230, 177, 126, 0.2);
             background: white;
         }
-
         button[type="submit"] {
             background: #e6b17e;
             color: white;
@@ -370,41 +336,19 @@
             border-radius: 60px;
             font-size: 1.1rem;
             font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             width: 100%;
             transition: all 0.2s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
-
         button[type="submit"]:hover {
             background: #d49c63;
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         }
+        button[type="submit"]:active { transform: translateY(0); }
 
-        button[type="submit"]:active {
-            transform: translateY(0);
-        }
-
-        .footer {
-            background: rgba(250, 245, 237, 0.8);
-            backdrop-filter: blur(4px);
-            text-align: center;
-            padding: 20px 24px;
-            font-size: 0.85rem;
-            color: #8f6e55;
-            border-top: 1px solid #e6d5c4;
-            animation: fadeIn 0.6s ease-out 0.4s both;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        small {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 0.75rem;
-        }
-
+        /* Тосты */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -420,43 +364,39 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: none;
+            text-align: center;
+            max-width: 90%;
         }
-        .toast.show {
-            opacity: 1;
+        .toast.error { background: #c95a49; }
+        .toast.show { opacity: 1; }
+
+        .footer {
+            background: rgba(250, 245, 237, 0.8);
+            backdrop-filter: blur(4px);
+            text-align: center;
+            padding: 20px 24px;
+            font-size: 0.85rem;
+            color: #8f6e55;
+            border-top: 1px solid #e6d5c4;
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+        small {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            font-size: 0.75rem;
         }
 
         @media (max-width: 550px) {
-            .hero-image {
-                aspect-ratio: 1 / 1;
-            }
-            .content {
-                padding: 24px 20px;
-            }
-            .section h2 {
-                font-size: 1.5rem;
-            }
-            .timer-block {
-                padding: 12px 16px;
-                min-width: 70px;
-            }
-            .timer-number {
-                font-size: 1.8rem;
-            }
-            .attendance-btn {
-                min-width: 140px;
-                padding: 12px 16px;
-            }
-            .info-block {
-                padding: 12px 16px;
-            }
-            .info-icon {
-                font-size: 1.5rem;
-                width: 40px;
-            }
-            .date-badge {
-                font-size: 1rem;
-                padding: 8px 24px;
-            }
+            .hero-image { aspect-ratio: 1 / 1; }
+            .content { padding: 24px 20px; }
+            .section h2 { font-size: 1.5rem; }
+            .timer-block { padding: 12px 16px; min-width: 70px; }
+            .timer-number { font-size: 1.8rem; }
+            .attendance-btn { min-width: 140px; padding: 12px 16px; }
+            .info-block { padding: 12px 16px; }
+            .info-icon { font-size: 1.5rem; width: 40px; }
+            .date-badge { font-size: 1rem; padding: 8px 24px; }
         }
     </style>
 </head>
@@ -500,7 +440,17 @@
                         <div class="info-icon">👗</div>
                         <div class="info-content">
                             <strong>Дресс-код</strong>
-                            <div class="dresscode-text">без белого и чёрного</div>
+                            <div class="dresscode-text">👔 Мужчинам — без чёрного цвета</div>
+                            <div class="dresscode-text" style="margin-top: 4px;">👗 Девушкам — без белого цвета</div>
+                        </div>
+                    </div>
+                    <div class="info-block">
+                        <div class="info-icon">🎁</div>
+                        <div class="info-content">
+                            <strong>Пожелания</strong>
+                            <div class="wish-text">
+                                Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -508,7 +458,7 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbzYsZnc498vSOolRW36T5F5SYq93TlDDeuqAZ4TO6PwdFxjReV1EAqzSvmkbi7Zd0pUyQ/exec" method="POST">
+                <form id="rsvp-form">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
                         <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
@@ -542,6 +492,11 @@
     <div id="toast" class="toast"></div>
 
     <script>
+        // ========== НАСТРОЙКИ ==========
+        // ВСТАВЬТЕ СЮДА ВАШ URL ВЕБ-ПРИЛОЖЕНИЯ (ПОСЛЕ ПЕРЕРАЗВЕРТЫВАНИЯ)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbziTEimq7FT4NHx_u_T9S6gl9WysR6VFevnjhci9YBjQm_fF8PatVLL69-3pe8SO3ORlw/exec';
+        // =================================
+
         // --- Лепестки на canvas ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
@@ -552,7 +507,6 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-
         function drawPetal(x, y, size, angle, color) {
             ctx.save();
             ctx.translate(x, y);
@@ -565,7 +519,6 @@
             ctx.fill();
             ctx.restore();
         }
-
         function initPetals() {
             const count = 35;
             for (let i = 0; i < count; i++) {
@@ -580,7 +533,6 @@
                 });
             }
         }
-
         function drawPetals() {
             if (!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -595,19 +547,16 @@
             }
             animationId = requestAnimationFrame(drawPetals);
         }
-
         function startPetals() {
             resizeCanvas();
             initPetals();
             drawPetals();
         }
-
         window.addEventListener('resize', () => {
             resizeCanvas();
             petals = [];
             initPetals();
         });
-
         startPetals();
 
         // --- Смена фона по времени суток ---
@@ -615,15 +564,10 @@
             const now = new Date();
             const hours = now.getHours();
             let gradient;
-            if (hours >= 6 && hours < 12) {
-                gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
-            } else if (hours >= 12 && hours < 18) {
-                gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
-            } else if (hours >= 18 && hours < 24) {
-                gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
-            } else {
-                gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
-            }
+            if (hours >= 6 && hours < 12) gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
+            else if (hours >= 12 && hours < 18) gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
+            else if (hours >= 18 && hours < 24) gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
+            else gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
             document.body.style.background = gradient;
         }
         setTimeOfDayBackground();
@@ -663,6 +607,76 @@
             });
         });
 
+        // --- Отправка формы через fetch ---
+        const form = document.getElementById('rsvp-form');
+        const toast = document.getElementById('toast');
+
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.classList.remove('error');
+            if (isError) toast.classList.add('error');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('code').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const attending = attendingInput.value;
+            const music = document.getElementById('music').value.trim();
+
+            if (!code) {
+                showToast('Введите код приглашения', true);
+                return;
+            }
+            if (!name) {
+                showToast('Введите ваше имя', true);
+                return;
+            }
+            if (!attending) {
+                showToast('Выберите, сможете ли присутствовать', true);
+                return;
+            }
+
+            // Показываем спиннер или блокируем кнопку
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Отправка...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('code', code);
+                formData.append('name', name);
+                formData.append('attending', attending);
+                formData.append('music', music);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('✨ Спасибо! Ваш ответ сохранён ✨', false);
+                    form.reset();
+                    attendanceBtns.forEach(b => b.classList.remove('selected'));
+                    attendingInput.value = '';
+                } else {
+                    showToast(result.error || 'Ошибка при отправке', true);
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Ошибка соединения. Попробуйте позже.', true);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
         // --- Добавление в календарь по клику на дату ---
         const calendarTrigger = document.getElementById('calendarTrigger');
         calendarTrigger.addEventListener('click', function() {
@@ -674,19 +688,6 @@
             const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
             window.open(googleUrl, '_blank');
         });
-
-        // --- Показ сообщения об успехе после редиректа ---
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('success') === '1') {
-            const toast = document.getElementById('toast');
-            toast.textContent = '✨ Спасибо! Ваш ответ сохранён ✨';
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-            // Убираем параметр из URL, чтобы при обновлении не показывать снова
-            history.replaceState(null, '', window.location.pathname);
-        }
     </script>
 </body>
 </html>
