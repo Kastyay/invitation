@@ -2,80 +2,127 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Екатерина & Максим | Приглашение</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Все ваши стили остаются без изменений – они уже были */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
             color: #2e241f;
-            line-height: 1.5;
-            min-height: 100vh;
-            position: relative;
-            transition: background 0.8s ease;
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             padding: 24px 16px;
-            font-weight: 400;
         }
+        /* ... остальные стили (скопируйте из вашего рабочего HTML, чтобы не потерять оформление) ... */
+        /* Ниже – минимальные стили для демонстрации, но вы вставите свои полные стили */
+        .container { max-width: 700px; margin: 0 auto; background: rgba(255,255,255,0.92); border-radius: 48px; padding: 20px; }
+        .form-group { margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 30px; border: 1px solid #ccc; }
+        button { background: #e6b17e; color: white; border: none; padding: 12px 24px; border-radius: 30px; cursor: pointer; }
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #2b7a4b; color: white; padding: 12px 24px; border-radius: 60px;
+            opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000;
+        }
+        .toast.error { background: #c95a49; }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Екатерина & Максим</h1>
+    <p>приглашают вас на свадьбу</p>
+    <form id="rsvp-form" action="ВАШ_НОВЫЙ_URL" method="POST" target="hidden-iframe">
+        <div class="form-group">
+            <label>🔑 Код приглашения</label>
+            <input type="text" name="code" required>
+        </div>
+        <div class="form-group">
+            <label>Фамилия, имя, отчество</label>
+            <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+            <label>Сможете присутствовать?</label>
+            <select name="attending" required>
+                <option value="">Выберите</option>
+                <option value="Приду">✅ Приду</option>
+                <option value="Не смогу">❌ Не смогу</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>🎵 Музыкальная заявка</label>
+            <input type="text" name="music" placeholder="Исполнитель — песня">
+        </div>
+        <button type="submit">Отправить</button>
+    </form>
+</div>
 
-        #petals-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.6;
-        }
+<iframe name="hidden-iframe" style="display:none;"></iframe>
+<div id="toast" class="toast"></div>
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(2px);
-            border-radius: 48px;
-            overflow: hidden;
-            position: relative;
-            z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
-            box-shadow: 0 0 0 2px rgba(230, 177, 126, 0.2), 0 0 0 6px rgba(245, 210, 160, 0.1), 0 0 0 12px rgba(245, 210, 160, 0.05), 0 25px 45px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-        }
-        .container:hover {
-            box-shadow: 0 0 0 2px rgba(230, 177, 126, 0.4), 0 0 0 8px rgba(245, 210, 160, 0.2), 0 0 0 16px rgba(245, 210, 160, 0.1), 0 30px 50px rgba(0, 0, 0, 0.12);
-        }
+<script>
+    const form = document.getElementById('rsvp-form');
+    const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+    const toast = document.getElementById('toast');
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    function showToast(message, isError = false) {
+        toast.textContent = message;
+        toast.classList.toggle('error', isError);
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 5000);
+    }
 
-        .hero {
-            position: relative;
-            width: 100%;
-            height: auto;
+    iframe.addEventListener('load', function() {
+        try {
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+            let responseText = iframeDoc.body.innerText || iframeDoc.body.textContent;
+            responseText = responseText.trim();
+            if (!responseText) throw new Error('Пустой ответ');
+            const result = JSON.parse(responseText);
+            if (result.success) {
+                showToast('✨ Спасибо! Ваш ответ сохранён ✨');
+                form.reset();
+            } else {
+                showToast(result.error || 'Ошибка при отправке', true);
+            }
+        } catch (e) {
+            console.error(e);
+            showToast('Ошибка получения ответа', true);
         }
-        .hero-image {
-            width: 100%;
-            display: block;
-            object-fit: cover;
-            aspect-ratio: 1 / 1;
-            transition: transform 0.3s ease;
+    });
+
+    form.addEventListener('submit', function(e) {
+        // Валидация (можно добавить проверку полей)
+        if (!form.code.value.trim()) {
+            e.preventDefault();
+            showToast('Введите код приглашения', true);
+            return;
         }
-        .hero-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-            padding: 32px 24px 24px;
+        if (!form.name.value.trim()) {
+            e.preventDefault();
+            showToast('Введите ваше имя', true);
+            return;
+        }
+        if (!form.attending.value) {
+            e.preventDefault();
+            showToast('Выберите вариант присутствия', true);
+            return;
+        }
+        // Можно добавить спиннер на кнопку
+        const btn = form.querySelector('button');
+        const originalText = btn.textContent;
+        btn.textContent = 'Отправка...';
+        btn.disabled = true;
+        // Через небольшую задержку вернём кнопку в исходное состояние (после загрузки iframe)
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }, 2000);
+    });
+</script>
+</body>
+</html>            padding: 32px 24px 24px;
             text-align: center;
             pointer-events: none;
         }
@@ -494,7 +541,7 @@
     <script>
         // ========== НАСТРОЙКИ ==========
         // ВСТАВЬТЕ СЮДА ВАШ URL ВЕБ-ПРИЛОЖЕНИЯ (ПОСЛЕ ПЕРЕРАЗВЕРТЫВАНИЯ)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxOfThCX5MWCEPQml1G8iFuyJSeFMdEpnjujdBj5B1_BSOz0As4r50munmKvX64TSXTZw/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzZRKtfyLH2VHjdR3mouvkskWauq2-NyfWzxN5zSFp33qr77Iz9xEjmJTwb8vLAi6mfQ/exec';
         // =================================
 
         // --- Лепестки на canvas ---
