@@ -6,128 +6,75 @@
     <title>Екатерина & Максим | Приглашение</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
             color: #2e241f;
-            line-height: 1.5;
-            min-height: 100vh;
-            position: relative;
-            transition: background 0.8s ease;
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             padding: 24px 16px;
-            font-weight: 400;
+            min-height: 100vh;
         }
-
         #petals-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             z-index: 0;
             opacity: 0.6;
         }
-
         .container {
             max-width: 700px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255,255,255,0.92);
             backdrop-filter: blur(2px);
             border-radius: 48px;
             overflow: hidden;
             position: relative;
             z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
-            box-shadow: 
-                0 0 0 2px rgba(230, 177, 126, 0.2),
-                0 0 0 6px rgba(245, 210, 160, 0.1),
-                0 0 0 12px rgba(245, 210, 160, 0.05),
-                0 25px 45px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-        }
-        .container:hover {
-            box-shadow: 
-                0 0 0 2px rgba(230, 177, 126, 0.4),
-                0 0 0 8px rgba(245, 210, 160, 0.2),
-                0 0 0 16px rgba(245, 210, 160, 0.1),
-                0 30px 50px rgba(0, 0, 0, 0.12);
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero {
-            position: relative;
-            width: 100%;
-            height: auto;
+            box-shadow: 0 0 0 2px rgba(230,177,126,0.2), 0 0 0 6px rgba(245,210,160,0.1), 0 0 0 12px rgba(245,210,160,0.05), 0 25px 45px rgba(0,0,0,0.1);
         }
         .hero-image {
             width: 100%;
             display: block;
+            aspect-ratio: 1/1;
             object-fit: cover;
-            aspect-ratio: 1 / 1;
-            transition: transform 0.3s ease;
         }
         .hero-overlay {
             position: absolute;
-            bottom: 0;
-            left: 0;
+            bottom: 0; left: 0;
             width: 100%;
             background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-            padding: 32px 24px 24px;
+            padding: 32px 24px;
             text-align: center;
             pointer-events: none;
         }
         .date-badge {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255,255,255,0.85);
             backdrop-filter: blur(8px);
             padding: 12px 32px;
             border-radius: 60px;
             font-size: 1.3rem;
             font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
-            color: #4f3527;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(230, 177, 126, 0.4);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            pointer-events: auto;
-            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            border: 1px solid rgba(230,177,126,0.4);
         }
-        .date-badge:hover {
-            background: rgba(255, 255, 255, 0.95);
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            border-color: #e6b17e;
-        }
-        .date-badge:active { transform: scale(0.98); }
-
+        .date-badge:hover { background: rgba(255,255,255,0.95); transform: scale(1.02); border-color: #e6b17e; }
         .timer-section {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255,255,255,0.6);
             backdrop-filter: blur(4px);
             padding: 32px 20px;
             text-align: center;
             border-bottom: 1px solid #e6d5c4;
-            animation: fadeIn 0.6s ease-out 0.2s both;
         }
         .timer-title {
-            font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             font-weight: 500;
             color: #b46f3a;
             letter-spacing: 2px;
-            margin-bottom: 20px;
             text-transform: uppercase;
+            margin-bottom: 20px;
         }
         .timer {
             display: flex;
@@ -136,43 +83,19 @@
             flex-wrap: wrap;
         }
         .timer-block {
-            background: rgba(255, 250, 245, 0.8);
+            background: rgba(255,250,245,0.8);
             backdrop-filter: blur(4px);
             border-radius: 32px;
             padding: 16px 20px;
             min-width: 90px;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(230, 177, 126, 0.2);
+            border: 1px solid rgba(230,177,126,0.2);
+            transition: transform 0.3s;
         }
-        .timer-block:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-            border-color: #e6b17e;
-        }
-        .timer-number {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #3b2a23;
-            line-height: 1;
-        }
-        .timer-label {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8f6e55;
-            margin-top: 8px;
-        }
-
-        .content {
-            padding: 32px 28px;
-        }
-        .section {
-            margin-bottom: 36px;
-        }
-        .section:last-of-type { margin-bottom: 0; }
+        .timer-block:hover { transform: translateY(-4px); border-color: #e6b17e; }
+        .timer-number { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; color: #3b2a23; line-height: 1; }
+        .timer-label { font-size: 0.75rem; text-transform: uppercase; color: #8f6e55; margin-top: 8px; }
+        .content { padding: 32px 28px; }
+        .section { margin-bottom: 36px; }
         .section h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -182,93 +105,55 @@
             padding-left: 16px;
             margin-bottom: 24px;
         }
-
         .details-card {
-            background: rgba(254, 250, 245, 0.7);
+            background: rgba(254,250,245,0.7);
             backdrop-filter: blur(4px);
             border-radius: 32px;
             padding: 28px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(230, 177, 126, 0.2);
-            transition: transform 0.3s ease;
             display: flex;
             flex-direction: column;
             gap: 24px;
         }
-        .details-card:hover { transform: translateY(-4px); }
-
         .info-block {
             display: flex;
             align-items: center;
             gap: 16px;
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(255,255,255,0.6);
             border-radius: 40px;
             padding: 16px 20px;
-            border: 1px solid rgba(230, 177, 126, 0.2);
-            transition: all 0.2s;
+            border: 1px solid rgba(230,177,126,0.2);
         }
-        .info-block:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateX(4px);
-        }
-        .info-icon {
-            font-size: 1.8rem;
-            width: 48px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .info-content {
-            flex: 1;
-            text-align: left;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.4;
-        }
-        .info-content strong { font-weight: 600; color: #3b2a23; }
-        .address-text { display: block; margin-top: 4px; }
+        .info-icon { font-size: 1.8rem; width: 48px; text-align: center; }
+        .info-content { flex: 1; font-size: 1rem; }
         .dresscode-text {
-            background: rgba(230, 177, 126, 0.1);
+            background: rgba(230,177,126,0.1);
             display: inline-block;
             padding: 4px 14px;
             border-radius: 30px;
             font-size: 0.9rem;
             color: #b46f3a;
-            font-weight: 500;
-            text-align: center;
             margin-top: 6px;
         }
         .wish-text {
-            background: rgba(230, 177, 126, 0.05);
-            display: inline-block;
+            background: rgba(230,177,126,0.05);
             padding: 8px 16px;
             border-radius: 30px;
             font-size: 0.95rem;
             color: #5e3e2c;
             font-weight: 500;
-            margin-top: 8px;
             line-height: 1.4;
         }
-
         .map-link {
             display: inline-flex;
-            align-items: center;
             gap: 8px;
-            background: rgba(230, 177, 126, 0.2);
+            background: rgba(230,177,126,0.2);
             padding: 6px 16px;
             border-radius: 40px;
             text-decoration: none;
             color: #b46f3a;
-            font-weight: 500;
-            transition: all 0.2s;
             font-size: 0.9rem;
             margin-top: 8px;
         }
-        .map-link:hover {
-            background: rgba(230, 177, 126, 0.4);
-            transform: translateX(4px);
-        }
-
         .attendance-buttons {
             display: flex;
             gap: 16px;
@@ -279,63 +164,28 @@
         .attendance-btn {
             flex: 1;
             min-width: 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
             padding: 14px 20px;
             border-radius: 60px;
-            background: rgba(245, 237, 229, 0.8);
-            backdrop-filter: blur(4px);
-            color: #5e3e2c;
-            font-weight: 500;
+            background: rgba(245,237,229,0.8);
             cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(226, 212, 202, 0.6);
-            font-size: 1rem;
-            text-align: center;
-            line-height: 1.2;
+            border: 1px solid rgba(226,212,202,0.6);
+            transition: all 0.2s;
         }
-        .attendance-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
-        }
-        .attendance-btn.selected[data-value="Приду"] {
-            background: #e6b17e;
-            color: white;
-            border-color: #e6b17e;
-            box-shadow: 0 4px 12px rgba(230, 177, 126, 0.4);
-        }
-        .attendance-btn.selected[data-value="Не смогу"] {
-            background: #f0c0a8;
-            color: #5e2e1a;
-            border-color: #e6b17e;
-            box-shadow: 0 4px 12px rgba(230, 177, 126, 0.3);
-        }
-        .attendance-btn input { display: none; }
-
+        .attendance-btn.selected[data-value="Приду"] { background: #e6b17e; color: white; border-color: #e6b17e; }
+        .attendance-btn.selected[data-value="Не смогу"] { background: #f0c0a8; color: #5e2e1a; border-color: #e6b17e; }
         .form-group { margin-bottom: 24px; }
-        label {
-            display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: #3b2a23;
-        }
-        input, textarea {
+        label { display: block; font-weight: 500; margin-bottom: 8px; }
+        input, select, textarea {
             width: 100%;
             padding: 14px 18px;
             border: 1px solid #e2d4ca;
             border-radius: 60px;
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
-            background: rgba(255, 255, 255, 0.8);
-            transition: 0.2s;
+            background: rgba(255,255,255,0.8);
         }
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #e6b17e;
-            box-shadow: 0 0 0 3px rgba(230, 177, 126, 0.2);
-            background: white;
-        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #e6b17e; box-shadow: 0 0 0 3px rgba(230,177,126,0.2); background: white; }
         button[type="submit"] {
             background: #e6b17e;
             color: white;
@@ -344,19 +194,20 @@
             border-radius: 60px;
             font-size: 1.1rem;
             font-weight: 600;
-            cursor: pointer;
             width: 100%;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
         }
-        button[type="submit"]:hover {
-            background: #d49c63;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        button[type="submit"]:hover { background: #d49c63; transform: translateY(-2px); }
+        .footer {
+            background: rgba(250,245,237,0.8);
+            text-align: center;
+            padding: 20px 24px;
+            font-size: 0.85rem;
+            color: #8f6e55;
+            border-top: 1px solid #e6d5c4;
         }
-        button[type="submit"]:active { transform: translateY(0); }
-
-        /* Тосты */
+        small { font-weight: 300; font-size: 0.75rem; }
         .toast {
             position: fixed;
             bottom: 20px;
@@ -369,41 +220,21 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 500;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s;
             pointer-events: none;
             text-align: center;
             max-width: 90%;
         }
         .toast.error { background: #c95a49; }
         .toast.show { opacity: 1; }
-
-        .footer {
-            background: rgba(250, 245, 237, 0.8);
-            backdrop-filter: blur(4px);
-            text-align: center;
-            padding: 20px 24px;
-            font-size: 0.85rem;
-            color: #8f6e55;
-            border-top: 1px solid #e6d5c4;
-            animation: fadeIn 0.6s ease-out 0.4s both;
-        }
-        small {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            font-size: 0.75rem;
-        }
-
         @media (max-width: 550px) {
-            .hero-image { aspect-ratio: 1 / 1; }
+            .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
             .section h2 { font-size: 1.5rem; }
             .timer-block { padding: 12px 16px; min-width: 70px; }
             .timer-number { font-size: 1.8rem; }
-            .attendance-btn { min-width: 140px; padding: 12px 16px; }
-            .info-block { padding: 12px 16px; }
-            .info-icon { font-size: 1.5rem; width: 40px; }
+            .attendance-btn { min-width: 140px; }
             .date-badge { font-size: 1rem; padding: 8px 24px; }
         }
     </style>
@@ -411,12 +242,10 @@
 <body>
     <canvas id="petals-canvas"></canvas>
     <div class="container">
-        <div class="hero">
+        <div style="position: relative;">
             <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
             <div class="hero-overlay">
-                <div class="date-badge" id="calendarTrigger">
-                    📅 25 июня 2026, 16:00
-                </div>
+                <div class="date-badge" id="calendarTrigger">📅 25 июня 2026, 16:00</div>
             </div>
         </div>
 
@@ -438,10 +267,8 @@
                         <div class="info-icon">📍</div>
                         <div class="info-content">
                             <strong>Место проведения</strong>
-                            <div class="address-text">Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</div>
-                            <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">
-                                Открыть карту →
-                            </a>
+                            <div>Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</div>
+                            <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">Открыть карту →</a>
                         </div>
                     </div>
                     <div class="info-block">
@@ -456,9 +283,7 @@
                         <div class="info-icon">🎁</div>
                         <div class="info-content">
                             <strong>Пожелания</strong>
-                            <div class="wish-text">
-                                Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.
-                            </div>
+                            <div class="wish-text">Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.</div>
                         </div>
                     </div>
                 </div>
@@ -492,51 +317,28 @@
                 </form>
             </div>
         </div>
-        <div class="footer">
-            С нетерпением ждём встречи! 💫
-        </div>
+        <div class="footer">С нетерпением ждём встречи! 💫</div>
     </div>
-
     <div id="toast" class="toast"></div>
 
     <script>
-        // ========== НАСТРОЙКИ ==========
-        // ВСТАВЬТЕ СЮДА ВАШ URL ВЕБ-ПРИЛОЖЕНИЯ (ПОСЛЕ ПЕРЕРАЗВЕРТЫВАНИЯ)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIcFTc3MTUzjNeTFkrvV6ORjQ7X9SOhF9scd2qw5k8sOb3PcX15Djrh5cuXqxIFf-BBQ/exec';
-        // =================================
-
-        // --- Лепестки на canvas ---
+        // === ЛЕПЕСТКИ ===
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
-        let animationId = null;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        function drawPetal(x, y, size, angle, color) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.rotate(angle);
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.quadraticCurveTo(size * 0.6, size * 0.4, 0, size);
-            ctx.quadraticCurveTo(-size * 0.6, size * 0.4, 0, 0);
-            ctx.fillStyle = color;
-            ctx.fill();
-            ctx.restore();
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        function drawPetal(x, y, s, a, c) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.beginPath();
+            ctx.moveTo(0, 0); ctx.quadraticCurveTo(s*0.6, s*0.4, 0, s); ctx.quadraticCurveTo(-s*0.6, s*0.4, 0, 0);
+            ctx.fillStyle = c; ctx.fill(); ctx.restore();
         }
         function initPetals() {
-            const count = 35;
-            for (let i = 0; i < count; i++) {
+            petals = [];
+            for (let i = 0; i < 35; i++) {
                 petals.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 12 + 6,
-                    angle: Math.random() * Math.PI * 2,
-                    speedY: Math.random() * 0.6 + 0.3,
-                    speedRotate: (Math.random() - 0.5) * 0.02,
+                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                    size: Math.random() * 12 + 6, angle: Math.random() * Math.PI * 2,
+                    speedY: Math.random() * 0.6 + 0.3, speedRotate: (Math.random() - 0.5) * 0.02,
                     color: `rgba(230, 177, 126, ${Math.random() * 0.4 + 0.2})`
                 });
             }
@@ -548,43 +350,29 @@
                 drawPetal(p.x, p.y, p.size, p.angle, p.color);
                 p.y += p.speedY;
                 p.angle += p.speedRotate;
-                if (p.y > canvas.height + 20) {
-                    p.y = -20;
-                    p.x = Math.random() * canvas.width;
-                }
+                if (p.y > canvas.height + 20) { p.y = -20; p.x = Math.random() * canvas.width; }
             }
-            animationId = requestAnimationFrame(drawPetals);
+            requestAnimationFrame(drawPetals);
         }
-        function startPetals() {
-            resizeCanvas();
-            initPetals();
-            drawPetals();
-        }
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            petals = [];
-            initPetals();
-        });
-        startPetals();
+        window.addEventListener('resize', () => { resizeCanvas(); initPetals(); });
+        resizeCanvas(); initPetals(); drawPetals();
 
-        // --- Смена фона по времени суток ---
+        // === СМЕНА ФОНА ===
         function setTimeOfDayBackground() {
-            const now = new Date();
-            const hours = now.getHours();
-            let gradient;
-            if (hours >= 6 && hours < 12) gradient = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
-            else if (hours >= 12 && hours < 18) gradient = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
-            else if (hours >= 18 && hours < 24) gradient = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
-            else gradient = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
-            document.body.style.background = gradient;
+            const h = new Date().getHours();
+            let g;
+            if (h >= 6 && h < 12) g = 'linear-gradient(135deg, #fff5ea 0%, #faeedf 100%)';
+            else if (h >= 12 && h < 18) g = 'linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%)';
+            else if (h >= 18 && h < 24) g = 'linear-gradient(135deg, #fae6d4 0%, #f2d9c4 100%)';
+            else g = 'linear-gradient(135deg, #e8d9cc 0%, #dccbb8 100%)';
+            document.body.style.background = g;
         }
         setTimeOfDayBackground();
 
-        // --- Таймер ---
+        // === ТАЙМЕР ===
         function updateTimer() {
-            const targetDate = new Date(2026, 5, 25, 16, 0, 0);
-            const now = new Date();
-            const diff = targetDate - now;
+            const target = new Date(2026, 5, 25, 16, 0, 0);
+            const diff = target - new Date();
             if (diff <= 0) {
                 document.getElementById('days').innerText = '00';
                 document.getElementById('hours').innerText = '00';
@@ -593,61 +381,56 @@
                 return;
             }
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
             document.getElementById('days').innerText = days < 10 ? '0' + days : days;
             document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-        updateTimer();
-        setInterval(updateTimer, 1000);
+        updateTimer(); setInterval(updateTimer, 1000);
 
-        // --- Кастомные кнопки выбора ---
-        const attendanceBtns = document.querySelectorAll('.attendance-btn');
+        // === КАСТОМНЫЕ КНОПКИ ===
+        const btns = document.querySelectorAll('.attendance-btn');
         const attendingInput = document.getElementById('attending-input');
-        attendanceBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                attendanceBtns.forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-                attendingInput.value = this.getAttribute('data-value');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                attendingInput.value = btn.getAttribute('data-value');
             });
         });
 
-        // --- Отправка формы через fetch ---
+        // === КАЛЕНДАРЬ ===
+        document.getElementById('calendarTrigger').addEventListener('click', () => {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&details=Приглашаем вас разделить с нами этот день!&location=Ресторан Fazenda, Саранск, Лямбирское ш., 10В`;
+            window.open(encodeURI(url), '_blank');
+        });
+
+        // === ОТПРАВКА ФОРМЫ (FETCH) ===
         const form = document.getElementById('rsvp-form');
         const toast = document.getElementById('toast');
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxrqFELTX-hEq28pA5jBzPCVzgzic2kWtVmRhI3hFjBSNgpTdSw0QYltx9DNhBljWP1NA/exec';   // ЗАМЕНИТЕ НА РЕАЛЬНЫЙ URL
 
         function showToast(message, isError = false) {
             toast.textContent = message;
-            toast.classList.remove('error');
-            if (isError) toast.classList.add('error');
+            toast.classList.toggle('error', isError);
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 5000);
+            setTimeout(() => toast.classList.remove('show'), 5000);
         }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
             const code = document.getElementById('code').value.trim();
             const name = document.getElementById('name').value.trim();
             const attending = attendingInput.value;
             const music = document.getElementById('music').value.trim();
 
-            if (!code) {
-                showToast('Введите код приглашения', true);
-                return;
-            }
-            if (!name) {
-                showToast('Введите ваше имя', true);
-                return;
-            }
-            if (!attending) {
-                showToast('Выберите, сможете ли присутствовать', true);
-                return;
-            }
+            if (!code) { showToast('Введите код приглашения', true); return; }
+            if (!name) { showToast('Введите ваше имя', true); return; }
+            if (!attending) { showToast('Выберите, сможете ли присутствовать', true); return; }
 
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
@@ -668,9 +451,9 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    showToast('✨ Спасибо! Ваш ответ сохранён ✨', false);
+                    showToast('✨ Спасибо! Ваш ответ сохранён ✨');
                     form.reset();
-                    attendanceBtns.forEach(b => b.classList.remove('selected'));
+                    btns.forEach(b => b.classList.remove('selected'));
                     attendingInput.value = '';
                 } else {
                     showToast(result.error || 'Ошибка при отправке', true);
@@ -682,18 +465,6 @@
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
-        });
-
-        // --- Добавление в календарь по клику на дату ---
-        const calendarTrigger = document.getElementById('calendarTrigger');
-        calendarTrigger.addEventListener('click', function() {
-            const eventTitle = 'Свадьба Екатерины и Максима';
-            const eventDescription = 'Приглашаем вас разделить с нами этот день! Подробности: https://kastyay.github.io/invitation/';
-            const location = 'Ресторан Fazenda, Саранск, Лямбирское ш., 10В';
-            const startDate = '20260625T130000Z';
-            const endDate = '20260625T180000Z';
-            const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDescription)}&location=${encodeURIComponent(location)}`;
-            window.open(googleUrl, '_blank');
         });
     </script>
 </body>
