@@ -14,7 +14,6 @@
             min-height: 100vh;
             position: relative;
         }
-        /* Canvas для лепестков */
         #petals-canvas {
             position: fixed;
             top: 0;
@@ -120,33 +119,36 @@
         }
         .info-block {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 16px;
             background: rgba(255,255,255,0.6);
             border-radius: 40px;
             padding: 16px 20px;
             border: 1px solid rgba(230,177,126,0.2);
         }
-        .info-icon { font-size: 1.8rem; width: 48px; text-align: center; flex-shrink: 0; }
-        .info-content { flex: 1; font-size: 1rem; line-height: 1.4; }
-        .info-content strong { font-weight: 600; color: #3b2a23; display: block; margin-bottom: 6px; }
-        .dresscode-sub {
-            background: rgba(230,177,126,0.1);
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            color: #b46f3a;
-            margin-top: 6px;
+        .info-icon {
+            font-size: 1.8rem;
+            width: 48px;
+            text-align: center;
+            flex-shrink: 0;
+            line-height: 1.2;
         }
-        .wish-text {
-            background: rgba(230,177,126,0.05);
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.95rem;
-            color: #5e3e2c;
-            font-weight: 500;
+        .info-content {
+            flex: 1;
+            font-size: 1rem;
             line-height: 1.4;
+        }
+        .info-content strong {
+            font-weight: 600;
+            color: #3b2a23;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .info-content p {
+            margin: 0;
+        }
+        .dresscode-text {
+            margin-top: 4px;
         }
         .map-link {
             display: inline-flex;
@@ -158,7 +160,7 @@
             text-decoration: none;
             color: #b46f3a;
             font-size: 0.9rem;
-            margin-top: 8px;
+            margin-top: 10px;
             transition: background 0.2s;
         }
         .map-link:hover { background: rgba(230,177,126,0.4); }
@@ -209,7 +211,6 @@
             width: 100%;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
-            margin-bottom: 0;
         }
         button[type="submit"]:hover { background: #d49c63; transform: translateY(-2px); }
         .footer {
@@ -219,7 +220,6 @@
             font-size: 0.85rem;
             color: #8f6e55;
             border-top: 1px solid #e6d5c4;
-            margin-top: 0;
         }
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
@@ -260,23 +260,22 @@
                         <div class="info-icon">📍</div>
                         <div class="info-content">
                             <strong>Место проведения</strong>
-                            <div>Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</div>
+                            <p>Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</p>
                             <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">Открыть карту →</a>
                         </div>
                     </div>
                     <div class="info-block">
-                        <div class="info-icon">👔</div>
+                        <div class="info-icon">👗</div>
                         <div class="info-content">
                             <strong>Дресс-код</strong>
-                            <div class="dresscode-sub">Мужчинам — без чёрного цвета</div>
-                            <div class="dresscode-sub" style="margin-top: 4px;">👗 Девушкам — без белого цвета</div>
+                            <div class="dresscode-text">Мужчинам — без чёрного цвета<br>Девушкам — без белого цвета</div>
                         </div>
                     </div>
                     <div class="info-block">
                         <div class="info-icon">🎁</div>
                         <div class="info-content">
                             <strong>Пожелания</strong>
-                            <div class="wish-text">Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.</div>
+                            <p>Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.</p>
                         </div>
                     </div>
                 </div>
