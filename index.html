@@ -225,7 +225,7 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbzndXaSOaYYF0MQt-43FyyC83GaBlfUTLTujlaU0WEtgup0J-nUnG1aRK5pu5bR8edXqA/exec" method="POST" target="hidden-iframe">
+                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbwfBTJ4-WAMNrDoBCoWfV8OgiaNOw2Hg2phUM-NX1xoZnhEUQ22ANgt1uLIzCHuDMSOpg/exec" method="POST" target="hidden-iframe">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
                         <input type="text" name="code" id="code" placeholder="Введите код" required>
@@ -256,37 +256,27 @@
     <iframe name="hidden-iframe" style="display:none;"></iframe>
     <div id="toast" class="toast"></div>
 
-    <script>
-        // --- ПЕТАЛИ (ВАШ ОРИГИНАЛЬНЫЙ КОД) ---
+<script>
+        // --- ПЕТАЛИ ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
-
         function createPetals() {
             petals = [];
             for (let i = 0; i < 30; i++) {
-                petals.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    s: Math.random() * 8 + 4,
-                    r: Math.random() * 2,
-                    sy: Math.random() * 1 + 0.5
-                });
+                petals.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*8+4, sy: Math.random()*1+0.5 });
             }
         }
         createPetals();
         function animatePetals() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(230, 177, 126, 0.4)';
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(230,177,126,0.4)';
             petals.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
-                ctx.fill();
-                p.y += p.sy;
-                if (p.y > canvas.height) p.y = -10;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.y += p.sy; if (p.y > canvas.height) p.y = -10;
             });
             requestAnimationFrame(animatePetals);
         }
@@ -295,23 +285,22 @@
         // --- ТАЙМЕР ---
         function updateTimer() {
             const target = new Date(2026, 5, 25, 16, 0);
-            const now = new Date();
-            const diff = target - now;
+            const diff = target - new Date();
             if (diff > 0) {
-                document.getElementById('days').innerText = String(Math.floor(diff / 864e5)).padStart(2, '0');
-                document.getElementById('hours').innerText = String(Math.floor((diff / 36e5) % 24)).padStart(2, '0');
-                document.getElementById('minutes').innerText = String(Math.floor((diff / 6e4) % 60)).padStart(2, '0');
-                document.getElementById('seconds').innerText = String(Math.floor((diff / 1e3) % 60)).padStart(2, '0');
+                document.getElementById('days').innerText = String(Math.floor(diff/864e5)).padStart(2,'0');
+                document.getElementById('hours').innerText = String(Math.floor((diff/36e5)%24)).padStart(2,'0');
+                document.getElementById('minutes').innerText = String(Math.floor((diff/6e4)%60)).padStart(2,'0');
+                document.getElementById('seconds').innerText = String(Math.floor((diff/1e3)%60)).padStart(2,'0');
             }
         }
-        setInterval(updateTimer, 1000);
-        updateTimer();
+        setInterval(updateTimer, 1000); updateTimer();
 
-        // --- ФОРМА И КНОПКИ ---
+        // --- ФОРМА ---
         const form = document.getElementById('rsvp-form');
         const btns = document.querySelectorAll('.attendance-btn');
         const attendingInput = document.getElementById('attending-input');
         const toast = document.getElementById('toast');
+        const submitBtn = form.querySelector('button[type="submit"]');
 
         function showToast(msg, isErr = false) {
             toast.textContent = msg;
@@ -327,13 +316,15 @@
             });
         });
 
-        // Слушатель ответа
+        // ГЛАВНЫЙ ОБРАБОТЧИК ОТВЕТА
         window.addEventListener('message', function(event) {
+            // Проверяем только наши сообщения
             if (event.data && event.data.source === 'WEDDING_APP') {
                 const res = event.data.payload;
-                const btn = form.querySelector('button[type="submit"]');
-                btn.disabled = false;
-                btn.textContent = 'Отправить';
+                
+                // Сразу разблокируем кнопку
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Отправить';
 
                 if (res.success) {
                     showToast('✨ Спасибо! Ваш ответ сохранён ✨');
@@ -341,7 +332,7 @@
                     btns.forEach(b => b.classList.remove('selected'));
                     attendingInput.value = '';
                 } else {
-                    showToast(res.error || 'Ошибка', true);
+                    showToast(res.error || 'Произошла ошибка', true);
                 }
             }
         });
@@ -352,9 +343,18 @@
                 showToast('Выберите вариант присутствия', true);
                 return;
             }
-            const btn = form.querySelector('button[type="submit"]');
-            btn.textContent = 'Отправка...';
-            btn.disabled = true;
+            
+            submitBtn.textContent = 'Отправка...';
+            submitBtn.disabled = true;
+
+            // Таймер безопасности (если сообщение потеряется)
+            setTimeout(() => {
+                if (submitBtn.disabled) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить';
+                    console.log("Ответ от скрипта не получен вовремя.");
+                }
+            }, 7000);
         });
     </script>
 </body>
