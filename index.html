@@ -45,11 +45,19 @@
             position: relative;
             z-index: 1;
             animation: fadeInUp 0.8s ease-out;
-            box-shadow: 0 0 0 2px rgba(230, 177, 126, 0.2), 0 0 0 6px rgba(245, 210, 160, 0.1), 0 0 0 12px rgba(245, 210, 160, 0.05), 0 25px 45px rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 0 0 2px rgba(230, 177, 126, 0.2),
+                0 0 0 6px rgba(245, 210, 160, 0.1),
+                0 0 0 12px rgba(245, 210, 160, 0.05),
+                0 25px 45px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.3s ease;
         }
         .container:hover {
-            box-shadow: 0 0 0 2px rgba(230, 177, 126, 0.4), 0 0 0 8px rgba(245, 210, 160, 0.2), 0 0 0 16px rgba(245, 210, 160, 0.1), 0 30px 50px rgba(0, 0, 0, 0.12);
+            box-shadow: 
+                0 0 0 2px rgba(230, 177, 126, 0.4),
+                0 0 0 8px rgba(245, 210, 160, 0.2),
+                0 0 0 16px rgba(245, 210, 160, 0.1),
+                0 30px 50px rgba(0, 0, 0, 0.12);
         }
 
         @keyframes fadeInUp {
@@ -348,6 +356,29 @@
         }
         button[type="submit"]:active { transform: translateY(0); }
 
+        /* Тосты */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2b7a4b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            text-align: center;
+            max-width: 90%;
+        }
+        .toast.error { background: #c95a49; }
+        .toast.show { opacity: 1; }
+
         .footer {
             background: rgba(250, 245, 237, 0.8);
             backdrop-filter: blur(4px);
@@ -435,14 +466,14 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form action="https://script.google.com/macros/s/AKfycbxzZRKtfyLH2VHjdR3mouvkskWauq2-NyfWzxN5zSFp33qr77Iz9xEjmJTwb8vLAi6mfQ/exec" method="POST">
+                <form id="rsvp-form">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
-                        <input type="text" name="code" placeholder="Введите код с приглашения" required>
+                        <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
                     </div>
                     <div class="form-group">
                         <label>Фамилия, имя, отчество</label>
-                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
+                        <input type="text" name="name" id="name" placeholder="Иванова Анна Петровна" required>
                     </div>
                     <div class="form-group">
                         <label>Сможете присутствовать?</label>
@@ -454,7 +485,7 @@
                     </div>
                     <div class="form-group">
                         <label>🎵 Ваша музыкальная заявка</label>
-                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
+                        <input type="text" name="music" id="music" placeholder="Исполнитель — Название песни">
                         <small>(Вы можете предложить одну композицию)</small>
                     </div>
                     <button type="submit">Отправить</button>
@@ -466,7 +497,14 @@
         </div>
     </div>
 
+    <div id="toast" class="toast"></div>
+
     <script>
+        // ========== НАСТРОЙКИ ==========
+        // ВСТАВЬТЕ СЮДА ВАШ URL ВЕБ-ПРИЛОЖЕНИЯ (ПОСЛЕ ПЕРЕРАЗВЕРТЫВАНИЯ)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyIcFTc3MTUzjNeTFkrvV6ORjQ7X9SOhF9scd2qw5k8sOb3PcX15Djrh5cuXqxIFf-BBQ/exec';
+        // =================================
+
         // --- Лепестки на canvas ---
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
@@ -477,7 +515,6 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-
         function drawPetal(x, y, size, angle, color) {
             ctx.save();
             ctx.translate(x, y);
@@ -490,7 +527,6 @@
             ctx.fill();
             ctx.restore();
         }
-
         function initPetals() {
             const count = 35;
             for (let i = 0; i < count; i++) {
@@ -505,7 +541,6 @@
                 });
             }
         }
-
         function drawPetals() {
             if (!ctx) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -520,19 +555,16 @@
             }
             animationId = requestAnimationFrame(drawPetals);
         }
-
         function startPetals() {
             resizeCanvas();
             initPetals();
             drawPetals();
         }
-
         window.addEventListener('resize', () => {
             resizeCanvas();
             petals = [];
             initPetals();
         });
-
         startPetals();
 
         // --- Смена фона по времени суток ---
@@ -581,6 +613,75 @@
                 this.classList.add('selected');
                 attendingInput.value = this.getAttribute('data-value');
             });
+        });
+
+        // --- Отправка формы через fetch ---
+        const form = document.getElementById('rsvp-form');
+        const toast = document.getElementById('toast');
+
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.classList.remove('error');
+            if (isError) toast.classList.add('error');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('code').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const attending = attendingInput.value;
+            const music = document.getElementById('music').value.trim();
+
+            if (!code) {
+                showToast('Введите код приглашения', true);
+                return;
+            }
+            if (!name) {
+                showToast('Введите ваше имя', true);
+                return;
+            }
+            if (!attending) {
+                showToast('Выберите, сможете ли присутствовать', true);
+                return;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Отправка...';
+            submitBtn.disabled = true;
+
+            try {
+                const formData = new URLSearchParams();
+                formData.append('code', code);
+                formData.append('name', name);
+                formData.append('attending', attending);
+                formData.append('music', music);
+
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('✨ Спасибо! Ваш ответ сохранён ✨', false);
+                    form.reset();
+                    attendanceBtns.forEach(b => b.classList.remove('selected'));
+                    attendingInput.value = '';
+                } else {
+                    showToast(result.error || 'Ошибка при отправке', true);
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('Ошибка соединения. Попробуйте позже.', true);
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
         });
 
         // --- Добавление в календарь по клику на дату ---
