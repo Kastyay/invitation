@@ -2,25 +2,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Екатерина & Максим | Приглашение</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
-            color: #2e241f;
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             padding: 24px 16px;
             min-height: 100vh;
-        }
-        #petals-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.6;
         }
         .container {
             max-width: 700px;
@@ -29,8 +20,6 @@
             backdrop-filter: blur(2px);
             border-radius: 48px;
             overflow: hidden;
-            position: relative;
-            z-index: 1;
             box-shadow: 0 0 0 2px rgba(230,177,126,0.2), 0 0 0 6px rgba(245,210,160,0.1), 0 0 0 12px rgba(245,210,160,0.05), 0 25px 45px rgba(0,0,0,0.1);
         }
         .hero-image {
@@ -59,7 +48,6 @@
             cursor: pointer;
             transition: all 0.3s;
             border: 1px solid rgba(230,177,126,0.4);
-            pointer-events: auto;
         }
         .date-badge:hover { background: rgba(255,255,255,0.95); transform: scale(1.02); border-color: #e6b17e; }
         .timer-section {
@@ -69,8 +57,20 @@
             text-align: center;
             border-bottom: 1px solid #e6d5c4;
         }
-        .timer-title { font-size: 1.2rem; font-weight: 500; color: #b46f3a; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
-        .timer { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .timer-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #b46f3a;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
         .timer-block {
             background: rgba(255,250,245,0.8);
             backdrop-filter: blur(4px);
@@ -143,48 +143,74 @@
             font-size: 0.9rem;
             margin-top: 8px;
         }
-        .attendance-buttons { display: flex; gap: 16px; margin: 20px 0; flex-wrap: wrap; justify-content: center; }
+        .attendance-buttons {
+            display: flex;
+            gap: 16px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
         .attendance-btn {
-            flex: 1; min-width: 160px; text-align: center; padding: 14px 20px; border-radius: 60px;
-            background: rgba(245,237,229,0.8); cursor: pointer; border: 1px solid rgba(226,212,202,0.6); transition: all 0.2s;
+            flex: 1;
+            min-width: 160px;
+            text-align: center;
+            padding: 14px 20px;
+            border-radius: 60px;
+            background: rgba(245,237,229,0.8);
+            cursor: pointer;
+            border: 1px solid rgba(226,212,202,0.6);
+            transition: all 0.2s;
         }
         .attendance-btn.selected[data-value="Приду"] { background: #e6b17e; color: white; border-color: #e6b17e; }
         .attendance-btn.selected[data-value="Не смогу"] { background: #f0c0a8; color: #5e2e1a; border-color: #e6b17e; }
         .form-group { margin-bottom: 24px; }
         label { display: block; font-weight: 500; margin-bottom: 8px; }
-        input {
-            width: 100%; padding: 14px 18px; border: 1px solid #e2d4ca; border-radius: 60px;
-            font-family: 'Montserrat', sans-serif; font-size: 1rem; background: rgba(255,255,255,0.8);
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #e2d4ca;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.8);
         }
-        input:focus { outline: none; border-color: #e6b17e; box-shadow: 0 0 0 3px rgba(230,177,126,0.2); background: white; }
+        input:focus, textarea:focus { outline: none; border-color: #e6b17e; box-shadow: 0 0 0 3px rgba(230,177,126,0.2); background: white; }
         button[type="submit"] {
-            background: #e6b17e; color: white; border: none; padding: 14px 28px; border-radius: 60px;
-            font-size: 1.1rem; font-weight: 600; width: 100%; cursor: pointer; transition: background 0.2s, transform 0.1s;
+            background: #e6b17e;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
         }
-        button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; }
-        .footer { background: rgba(250,245,237,0.8); text-align: center; padding: 20px 24px; font-size: 0.85rem; color: #8f6e55; border-top: 1px solid #e6d5c4; }
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #2b7a4b; color: white; padding: 12px 24px; border-radius: 60px;
-            font-family: 'Montserrat', sans-serif; font-weight: 500; z-index: 1000;
-            opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; max-width: 90%;
+        button[type="submit"]:hover { background: #d49c63; transform: translateY(-2px); }
+        .footer {
+            background: rgba(250,245,237,0.8);
+            text-align: center;
+            padding: 20px 24px;
+            font-size: 0.85rem;
+            color: #8f6e55;
+            border-top: 1px solid #e6d5c4;
         }
-        .toast.error { background: #c95a49; }
-        .toast.show { opacity: 1; }
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
             .section h2 { font-size: 1.5rem; }
             .timer-block { padding: 12px 16px; min-width: 70px; }
             .timer-number { font-size: 1.8rem; }
+            .attendance-btn { min-width: 140px; }
+            .date-badge { font-size: 1rem; padding: 8px 24px; }
         }
     </style>
 </head>
 <body>
-    <canvas id="petals-canvas"></canvas>
     <div class="container">
         <div style="position: relative;">
-            <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим">
+            <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
             <div class="hero-overlay">
                 <div class="date-badge" id="calendarTrigger">📅 25 июня 2026, 16:00</div>
             </div>
@@ -220,31 +246,43 @@
                             <div class="dresscode-text" style="margin-top: 4px;">👗 Девушкам — без белого цвета</div>
                         </div>
                     </div>
+                    <div class="info-block">
+                        <div class="info-icon">🎁</div>
+                        <div class="info-content">
+                            <strong>Пожелания</strong>
+                            <div class="wish-text">Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbzlP5VH9ZynAq1jtoKWo4Hx7jG7XP-gL7MzguVXg0cVXm6QVe0qMq36yGas0Ovgu6EIrw/exec" method="POST" target="hidden-iframe">
+                <form action="https://script.google.com/macros/s/AKfycbzwrD1Kbodg4yrKkB7lFBmYmBf0mEX73ly3EG90h7E983aGdJUUbGXtKgG4PEfEA5Fbag/exec" method="POST">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
-                        <input type="text" name="code" id="code" placeholder="Введите код" required>
+                        <input type="text" name="code" placeholder="Введите код с приглашения" required>
                     </div>
                     <div class="form-group">
                         <label>Фамилия, имя, отчество</label>
-                        <input type="text" name="name" id="name" placeholder="Иванова Анна Петровна" required>
+                        <input type="text" name="name" placeholder="Иванова Анна Петровна" required>
                     </div>
                     <div class="form-group">
                         <label>Сможете присутствовать?</label>
-                        <div class="attendance-buttons" id="attendance-buttons">
-                            <div class="attendance-btn" data-value="Приду">✅ Приду</div>
-                            <div class="attendance-btn" data-value="Не смогу">❌ Не смогу</div>
+                        <div class="attendance-buttons">
+                            <div class="attendance-btn" data-value="Приду" onclick="this.parentNode.parentNode.querySelector('select').value='Приду'; this.parentNode.querySelectorAll('.attendance-btn').forEach(b=>b.classList.remove('selected')); this.classList.add('selected');">✅ Приду</div>
+                            <div class="attendance-btn" data-value="Не смогу" onclick="this.parentNode.parentNode.querySelector('select').value='Не смогу'; this.parentNode.querySelectorAll('.attendance-btn').forEach(b=>b.classList.remove('selected')); this.classList.add('selected');">❌ Не смогу прийти</div>
                         </div>
-                        <input type="hidden" name="attending" id="attending-input" required>
+                        <select name="attending" style="display:none;" required>
+                            <option value="">Выберите</option>
+                            <option value="Приду">Приду</option>
+                            <option value="Не смогу">Не смогу</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>🎵 Ваша музыкальная заявка</label>
-                        <input type="text" name="music" id="music" placeholder="Исполнитель — Название песни">
+                        <input type="text" name="music" placeholder="Исполнитель — Название песни">
+                        <small>(Вы можете предложить одну композицию)</small>
                     </div>
                     <button type="submit">Отправить</button>
                 </form>
@@ -252,109 +290,35 @@
         </div>
         <div class="footer">С нетерпением ждём встречи! 💫</div>
     </div>
-    
-    <iframe name="hidden-iframe" style="display:none;"></iframe>
-    <div id="toast" class="toast"></div>
 
-<script>
-    // --- ПЕТАЛИ И ТАЙМЕР (ОСТАВЛЯЕМ БЕЗ ИЗМЕНЕНИЙ) ---
-    const canvas = document.getElementById('petals-canvas');
-    const ctx = canvas.getContext('2d');
-    let petals = [];
-    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    function createPetals() {
-        petals = [];
-        for (let i = 0; i < 30; i++) {
-            petals.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*8+4, sy: Math.random()*1+0.5 });
+    <script>
+        // Простой таймер (без лепестков, чтобы не усложнять)
+        function updateTimer() {
+            const target = new Date(2026, 5, 25, 16, 0, 0);
+            const diff = target - new Date();
+            if (diff <= 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                return;
+            }
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-    }
-    createPetals();
-    function animatePetals() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        ctx.fillStyle = 'rgba(230,177,126,0.4)';
-        petals.forEach(p => {
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
-            p.y += p.sy; if (p.y > canvas.height) p.y = -10;
+        updateTimer(); setInterval(updateTimer, 1000);
+
+        // Календарь
+        document.getElementById('calendarTrigger').addEventListener('click', () => {
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&details=Приглашаем вас разделить с нами этот день!&location=Ресторан Fazenda, Саранск, Лямбирское ш., 10В`;
+            window.open(encodeURI(url), '_blank');
         });
-        requestAnimationFrame(animatePetals);
-    }
-    animatePetals();
-
-    function updateTimer() {
-        const target = new Date(2026, 5, 25, 16, 0);
-        const diff = target - new Date();
-        if (diff > 0) {
-            document.getElementById('days').innerText = String(Math.floor(diff/864e5)).padStart(2,'0');
-            document.getElementById('hours').innerText = String(Math.floor((diff/36e5)%24)).padStart(2,'0');
-            document.getElementById('minutes').innerText = String(Math.floor((diff/6e4)%60)).padStart(2,'0');
-            document.getElementById('seconds').innerText = String(Math.floor((diff/1e3)%60)).padStart(2,'0');
-        }
-    }
-    setInterval(updateTimer, 1000); updateTimer();
-
-    // --- НОВАЯ ЛОГИКА ФОРМЫ (БЕЗ IFRAME) ---
-    const form = document.getElementById('rsvp-form');
-    const btns = document.querySelectorAll('.attendance-btn');
-    const attendingInput = document.getElementById('attending-input');
-    const toast = document.getElementById('toast');
-    const submitBtn = form.querySelector('button[type="submit"]');
-
-    // ЗАМЕНИТЕ ЭТО НА ВАШУ ССЫЛКУ ИЗ GOOGLE (которая /exec)
-    const GOOGLE_SCRIPT_URL = 'ВАША_НОВАЯ_ССЫЛКА_ПОСЛЕ_DEPLOY';
-
-    function showToast(msg, isErr = false) {
-        toast.textContent = msg;
-        toast.className = 'toast show' + (isErr ? ' error' : '');
-        setTimeout(() => toast.classList.remove('show'), 5000);
-    }
-
-    btns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            btns.forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            attendingInput.value = btn.getAttribute('data-value');
-        });
-    });
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault(); // Останавливаем стандартную отправку
-
-        if (!attendingInput.value) {
-            showToast('Выберите вариант присутствия', true);
-            return;
-        }
-
-        submitBtn.textContent = 'Отправка...';
-        submitBtn.disabled = true;
-
-        // Собираем данные вручную
-        const formData = new FormData(form);
-        const queryString = new URLSearchParams(formData).toString();
-
-        // Отправляем через Fetch (метод GET более стабилен для Google скриптов без CORS)
-        fetch(`${GOOGLE_SCRIPT_URL}?${queryString}`, {
-            method: 'GET',
-            mode: 'no-cors' // Это позволит отправить данные без ошибок безопасности
-        })
-        .then(() => {
-            // Поскольку используется 'no-cors', мы не можем прочитать ответ JSON напрямую,
-            // но мы знаем, что данные ушли. Для свадебного сайта этого достаточно.
-            showToast('✨ Спасибо! Ваш ответ отправлен ✨');
-            form.reset();
-            btns.forEach(b => b.classList.remove('selected'));
-            attendingInput.value = '';
-        })
-        .catch(err => {
-            console.error(err);
-            showToast('Ошибка сети. Попробуйте позже.', true);
-        })
-        .finally(() => {
-            submitBtn.textContent = 'Отправить';
-            submitBtn.disabled = false;
-        });
-    });
-</script>
+    </script>
 </body>
 </html>
