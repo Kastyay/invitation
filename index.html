@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Екатерина & Максим | Приглашение</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -12,6 +12,18 @@
             background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
             padding: 24px 16px;
             min-height: 100vh;
+            position: relative;
+        }
+        /* Canvas для лепестков */
+        #petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
         }
         .container {
             max-width: 700px;
@@ -20,6 +32,8 @@
             backdrop-filter: blur(2px);
             border-radius: 48px;
             overflow: hidden;
+            position: relative;
+            z-index: 1;
             box-shadow: 0 0 0 2px rgba(230,177,126,0.2), 0 0 0 6px rgba(245,210,160,0.1), 0 0 0 12px rgba(245,210,160,0.05), 0 25px 45px rgba(0,0,0,0.1);
         }
         .hero-image {
@@ -85,6 +99,7 @@
         .timer-label { font-size: 0.75rem; text-transform: uppercase; color: #8f6e55; margin-top: 8px; }
         .content { padding: 32px 28px; }
         .section { margin-bottom: 36px; }
+        .section:last-of-type { margin-bottom: 0; }
         .section h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -112,9 +127,10 @@
             padding: 16px 20px;
             border: 1px solid rgba(230,177,126,0.2);
         }
-        .info-icon { font-size: 1.8rem; width: 48px; text-align: center; }
-        .info-content { flex: 1; font-size: 1rem; }
-        .dresscode-text {
+        .info-icon { font-size: 1.8rem; width: 48px; text-align: center; flex-shrink: 0; }
+        .info-content { flex: 1; font-size: 1rem; line-height: 1.4; }
+        .info-content strong { font-weight: 600; color: #3b2a23; display: block; margin-bottom: 6px; }
+        .dresscode-sub {
             background: rgba(230,177,126,0.1);
             display: inline-block;
             padding: 4px 14px;
@@ -134,6 +150,7 @@
         }
         .map-link {
             display: inline-flex;
+            align-items: center;
             gap: 8px;
             background: rgba(230,177,126,0.2);
             padding: 6px 16px;
@@ -142,7 +159,9 @@
             color: #b46f3a;
             font-size: 0.9rem;
             margin-top: 8px;
+            transition: background 0.2s;
         }
+        .map-link:hover { background: rgba(230,177,126,0.4); }
         .attendance-buttons {
             display: flex;
             gap: 16px;
@@ -153,6 +172,9 @@
         .attendance-btn {
             flex: 1;
             min-width: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
             padding: 14px 20px;
             border-radius: 60px;
@@ -160,6 +182,7 @@
             cursor: pointer;
             border: 1px solid rgba(226,212,202,0.6);
             transition: all 0.2s;
+            font-weight: 500;
         }
         .attendance-btn.selected[data-value="Приду"] { background: #e6b17e; color: white; border-color: #e6b17e; }
         .attendance-btn.selected[data-value="Не смогу"] { background: #f0c0a8; color: #5e2e1a; border-color: #e6b17e; }
@@ -186,6 +209,7 @@
             width: 100%;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
+            margin-bottom: 0;
         }
         button[type="submit"]:hover { background: #d49c63; transform: translateY(-2px); }
         .footer {
@@ -195,6 +219,7 @@
             font-size: 0.85rem;
             color: #8f6e55;
             border-top: 1px solid #e6d5c4;
+            margin-top: 0;
         }
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
@@ -208,6 +233,7 @@
     </style>
 </head>
 <body>
+    <canvas id="petals-canvas"></canvas>
     <div class="container">
         <div style="position: relative;">
             <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
@@ -239,11 +265,11 @@
                         </div>
                     </div>
                     <div class="info-block">
-                        <div class="info-icon">👗</div>
+                        <div class="info-icon">👔</div>
                         <div class="info-content">
                             <strong>Дресс-код</strong>
-                            <div class="dresscode-text">👔 Мужчинам — без чёрного цвета</div>
-                            <div class="dresscode-text" style="margin-top: 4px;">👗 Девушкам — без белого цвета</div>
+                            <div class="dresscode-sub">Мужчинам — без чёрного цвета</div>
+                            <div class="dresscode-sub" style="margin-top: 4px;">👗 Девушкам — без белого цвета</div>
                         </div>
                     </div>
                     <div class="info-block">
@@ -269,11 +295,11 @@
                     </div>
                     <div class="form-group">
                         <label>Сможете присутствовать?</label>
-                        <div class="attendance-buttons">
-                            <div class="attendance-btn" data-value="Приду" onclick="this.parentNode.parentNode.querySelector('select').value='Приду'; this.parentNode.querySelectorAll('.attendance-btn').forEach(b=>b.classList.remove('selected')); this.classList.add('selected');">✅ Приду</div>
-                            <div class="attendance-btn" data-value="Не смогу" onclick="this.parentNode.parentNode.querySelector('select').value='Не смогу'; this.parentNode.querySelectorAll('.attendance-btn').forEach(b=>b.classList.remove('selected')); this.classList.add('selected');">❌ Не смогу прийти</div>
+                        <div class="attendance-buttons" id="attendance-buttons">
+                            <div class="attendance-btn" data-value="Приду">✅ Приду</div>
+                            <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
                         </div>
-                        <select name="attending" style="display:none;" required>
+                        <select name="attending" style="display:none;" id="attending-select" required>
                             <option value="">Выберите</option>
                             <option value="Приду">Приду</option>
                             <option value="Не смогу">Не смогу</option>
@@ -292,7 +318,69 @@
     </div>
 
     <script>
-        // Простой таймер (без лепестков, чтобы не усложнять)
+        // === ЛЕПЕСТКИ (canvas) ===
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
+        let animationId = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function drawPetal(x, y, size, angle, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(size * 0.6, size * 0.4, 0, size);
+            ctx.quadraticCurveTo(-size * 0.6, size * 0.4, 0, 0);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function initPetals() {
+            petals = [];
+            for (let i = 0; i < 35; i++) {
+                petals.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 12 + 6,
+                    angle: Math.random() * Math.PI * 2,
+                    speedY: Math.random() * 0.6 + 0.3,
+                    speedRotate: (Math.random() - 0.5) * 0.02,
+                    color: `rgba(230, 177, 126, ${Math.random() * 0.4 + 0.2})`
+                });
+            }
+        }
+
+        function drawPetals() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of petals) {
+                drawPetal(p.x, p.y, p.size, p.angle, p.color);
+                p.y += p.speedY;
+                p.angle += p.speedRotate;
+                if (p.y > canvas.height + 20) {
+                    p.y = -20;
+                    p.x = Math.random() * canvas.width;
+                }
+            }
+            animationId = requestAnimationFrame(drawPetals);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initPetals();
+        });
+        resizeCanvas();
+        initPetals();
+        drawPetals();
+
+        // === ТАЙМЕР ===
         function updateTimer() {
             const target = new Date(2026, 5, 25, 16, 0, 0);
             const diff = target - new Date();
@@ -312,9 +400,21 @@
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-        updateTimer(); setInterval(updateTimer, 1000);
+        updateTimer();
+        setInterval(updateTimer, 1000);
 
-        // Календарь
+        // === КАСТОМНЫЕ КНОПКИ ВЫБОРА ===
+        const btns = document.querySelectorAll('.attendance-btn');
+        const select = document.getElementById('attending-select');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                btns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                select.value = btn.getAttribute('data-value');
+            });
+        });
+
+        // === КАЛЕНДАРЬ ===
         document.getElementById('calendarTrigger').addEventListener('click', () => {
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&details=Приглашаем вас разделить с нами этот день!&location=Ресторан Fazenda, Саранск, Лямбирское ш., 10В`;
             window.open(encodeURI(url), '_blank');
