@@ -225,7 +225,7 @@
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbwfBTJ4-WAMNrDoBCoWfV8OgiaNOw2Hg2phUM-NX1xoZnhEUQ22ANgt1uLIzCHuDMSOpg/exec" method="POST" target="hidden-iframe">
+                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbzlP5VH9ZynAq1jtoKWo4Hx7jG7XP-gL7MzguVXg0cVXm6QVe0qMq36yGas0Ovgu6EIrw/exec" method="POST" target="hidden-iframe">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
                         <input type="text" name="code" id="code" placeholder="Введите код" required>
@@ -257,105 +257,104 @@
     <div id="toast" class="toast"></div>
 
 <script>
-        // --- ПЕТАЛИ ---
-        const canvas = document.getElementById('petals-canvas');
-        const ctx = canvas.getContext('2d');
-        let petals = [];
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        function createPetals() {
-            petals = [];
-            for (let i = 0; i < 30; i++) {
-                petals.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*8+4, sy: Math.random()*1+0.5 });
-            }
+    // --- ПЕТАЛИ И ТАЙМЕР (ОСТАВЛЯЕМ БЕЗ ИЗМЕНЕНИЙ) ---
+    const canvas = document.getElementById('petals-canvas');
+    const ctx = canvas.getContext('2d');
+    let petals = [];
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    function createPetals() {
+        petals = [];
+        for (let i = 0; i < 30; i++) {
+            petals.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*8+4, sy: Math.random()*1+0.5 });
         }
-        createPetals();
-        function animatePetals() {
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = 'rgba(230,177,126,0.4)';
-            petals.forEach(p => {
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
-                p.y += p.sy; if (p.y > canvas.height) p.y = -10;
-            });
-            requestAnimationFrame(animatePetals);
-        }
-        animatePetals();
-
-        // --- ТАЙМЕР ---
-        function updateTimer() {
-            const target = new Date(2026, 5, 25, 16, 0);
-            const diff = target - new Date();
-            if (diff > 0) {
-                document.getElementById('days').innerText = String(Math.floor(diff/864e5)).padStart(2,'0');
-                document.getElementById('hours').innerText = String(Math.floor((diff/36e5)%24)).padStart(2,'0');
-                document.getElementById('minutes').innerText = String(Math.floor((diff/6e4)%60)).padStart(2,'0');
-                document.getElementById('seconds').innerText = String(Math.floor((diff/1e3)%60)).padStart(2,'0');
-            }
-        }
-        setInterval(updateTimer, 1000); updateTimer();
-
-        // --- ФОРМА ---
-        const form = document.getElementById('rsvp-form');
-        const btns = document.querySelectorAll('.attendance-btn');
-        const attendingInput = document.getElementById('attending-input');
-        const toast = document.getElementById('toast');
-        const submitBtn = form.querySelector('button[type="submit"]');
-
-        function showToast(msg, isErr = false) {
-            toast.textContent = msg;
-            toast.className = 'toast show' + (isErr ? ' error' : '');
-            setTimeout(() => toast.classList.remove('show'), 5000);
-        }
-
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                btns.forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                attendingInput.value = btn.getAttribute('data-value');
-            });
+    }
+    createPetals();
+    function animatePetals() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(230,177,126,0.4)';
+        petals.forEach(p => {
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+            p.y += p.sy; if (p.y > canvas.height) p.y = -10;
         });
+        requestAnimationFrame(animatePetals);
+    }
+    animatePetals();
 
-        // ГЛАВНЫЙ ОБРАБОТЧИК ОТВЕТА
-        window.addEventListener('message', function(event) {
-            // Проверяем только наши сообщения
-            if (event.data && event.data.source === 'WEDDING_APP') {
-                const res = event.data.payload;
-                
-                // Сразу разблокируем кнопку
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Отправить';
+    function updateTimer() {
+        const target = new Date(2026, 5, 25, 16, 0);
+        const diff = target - new Date();
+        if (diff > 0) {
+            document.getElementById('days').innerText = String(Math.floor(diff/864e5)).padStart(2,'0');
+            document.getElementById('hours').innerText = String(Math.floor((diff/36e5)%24)).padStart(2,'0');
+            document.getElementById('minutes').innerText = String(Math.floor((diff/6e4)%60)).padStart(2,'0');
+            document.getElementById('seconds').innerText = String(Math.floor((diff/1e3)%60)).padStart(2,'0');
+        }
+    }
+    setInterval(updateTimer, 1000); updateTimer();
 
-                if (res.success) {
-                    showToast('✨ Спасибо! Ваш ответ сохранён ✨');
-                    form.reset();
-                    btns.forEach(b => b.classList.remove('selected'));
-                    attendingInput.value = '';
-                } else {
-                    showToast(res.error || 'Произошла ошибка', true);
-                }
-            }
+    // --- НОВАЯ ЛОГИКА ФОРМЫ (БЕЗ IFRAME) ---
+    const form = document.getElementById('rsvp-form');
+    const btns = document.querySelectorAll('.attendance-btn');
+    const attendingInput = document.getElementById('attending-input');
+    const toast = document.getElementById('toast');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    // ЗАМЕНИТЕ ЭТО НА ВАШУ ССЫЛКУ ИЗ GOOGLE (которая /exec)
+    const GOOGLE_SCRIPT_URL = 'ВАША_НОВАЯ_ССЫЛКА_ПОСЛЕ_DEPLOY';
+
+    function showToast(msg, isErr = false) {
+        toast.textContent = msg;
+        toast.className = 'toast show' + (isErr ? ' error' : '');
+        setTimeout(() => toast.classList.remove('show'), 5000);
+    }
+
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btns.forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            attendingInput.value = btn.getAttribute('data-value');
         });
+    });
 
-        form.addEventListener('submit', (e) => {
-            if (!attendingInput.value) {
-                e.preventDefault();
-                showToast('Выберите вариант присутствия', true);
-                return;
-            }
-            
-            submitBtn.textContent = 'Отправка...';
-            submitBtn.disabled = true;
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Останавливаем стандартную отправку
 
-            // Таймер безопасности (если сообщение потеряется)
-            setTimeout(() => {
-                if (submitBtn.disabled) {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Отправить';
-                    console.log("Ответ от скрипта не получен вовремя.");
-                }
-            }, 7000);
+        if (!attendingInput.value) {
+            showToast('Выберите вариант присутствия', true);
+            return;
+        }
+
+        submitBtn.textContent = 'Отправка...';
+        submitBtn.disabled = true;
+
+        // Собираем данные вручную
+        const formData = new FormData(form);
+        const queryString = new URLSearchParams(formData).toString();
+
+        // Отправляем через Fetch (метод GET более стабилен для Google скриптов без CORS)
+        fetch(`${GOOGLE_SCRIPT_URL}?${queryString}`, {
+            method: 'GET',
+            mode: 'no-cors' // Это позволит отправить данные без ошибок безопасности
+        })
+        .then(() => {
+            // Поскольку используется 'no-cors', мы не можем прочитать ответ JSON напрямую,
+            // но мы знаем, что данные ушли. Для свадебного сайта этого достаточно.
+            showToast('✨ Спасибо! Ваш ответ отправлен ✨');
+            form.reset();
+            btns.forEach(b => b.classList.remove('selected'));
+            attendingInput.value = '';
+        })
+        .catch(err => {
+            console.error(err);
+            showToast('Ошибка сети. Попробуйте позже.', true);
+        })
+        .finally(() => {
+            submitBtn.textContent = 'Отправить';
+            submitBtn.disabled = false;
         });
-    </script>
+    });
+</script>
 </body>
 </html>
