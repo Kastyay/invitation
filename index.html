@@ -148,8 +148,8 @@
             flex: 1; min-width: 160px; text-align: center; padding: 14px 20px; border-radius: 60px;
             background: rgba(245,237,229,0.8); cursor: pointer; border: 1px solid rgba(226,212,202,0.6); transition: all 0.2s;
         }
-        .attendance-btn.selected[data-value="Приду"] { background: #e6b17e; color: white; border-color: #e6b17e; }
-        .attendance-btn.selected[data-value="Не смогу"] { background: #f0c0a8; color: #5e2e1a; border-color: #e6b17e; }
+        .attendance-btn.selected { background: #e6b17e; color: white; border-color: #e6b17e; }
+        
         .form-group { margin-bottom: 24px; }
         label { display: block; font-weight: 500; margin-bottom: 8px; }
         input {
@@ -157,24 +157,27 @@
             font-family: 'Montserrat', sans-serif; font-size: 1rem; background: rgba(255,255,255,0.8);
         }
         input:focus { outline: none; border-color: #e6b17e; box-shadow: 0 0 0 3px rgba(230,177,126,0.2); background: white; }
+        
         button[type="submit"] {
             background: #e6b17e; color: white; border: none; padding: 14px 28px; border-radius: 60px;
-            font-size: 1.1rem; font-weight: 600; width: 100%; cursor: pointer; transition: background 0.2s, transform 0.1s;
+            font-size: 1.1rem; font-weight: 600; width: 100%; cursor: pointer; transition: all 0.2s;
         }
         button[type="submit"]:disabled { background: #ccc; cursor: not-allowed; }
+
         .footer { background: rgba(250,245,237,0.8); text-align: center; padding: 20px 24px; font-size: 0.85rem; color: #8f6e55; border-top: 1px solid #e6d5c4; }
+        
         .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #2b7a4b; color: white; padding: 12px 24px; border-radius: 60px;
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #2b7a4b; color: white; padding: 16px 32px; border-radius: 60px;
             font-family: 'Montserrat', sans-serif; font-weight: 500; z-index: 1000;
-            opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; max-width: 90%;
+            opacity: 0; visibility: hidden; transition: all 0.3s; pointer-events: none; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         .toast.error { background: #c95a49; }
-        .toast.show { opacity: 1; }
+        .toast.show { opacity: 1; visibility: visible; bottom: 50px; }
+
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
-            .section h2 { font-size: 1.5rem; }
             .timer-block { padding: 12px 16px; min-width: 70px; }
             .timer-number { font-size: 1.8rem; }
         }
@@ -184,14 +187,14 @@
     <canvas id="petals-canvas"></canvas>
     <div class="container">
         <div style="position: relative;">
-            <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Наше+Фото'">
+            <img class="hero-image" src="images/verh.jpeg" alt="Приглашение">
             <div class="hero-overlay">
                 <div class="date-badge" id="calendarTrigger">📅 25 июня 2026, 16:00</div>
             </div>
         </div>
 
         <div class="timer-section">
-            <div class="timer-title">До нашей свадьбы осталось</div>
+            <div class="timer-title">До свадьбы осталось</div>
             <div class="timer" id="timer">
                 <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
                 <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
@@ -220,146 +223,119 @@
                             <div class="dresscode-text" style="margin-top: 4px;">👗 Девушкам — без белого цвета</div>
                         </div>
                     </div>
-                    <div class="info-block">
-                        <div class="info-icon">🎁</div>
-                        <div class="info-content">
-                            <strong>Пожелания</strong>
-                            <div class="wish-text">Если Вы хотели подарить букет, вместо этого лучше подарите бутылочку Вашего любимого алкогольного напитка.</div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="section">
                 <h2>Ваш ответ</h2>
-                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbw8q5zrmrhOxH-7jYQX7SG2jzQ37D_6uGMLS9Xu5-rAkhyasVulDhbSg4kTGNt9UDUbUQ/exec" method="POST" target="hidden-iframe">
+                <form id="rsvp-form" action="https://script.google.com/macros/s/AKfycbzOGSRk56lJXiA12wzqHx4EfLqOR_5mfrvwvJV_dYs-e0bfsg7THvKvMf7TC8qcpafdYg/exec" method="POST" target="hidden-iframe">
                     <div class="form-group">
                         <label>🔑 Код приглашения</label>
-                        <input type="text" name="code" id="code" placeholder="Введите код с приглашения" required>
+                        <input type="text" name="code" id="code" placeholder="Введите код" required>
                     </div>
                     <div class="form-group">
-                        <label>Фамилия, имя, отчество</label>
-                        <input type="text" name="name" id="name" placeholder="Иванова Анна Петровна" required>
+                        <label>ФИО</label>
+                        <input type="text" name="name" id="name" placeholder="Иванова Анна" required>
                     </div>
                     <div class="form-group">
-                        <label>Сможете присутствовать?</label>
-                        <div class="attendance-buttons" id="attendance-buttons">
-                            <div class="attendance-btn" data-value="Приду">✅ Приду</div>
-                            <div class="attendance-btn" data-value="Не смогу">❌ Не смогу прийти</div>
+                        <label>Сможете быть?</label>
+                        <div class="attendance-buttons">
+                            <div class="attendance-btn" data-value="Приду">Приду</div>
+                            <div class="attendance-btn" data-value="Не смогу">Не смогу</div>
                         </div>
                         <input type="hidden" name="attending" id="attending-input" required>
                     </div>
                     <div class="form-group">
-                        <label>🎵 Ваша музыкальная заявка</label>
-                        <input type="text" name="music" id="music" placeholder="Исполнитель — Название песни">
+                        <label>🎵 Музыкальные пожелания</label>
+                        <input type="text" name="music" id="music" placeholder="Любимая песня">
                     </div>
-                    <button type="submit" id="submit-btn">Отправить</button>
+                    <button type="submit" id="submit-btn">Отправить ответ</button>
                 </form>
             </div>
         </div>
-        <div class="footer">С нетерпением ждём встречи! 💫</div>
+        <div class="footer">Ждем Вас! ✨</div>
     </div>
     
-    <iframe name="hidden-iframe" style="display:none;"></iframe>
+    <iframe name="hidden-iframe" id="hidden-iframe" style="display:none;"></iframe>
     <div id="toast" class="toast"></div>
 
     <script>
-        // === ЛЕПЕСТКИ ===
+        // === Настройка лепестков (упрощенно) ===
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        function drawPetal(x, y, s, a, c) {
-            ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.beginPath();
-            ctx.moveTo(0, 0); ctx.quadraticCurveTo(s*0.6, s*0.4, 0, s); ctx.quadraticCurveTo(-s*0.6, s*0.4, 0, 0);
-            ctx.fillStyle = c; ctx.fill(); ctx.restore();
-        }
-        function initPetals() {
-            petals = [];
-            for (let i = 0; i < 35; i++) {
-                petals.push({
-                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                    size: Math.random() * 12 + 6, angle: Math.random() * Math.PI * 2,
-                    speedY: Math.random() * 0.6 + 0.3, speedRotate: (Math.random() - 0.5) * 0.02,
-                    color: `rgba(230, 177, 126, ${Math.random() * 0.4 + 0.2})`
-                });
-            }
-        }
-        function drawPetals() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let p of petals) {
-                drawPetal(p.x, p.y, p.size, p.angle, p.color);
-                p.y += p.speedY; p.angle += p.speedRotate;
-                if (p.y > canvas.height + 20) { p.y = -20; p.x = Math.random() * canvas.width; }
-            }
-            requestAnimationFrame(drawPetals);
-        }
-        window.addEventListener('resize', () => { resizeCanvas(); initPetals(); });
-        resizeCanvas(); initPetals(); drawPetals();
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize);
+        resize();
 
-        // === ТАЙМЕР ===
+        for(let i=0; i<30; i++) petals.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*10+5, sy: Math.random()*1+0.5});
+        function animate() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(230,177,126,0.3)';
+            petals.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.y += p.sy; if(p.y > canvas.height) p.y = -10;
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // === Таймер ===
         function updateTimer() {
-            const target = new Date(2026, 5, 25, 16, 0, 0);
-            const diff = target - new Date();
+            const diff = new Date(2026, 5, 25, 16) - new Date();
             if (diff <= 0) return;
-            document.getElementById('days').innerText = String(Math.floor(diff / 864e5)).padStart(2, '0');
-            document.getElementById('hours').innerText = String(Math.floor((diff / 36e5) % 24)).padStart(2, '0');
-            document.getElementById('minutes').innerText = String(Math.floor((diff / 6e4) % 60)).padStart(2, '0');
-            document.getElementById('seconds').innerText = String(Math.floor((diff / 1e3) % 60)).padStart(2, '0');
+            document.getElementById('days').innerText = Math.floor(diff/864e5);
+            document.getElementById('hours').innerText = Math.floor((diff/36e5)%24);
+            document.getElementById('minutes').innerText = Math.floor((diff/6e4)%60);
+            document.getElementById('seconds').innerText = Math.floor((diff/1e3)%60);
         }
-        updateTimer(); setInterval(updateTimer, 1000);
+        setInterval(updateTimer, 1000); updateTimer();
 
-        // === КНОПКИ ВЫБОРА ===
+        // === Логика формы ===
         const btns = document.querySelectorAll('.attendance-btn');
         const attendingInput = document.getElementById('attending-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const toast = document.getElementById('toast');
+
         btns.forEach(btn => {
             btn.addEventListener('click', () => {
                 btns.forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                attendingInput.value = btn.getAttribute('data-value');
+                attendingInput.value = btn.dataset.value;
             });
         });
 
-        // === КАЛЕНДАРЬ ===
-        document.getElementById('calendarTrigger').addEventListener('click', () => {
-            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&location=Ресторан Fazenda, Саранск`;
-            window.open(encodeURI(url), '_blank');
-        });
-
-        // === ОБРАБОТКА ОТВЕТА (postMessage) ===
-        const form = document.getElementById('rsvp-form');
-        const toast = document.getElementById('toast');
-        const submitBtn = document.getElementById('submit-btn');
-
-        function showToast(message, isError = false) {
-            toast.textContent = message;
-            toast.classList.toggle('error', isError);
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 5000);
+        function showToast(text, isError = false) {
+            toast.textContent = text;
+            toast.className = 'toast show' + (isError ? ' error' : '');
+            setTimeout(() => toast.className = 'toast', 4000);
         }
 
-        // Слушаем ответ от Google Script через postMessage
+        // КЛЮЧЕВОЙ МОМЕНТ: слушаем сообщение от скрипта
         window.addEventListener('message', function(event) {
-            // Возвращаем кнопку в нормальное состояние
-            submitBtn.textContent = 'Отправить';
             submitBtn.disabled = false;
-
-            const result = event.data;
-            if (result && typeof result.success !== 'undefined') {
-                if (result.success) {
-                    showToast('✨ Спасибо! Ваш ответ сохранён ✨');
-                    form.reset();
+            submitBtn.textContent = 'Отправить ответ';
+            
+            const data = event.data;
+            if (data && typeof data.success !== 'undefined') {
+                if (data.success) {
+                    showToast('✅ Ваш ответ успешно отправлен!');
+                    document.getElementById('rsvp-form').reset();
                     btns.forEach(b => b.classList.remove('selected'));
-                    attendingInput.value = '';
                 } else {
-                    showToast(result.error || 'Ошибка при отправке', true);
+                    showToast('❌ Ошибка: ' + (data.error || 'попробуйте позже'), true);
                 }
             }
         });
 
-        form.addEventListener('submit', () => {
-            submitBtn.textContent = 'Отправка...';
+        document.getElementById('rsvp-form').addEventListener('submit', (e) => {
+            if (!attendingInput.value) {
+                e.preventDefault();
+                showToast('Выберите вариант присутствия', true);
+                return;
+            }
             submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
         });
     </script>
 </body>
