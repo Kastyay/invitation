@@ -134,7 +134,7 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
-        /* Разделитель между блоками (полоска) */
+        /* Разделитель между блоками */
         .info-block:not(:last-child) {
             border-bottom: 1px solid rgba(230,177,126,0.3);
             margin-bottom: 20px;
@@ -237,7 +237,7 @@
             font-size: 0.85rem;
             color: #8f6e55;
         }
-        /* Мобильные стили с аккуратными переносами стихов и уменьшенными иконками */
+        /* Мобильные стили: компактные отступы, уменьшенные иконки, аккуратные переносы */
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
@@ -253,23 +253,25 @@
                 white-space: nowrap;
             }
             .date-badge { font-size: 1rem; padding: 8px 24px; }
-            .info-block { padding: 16px 20px; }
-            /* Уменьшаем иконки, чтобы освободить место для текста */
+            /* Компактные блоки */
+            .info-block {
+                padding: 16px 16px;
+                gap: 12px;
+            }
+            .info-block:not(:last-child) {
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+            }
             .info-icon {
                 font-size: 1.4rem;
                 width: 40px;
             }
-            /* Улучшаем читаемость стихов */
             .dresscode-text, .wish-text {
                 font-size: 0.8rem;
                 line-height: 1.5;
                 hyphens: auto;
                 word-break: break-word;
                 overflow-wrap: break-word;
-            }
-            .info-block:not(:last-child) {
-                margin-bottom: 16px;
-                padding-bottom: 16px;
             }
         }
     </style>
