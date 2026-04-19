@@ -121,10 +121,8 @@
             padding-left: 16px;
             margin-bottom: 24px;
         }
+        /* Новая структура блоков: иконка + заголовок в одной строке */
         .info-block {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
             background: rgba(255,245,235,0.85);
             backdrop-filter: blur(2px);
             border-radius: 40px;
@@ -146,24 +144,29 @@
             background: rgba(255,245,235,0.95);
             border-color: #e6b17e;
         }
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
         .info-icon {
-            font-size: 1.8rem;
-            width: 48px;
-            text-align: center;
-            flex-shrink: 0;
+            font-size: 1.6rem;
+            line-height: 1;
             transition: transform 0.2s ease;
         }
-        .info-block:hover .info-icon { transform: scale(1.1) rotate(3deg); }
-        .info-content {
-            flex: 1;
-            font-size: 1rem;
-            line-height: 1.4;
+        .info-block:hover .info-icon {
+            transform: scale(1.1) rotate(3deg);
         }
-        .info-content strong {
+        .info-header strong {
+            font-size: 1.2rem;
             font-weight: 600;
             color: #3b2a23;
-            display: block;
-            margin-bottom: 8px;
+        }
+        .info-content {
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-top: 4px;
         }
         .map-link {
             display: inline-flex;
@@ -236,7 +239,7 @@
             font-size: 0.85rem;
             color: #8f6e55;
         }
-        /* Стили для строк стихов (всегда обёрнуты, но рамки только на мобильных) */
+        /* Стили для строк стихов (овальные рамки на мобильных) */
         .verse-line {
             display: block;
             margin-bottom: 8px;
@@ -258,27 +261,30 @@
             .date-badge { font-size: 1rem; padding: 8px 24px; }
             .info-block {
                 padding: 16px 16px;
-                gap: 12px;
             }
             .info-block:not(:last-child) {
                 margin-bottom: 12px;
                 padding-bottom: 12px;
             }
+            .info-header {
+                gap: 8px;
+                margin-bottom: 8px;
+            }
             .info-icon {
                 font-size: 1.4rem;
-                width: 40px;
             }
-            /* Овальные рамки для каждой строки стиха с чередованием */
+            .info-header strong {
+                font-size: 1rem;
+            }
             .verse-line {
-                display: inline-block;  /* чтобы рамка была по ширине текста */
+                display: inline-block;
                 padding: 6px 14px;
                 border-radius: 40px;
                 margin-bottom: 8px;
-                font-size: 0.9rem;    /* такой же размер, как у текста места проведения */
+                font-size: 0.85rem;
                 line-height: 1.4;
-                background: rgba(230,177,126,0.1); /* светлый по умолчанию */
+                background: rgba(230,177,126,0.1);
             }
-            /* Чередование: нечётные (1,3,5...) – темнее, чётные – светлее */
             .verse-line:nth-child(odd) {
                 background: rgba(230,177,126,0.25);
             }
@@ -317,17 +323,21 @@
             <div class="section">
                 <h2>О событии</h2>
                 <div class="info-block">
-                    <div class="info-icon">📍</div>
-                    <div class="info-content">
+                    <div class="info-header">
+                        <div class="info-icon">📍</div>
                         <strong>Место проведения</strong>
+                    </div>
+                    <div class="info-content">
                         <p>Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</p>
                         <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">Открыть карту →</a>
                     </div>
                 </div>
                 <div class="info-block">
-                    <div class="info-icon">👗</div>
-                    <div class="info-content">
+                    <div class="info-header">
+                        <div class="info-icon">👗</div>
                         <strong>Дресс-код</strong>
+                    </div>
+                    <div class="info-content">
                         <div class="dresscode-text">
                             <div class="verse-line">👰 Девушкам — ни грамма белого</div>
                             <div class="verse-line">🤵 Мужчинам — без пиджака синего</div>
@@ -337,9 +347,11 @@
                     </div>
                 </div>
                 <div class="info-block">
-                    <div class="info-icon">🎁</div>
-                    <div class="info-content">
+                    <div class="info-header">
+                        <div class="info-icon">🎁</div>
                         <strong>Пожелания</strong>
+                    </div>
+                    <div class="info-content">
                         <div class="wish-text">
                             <div class="verse-line">💐 Если хотели дарить букет —</div>
                             <div class="verse-line">🤫 Замените на бутылку, наш вам секрет.</div>
