@@ -83,7 +83,7 @@
             display: flex;
             justify-content: center;
             gap: 12px;
-            flex-wrap: nowrap; /* Запрещаем перенос на новую строку */
+            flex-wrap: nowrap;
         }
         .timer-block {
             background: rgba(255,250,245,0.8);
@@ -121,7 +121,6 @@
             padding-left: 16px;
             margin-bottom: 24px;
         }
-        /* Нежные блоки */
         .info-block {
             display: flex;
             align-items: flex-start;
@@ -229,7 +228,7 @@
             padding: 20px 24px;
             font-size: 0.85rem;
             color: #8f6e55;
-            border-top: 1px solid #e6d5c4;
+            /* Убрали border-top, чтобы не было квадратной рамки */
         }
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
@@ -276,30 +275,31 @@
                         <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">Открыть карту →</a>
                     </div>
                 </div>
-               <div class="info-block">
-    <div class="info-icon">👗</div>
-    <div class="info-content">
-        <strong>Дресс-код</strong>
-        <div class="dresscode-text">
-            Девушкам — ни грамма белого 👰<br>
-            Мужчинам — без пиджака синего 🤵<br>
-            Не заставляйте нас сливаться с толпой 😎<br>
-            Спасибо, что будете не нами, а собой ✨
-        </div>
-    </div>
-</div>
                 <div class="info-block">
-    <div class="info-icon">🎁</div>
-    <div class="info-content">
-        <strong>Пожелания</strong>
-        <div class="wish-text">
-            Если хотели дарить букет — 💐<br>
-            Замените на бутылку, наш вам секрет. 🤫<br>
-            Любимый напиток принесёте с собой — 🍷<br>
-            Будем пить за любовь и за нас с тобой! 💖
-        </div>
-    </div>
-</div>
+                    <div class="info-icon">👗</div>
+                    <div class="info-content">
+                        <strong>Дресс-код</strong>
+                        <div class="dresscode-text">
+                            Девушкам — ни грамма белого 👰<br>
+                            Мужчинам — без пиджака синего 🤵<br>
+                            Не заставляйте нас сливаться с толпой 😎<br>
+                            Спасибо, что будете не нами, а собой ✨
+                        </div>
+                    </div>
+                </div>
+                <div class="info-block">
+                    <div class="info-icon">🎁</div>
+                    <div class="info-content">
+                        <strong>Пожелания</strong>
+                        <div class="wish-text">
+                            Если хотели дарить букет — 💐<br>
+                            Замените на бутылку, наш вам секрет. 🤫<br>
+                            Любимый напиток принесёте с собой — 🍷<br>
+                            Будем пить за любовь и за нас с тобой! 💖
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="section">
                 <h2>Ваш ответ</h2>
