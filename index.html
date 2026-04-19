@@ -179,25 +179,6 @@
             transition: background 0.2s;
         }
         .map-link:hover { background: rgba(230,177,126,0.4); }
-        /* Стили для строк стихов с чередованием фона */
-        .verse-line {
-            display: block;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            border-radius: 60px;
-            transition: background 0.2s;
-        }
-        .verse-line:last-child {
-            margin-bottom: 0;
-        }
-        /* Чётные строки (светлый фон) */
-        .verse-line:nth-child(even) {
-            background: rgba(255,245,235,0.9);
-        }
-        /* Нечётные строки (чуть темнее) */
-        .verse-line:nth-child(odd) {
-            background: rgba(245,225,205,0.9);
-        }
         .attendance-buttons {
             display: flex;
             gap: 16px;
@@ -255,6 +236,11 @@
             font-size: 0.85rem;
             color: #8f6e55;
         }
+        /* Стили для строк стихов (всегда обёрнуты, но рамки только на мобильных) */
+        .verse-line {
+            display: block;
+            margin-bottom: 8px;
+        }
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
@@ -282,16 +268,28 @@
                 font-size: 1.4rem;
                 width: 40px;
             }
-            /* Убираем уменьшение шрифта для стихов — делаем как основной текст */
+            /* Овальные рамки для каждой строки стиха с чередованием */
             .verse-line {
-                font-size: 0.85rem;
-                padding: 6px 10px;
-                margin-bottom: 6px;
+                display: inline-block;  /* чтобы рамка была по ширине текста */
+                padding: 6px 14px;
+                border-radius: 40px;
+                margin-bottom: 8px;
+                font-size: 0.9rem;    /* такой же размер, как у текста места проведения */
+                line-height: 1.4;
+                background: rgba(230,177,126,0.1); /* светлый по умолчанию */
             }
-        }
-        /* Для десктопа тоже оставим нормальный размер */
-        .verse-line {
-            font-size: 0.95rem;
+            /* Чередование: нечётные (1,3,5...) – темнее, чётные – светлее */
+            .verse-line:nth-child(odd) {
+                background: rgba(230,177,126,0.25);
+            }
+            .verse-line:nth-child(even) {
+                background: rgba(230,177,126,0.1);
+            }
+            .dresscode-text, .wish-text {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -331,10 +329,10 @@
                     <div class="info-content">
                         <strong>Дресс-код</strong>
                         <div class="dresscode-text">
-                            <span class="verse-line">👰 Девушкам — ни грамма белого</span>
-                            <span class="verse-line">🤵 Мужчинам — без пиджака синего</span>
-                            <span class="verse-line">😎 Не заставляйте нас сливаться с толпой</span>
-                            <span class="verse-line">✨ Спасибо, что будете не нами, а собой</span>
+                            <div class="verse-line">👰 Девушкам — ни грамма белого</div>
+                            <div class="verse-line">🤵 Мужчинам — без пиджака синего</div>
+                            <div class="verse-line">😎 Не заставляйте нас сливаться с толпой</div>
+                            <div class="verse-line">✨ Спасибо, что будете не нами, а собой</div>
                         </div>
                     </div>
                 </div>
@@ -343,10 +341,10 @@
                     <div class="info-content">
                         <strong>Пожелания</strong>
                         <div class="wish-text">
-                            <span class="verse-line">💐 Если хотели дарить букет —</span>
-                            <span class="verse-line">🤫 Замените на бутылку, наш вам секрет.</span>
-                            <span class="verse-line">🍷 Любимый напиток принесёте с собой —</span>
-                            <span class="verse-line">💖 Будем пить за любовь и за нас с тобой!</span>
+                            <div class="verse-line">💐 Если хотели дарить букет —</div>
+                            <div class="verse-line">🤫 Замените на бутылку, наш вам секрет.</div>
+                            <div class="verse-line">🍷 Любимый напиток принесёте с собой —</div>
+                            <div class="verse-line">💖 Будем пить за любовь и за нас с тобой!</div>
                         </div>
                     </div>
                 </div>
