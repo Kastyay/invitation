@@ -134,6 +134,12 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
+        /* Разделитель между блоками (полоска) */
+        .info-block:not(:last-child) {
+            border-bottom: 1px solid rgba(230,177,126,0.3);
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+        }
         .info-block:last-child { margin-bottom: 0; }
         .info-block:hover {
             transform: translateY(-4px);
@@ -231,7 +237,7 @@
             font-size: 0.85rem;
             color: #8f6e55;
         }
-        /* Мобильные стили */
+        /* Мобильные стили с аккуратными переносами стихов */
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
@@ -248,11 +254,17 @@
             }
             .date-badge { font-size: 1rem; padding: 8px 24px; }
             .info-block { padding: 16px 20px; }
-            /* Улучшаем читаемость длинных строк в дресс-коде и пожеланиях */
+            /* Улучшаем читаемость стихов */
             .dresscode-text, .wish-text {
-                font-size: 0.85rem;
-                line-height: 1.4;
+                font-size: 0.8rem;
+                line-height: 1.5;
+                hyphens: auto;
                 word-break: break-word;
+                overflow-wrap: break-word;
+            }
+            .info-block:not(:last-child) {
+                margin-bottom: 16px;
+                padding-bottom: 16px;
             }
         }
     </style>
