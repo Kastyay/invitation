@@ -165,22 +165,6 @@
             display: block;
             margin-bottom: 8px;
         }
-        /* Стили для строк стихов */
-        .verse-line {
-            display: block;
-            padding: 4px 8px;
-            margin: 4px 0;
-            border-radius: 30px;
-            background: transparent;
-            transition: background 0.2s;
-        }
-        /* Чередование цветов */
-        .verse-line:nth-child(odd) {
-            background: rgba(230,177,126,0.1);
-        }
-        .verse-line:nth-child(even) {
-            background: rgba(255,245,235,0.5);
-        }
         .map-link {
             display: inline-flex;
             align-items: center;
@@ -195,6 +179,25 @@
             transition: background 0.2s;
         }
         .map-link:hover { background: rgba(230,177,126,0.4); }
+        /* Стили для строк стихов с чередованием фона */
+        .verse-line {
+            display: block;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 60px;
+            transition: background 0.2s;
+        }
+        .verse-line:last-child {
+            margin-bottom: 0;
+        }
+        /* Чётные строки (светлый фон) */
+        .verse-line:nth-child(even) {
+            background: rgba(255,245,235,0.9);
+        }
+        /* Нечётные строки (чуть темнее) */
+        .verse-line:nth-child(odd) {
+            background: rgba(245,225,205,0.9);
+        }
         .attendance-buttons {
             display: flex;
             gap: 16px;
@@ -279,11 +282,16 @@
                 font-size: 1.4rem;
                 width: 40px;
             }
+            /* Убираем уменьшение шрифта для стихов — делаем как основной текст */
             .verse-line {
-                padding: 3px 6px;
-                margin: 2px 0;
-                font-size: 0.75rem;
+                font-size: 0.85rem;
+                padding: 6px 10px;
+                margin-bottom: 6px;
             }
+        }
+        /* Для десктопа тоже оставим нормальный размер */
+        .verse-line {
+            font-size: 0.95rem;
         }
     </style>
 </head>
@@ -323,10 +331,10 @@
                     <div class="info-content">
                         <strong>Дресс-код</strong>
                         <div class="dresscode-text">
-                            <span class="verse-line">Девушкам — ни грамма белого 👰</span>
-                            <span class="verse-line">Мужчинам — без пиджака синего 🤵</span>
-                            <span class="verse-line">Не заставляйте нас сливаться с толпой 😎</span>
-                            <span class="verse-line">Спасибо, что будете не нами, а собой ✨</span>
+                            <span class="verse-line">👰 Девушкам — ни грамма белого</span>
+                            <span class="verse-line">🤵 Мужчинам — без пиджака синего</span>
+                            <span class="verse-line">😎 Не заставляйте нас сливаться с толпой</span>
+                            <span class="verse-line">✨ Спасибо, что будете не нами, а собой</span>
                         </div>
                     </div>
                 </div>
@@ -335,10 +343,10 @@
                     <div class="info-content">
                         <strong>Пожелания</strong>
                         <div class="wish-text">
-                            <span class="verse-line">Если хотели дарить букет — 💐</span>
-                            <span class="verse-line">Замените на бутылку, наш вам секрет. 🤫</span>
-                            <span class="verse-line">Любимый напиток принесёте с собой — 🍷</span>
-                            <span class="verse-line">Будем пить за любовь и за нас с тобой! 💖</span>
+                            <span class="verse-line">💐 Если хотели дарить букет —</span>
+                            <span class="verse-line">🤫 Замените на бутылку, наш вам секрет.</span>
+                            <span class="verse-line">🍷 Любимый напиток принесёте с собой —</span>
+                            <span class="verse-line">💖 Будем пить за любовь и за нас с тобой!</span>
                         </div>
                     </div>
                 </div>
