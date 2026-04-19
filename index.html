@@ -165,6 +165,22 @@
             display: block;
             margin-bottom: 8px;
         }
+        /* Стили для строк стихов */
+        .verse-line {
+            display: block;
+            padding: 4px 8px;
+            margin: 4px 0;
+            border-radius: 30px;
+            background: transparent;
+            transition: background 0.2s;
+        }
+        /* Чередование цветов */
+        .verse-line:nth-child(odd) {
+            background: rgba(230,177,126,0.1);
+        }
+        .verse-line:nth-child(even) {
+            background: rgba(255,245,235,0.5);
+        }
         .map-link {
             display: inline-flex;
             align-items: center;
@@ -263,12 +279,10 @@
                 font-size: 1.4rem;
                 width: 40px;
             }
-            /* Стихи: маленький шрифт, хорошие переносы */
-            .dresscode-text, .wish-text {
-                font-size: 0.7rem;
-                line-height: 1.5;
-                word-break: break-word;
-                overflow-wrap: break-word;
+            .verse-line {
+                padding: 3px 6px;
+                margin: 2px 0;
+                font-size: 0.75rem;
             }
         }
     </style>
@@ -309,10 +323,10 @@
                     <div class="info-content">
                         <strong>Дресс-код</strong>
                         <div class="dresscode-text">
-                            Девушкам — ни грамма белого 👰<br>
-                            Мужчинам — без пиджака синего 🤵<br>
-                            Не заставляйте нас сливаться с толпой 😎<br>
-                            Спасибо, что будете не нами, а собой ✨
+                            <span class="verse-line">Девушкам — ни грамма белого 👰</span>
+                            <span class="verse-line">Мужчинам — без пиджака синего 🤵</span>
+                            <span class="verse-line">Не заставляйте нас сливаться с толпой 😎</span>
+                            <span class="verse-line">Спасибо, что будете не нами, а собой ✨</span>
                         </div>
                     </div>
                 </div>
@@ -321,10 +335,10 @@
                     <div class="info-content">
                         <strong>Пожелания</strong>
                         <div class="wish-text">
-                            Если хотели дарить букет — 💐<br>
-                            Замените на бутылку, наш вам секрет. 🤫<br>
-                            Любимый напиток принесёте с собой — 🍷<br>
-                            Будем пить за любовь и за нас с тобой! 💖
+                            <span class="verse-line">Если хотели дарить букет — 💐</span>
+                            <span class="verse-line">Замените на бутылку, наш вам секрет. 🤫</span>
+                            <span class="verse-line">Любимый напиток принесёте с собой — 🍷</span>
+                            <span class="verse-line">Будем пить за любовь и за нас с тобой! 💖</span>
                         </div>
                     </div>
                 </div>
