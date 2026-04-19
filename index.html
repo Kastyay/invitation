@@ -244,59 +244,62 @@
             display: block;
             margin-bottom: 8px;
         }
-        @media (max-width: 550px) {
-            .hero-image { aspect-ratio: 1/1; }
-            .content { padding: 24px 20px; }
-            .section h2 { font-size: 1.5rem; }
-            .timer { gap: 8px; }
-            .timer-block { padding: 10px 6px; min-width: auto; }
-            .timer-number { font-size: 1.4rem; }
-            .timer-label { font-size: 0.6rem; }
-            .attendance-btn {
-                min-width: 120px;
-                padding: 12px 12px;
-                font-size: 0.85rem;
-                white-space: nowrap;
-            }
-            .date-badge { font-size: 1rem; padding: 8px 24px; }
-            .info-block {
-                padding: 16px 16px;
-            }
-            .info-block:not(:last-child) {
-                margin-bottom: 12px;
-                padding-bottom: 12px;
-            }
-            .info-header {
-                gap: 8px;
-                margin-bottom: 8px;
-            }
-            .info-icon {
-                font-size: 1.4rem;
-            }
-            .info-header strong {
-                font-size: 1rem;
-            }
-            .verse-line {
-                display: inline-block;
-                padding: 6px 14px;
-                border-radius: 40px;
-                margin-bottom: 8px;
-                font-size: 0.85rem;
-                line-height: 1.4;
-                background: rgba(230,177,126,0.1);
-            }
-            .verse-line:nth-child(odd) {
-                background: rgba(230,177,126,0.25);
-            }
-            .verse-line:nth-child(even) {
-                background: rgba(230,177,126,0.1);
-            }
-            .dresscode-text, .wish-text {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
+@media (max-width: 550px) {
+    .hero-image { aspect-ratio: 1/1; }
+    .content { padding: 24px 20px; }
+    .section h2 { font-size: 1.5rem; }
+    .timer { gap: 8px; }
+    .timer-block { padding: 10px 6px; min-width: auto; }
+    .timer-number { font-size: 1.4rem; }
+    .timer-label { font-size: 0.6rem; }
+    .attendance-btn {
+        min-width: 120px;
+        padding: 12px 12px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    .date-badge { font-size: 1rem; padding: 8px 24px; }
+    .info-block {
+        padding: 16px 16px;
+    }
+    .info-block:not(:last-child) {
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+    }
+    .info-header {
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    .info-icon {
+        font-size: 1.4rem;
+    }
+    .info-header strong {
+        font-size: 1rem;
+    }
+    .info-content p, .verse-line {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        font-weight: normal;
+    }
+    .verse-line {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 40px;
+        margin-bottom: 8px;
+        background: rgba(230,177,126,0.1);
+    }
+    .verse-line:nth-child(odd) {
+        background: rgba(230,177,126,0.25);
+    }
+    .verse-line:nth-child(even) {
+        background: rgba(230,177,126,0.1);
+    }
+    .dresscode-text, .wish-text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
     </style>
 </head>
 <body>
