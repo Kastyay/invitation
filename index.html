@@ -237,7 +237,7 @@
             font-size: 0.85rem;
             color: #8f6e55;
         }
-        /* Мобильные стили с аккуратными переносами стихов */
+        /* Мобильные стили с аккуратными переносами стихов и уменьшенными иконками */
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
@@ -254,6 +254,11 @@
             }
             .date-badge { font-size: 1rem; padding: 8px 24px; }
             .info-block { padding: 16px 20px; }
+            /* Уменьшаем иконки, чтобы освободить место для текста */
+            .info-icon {
+                font-size: 1.4rem;
+                width: 40px;
+            }
             /* Улучшаем читаемость стихов */
             .dresscode-text, .wish-text {
                 font-size: 0.8rem;
