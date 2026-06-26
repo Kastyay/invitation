@@ -58,13 +58,10 @@
             border-radius: 60px;
             font-size: 1.3rem;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
             border: 1px solid rgba(230,177,126,0.4);
-            pointer-events: auto;
             color: #4f3527;
+            pointer-events: none;
         }
-        .date-badge:hover { background: rgba(255,255,255,0.95); transform: scale(1.02); border-color: #e6b17e; }
         .timer-section {
             background: rgba(255,255,255,0.6);
             backdrop-filter: blur(4px);
@@ -266,7 +263,7 @@
         <div style="position: relative;">
             <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
             <div class="hero-overlay">
-                <div class="date-badge" id="calendarTrigger">📅 25 июня 2026</div>
+                <div class="date-badge">📅 25 июня 2026</div>
             </div>
         </div>
 
@@ -450,20 +447,14 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // === КАЛЕНДАРЬ ===
-        document.getElementById('calendarTrigger').addEventListener('click', () => {
-            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&details=Приглашаем вас разделить с нами этот день!&location=Ресторан Fazenda, Саранск, Лямбирское ш., 10В`;
-            window.open(encodeURI(url), '_blank');
-        });
-
         // === ЗАГРУЗКА ФАЙЛОВ (base64) ===
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
 
-        // ВАЖНО: замените URL на ваш, если он изменился после переразвертывания
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdO1zVauaMozL7h-EHiee6dqYaLzWGnYuFPr0akYlIdVN2Z9nMJ3b2xlISemLhy3yY/exec';
+        // НОВАЯ ССЫЛКА НА СКРИПТ
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwV45pEVt6plC9Pq2QwnMm0EpBB43I13Va5hcr_ofe2TjRTctmlsoyYEMRp0tjURND1/exec';
 
         function showUploadStatus(message, type) {
             uploadStatus.style.display = 'block';
