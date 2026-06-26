@@ -197,7 +197,6 @@
             display: block;
             margin-bottom: 8px;
         }
-        /* Стили для загрузки */
         .upload-btn {
             background: #e6b17e;
             color: white;
@@ -271,7 +270,6 @@
             </div>
         </div>
 
-        <!-- Таймер "Мы вместе" -->
         <div class="timer-section">
             <div class="timer-title">❤️ Мы женаты!</div>
             <div class="timer-sub">Свадьба состоялась 25 июня 2026 года</div>
@@ -284,7 +282,6 @@
         </div>
 
         <div class="content">
-            <!-- Благодарность -->
             <div class="section">
                 <h2>Спасибо, что были с нами!</h2>
                 <div class="info-block">
@@ -301,7 +298,6 @@
                 </div>
             </div>
 
-            <!-- Дресс-код и пожелания (как было, но теперь это воспоминания) -->
             <div class="section">
                 <h2>Как это было</h2>
                 <div class="info-block">
@@ -334,7 +330,6 @@
                 </div>
             </div>
 
-            <!-- Загрузка фото -->
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
                 <p style="margin-bottom: 20px; opacity: 0.8;">
@@ -429,12 +424,11 @@
 
         // === ТАЙМЕР "МЫ ВМЕСТЕ" ===
         function updateTimer() {
-            const weddingDate = new Date(2026, 5, 25, 16, 0, 0); // 25 июня 2026 16:00
+            const weddingDate = new Date(2026, 5, 25, 16, 0, 0);
             const now = new Date();
             const diff = now - weddingDate;
 
             if (diff < 0) {
-                // Если вдруг ещё не наступила (хотя уже прошла)
                 document.getElementById('days').innerText = '00';
                 document.getElementById('hours').innerText = '00';
                 document.getElementById('minutes').innerText = '00';
@@ -456,19 +450,19 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // === КАЛЕНДАРЬ (дата кликабельная) ===
+        // === КАЛЕНДАРЬ ===
         document.getElementById('calendarTrigger').addEventListener('click', () => {
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&details=Приглашаем вас разделить с нами этот день!&location=Ресторан Fazenda, Саранск, Лямбирское ш., 10В`;
             window.open(encodeURI(url), '_blank');
         });
 
-        // === ЗАГРУЗКА ФАЙЛОВ ===
+        // === ЗАГРУЗКА ФАЙЛОВ (base64) ===
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
 
-        // ⚠️ ВАЖНО: замените URL на ваш (или оставьте, если тот же)
+        // ВАЖНО: замените URL на ваш, если он изменился после переразвертывания
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdO1zVauaMozL7h-EHiee6dqYaLzWGnYuFPr0akYlIdVN2Z9nMJ3b2xlISemLhy3yY/exec';
 
         function showUploadStatus(message, type) {
@@ -490,37 +484,50 @@
 
             const file = fileInput.files[0];
             
-            // Проверка размера (100 МБ)
             if (file.size > 100 * 1024 * 1024) {
                 showUploadStatus('Файл слишком большой (максимум 100 МБ)', 'error');
                 return;
             }
 
-            const formData = new FormData();
-            formData.append('file', file);
-            
             uploadBtn.disabled = true;
             uploadBtn.textContent = '⏳ Загрузка...';
-            showUploadStatus('Отправка файла...', 'info');
+            showUploadStatus('Чтение файла...', 'info');
             
             try {
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showUploadStatus('✅ Файл успешно загружен! Спасибо!', 'success');
-                    fileInput.value = '';
-                } else {
-                    showUploadStatus('❌ ' + (result.message || 'Ошибка при загрузке'), 'error');
-                }
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const base64 = event.target.result.split(',')[1];
+                    const payload = {
+                        fileName: file.name,
+                        fileBase64: base64,
+                        mimeType: file.type
+                    };
+                    
+                    try {
+                        const response = await fetch(SCRIPT_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            showUploadStatus('✅ Файл успешно загружен! Спасибо!', 'success');
+                            fileInput.value = '';
+                        } else {
+                            showUploadStatus('❌ ' + (result.message || 'Ошибка при загрузке'), 'error');
+                        }
+                    } catch (error) {
+                        console.error('Ошибка:', error);
+                        showUploadStatus('❌ Ошибка соединения. Попробуйте позже.', 'error');
+                    } finally {
+                        uploadBtn.disabled = false;
+                        uploadBtn.textContent = '📤 Отправить файл';
+                    }
+                };
+                reader.readAsDataURL(file);
             } catch (error) {
-                console.error('Ошибка:', error);
-                showUploadStatus('❌ Ошибка соединения. Попробуйте позже.', 'error');
-            } finally {
+                console.error('Ошибка чтения файла:', error);
+                showUploadStatus('❌ Не удалось прочитать файл.', 'error');
                 uploadBtn.disabled = false;
                 uploadBtn.textContent = '📤 Отправить файл';
             }
