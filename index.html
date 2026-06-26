@@ -330,22 +330,22 @@
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
                 <p style="margin-bottom: 20px; opacity: 0.8;">
-                    Загрузите фото и видео с нашей свадьбы – мы соберём их в общий альбом!
+                    Выберите одно или несколько фото/видео – они будут сохранены в наш альбом.
                 </p>
                 <div class="info-block">
                     <div class="info-header">
                         <div class="info-icon">📤</div>
-                        <strong>Загрузить файл</strong>
+                        <strong>Загрузить файлы</strong>
                     </div>
                     <div class="info-content">
                         <form id="uploadForm">
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label for="fileInput" style="font-weight: 500; margin-bottom: 6px; display: block;">
-                                    Выберите фото или видео
+                                    Выберите файлы (можно несколько)
                                 </label>
-                                <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" required>
+                                <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" multiple required>
                             </div>
-                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить файл</button>
+                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить все</button>
                             <div id="uploadStatus" class="status-message" style="display: none;"></div>
                         </form>
                     </div>
@@ -447,14 +447,14 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // === ЗАГРУЗКА ФАЙЛОВ (base64) ===
+        // === ЗАГРУЗКА ФАЙЛОВ (несколько) ===
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
 
-        // НОВАЯ ССЫЛКА НА СКРИПТ
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwV45pEVt6plC9Pq2QwnMm0EpBB43I13Va5hcr_ofe2TjRTctmlsoyYEMRp0tjURND1/exec';
+        // ВСТАВЬТЕ СЮДА ВАШ URL (после переразвертывания)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkrACozEm_suSzmO5h34WD8ymVpbkr7k2Jz2u7l5I6-gvcgE3up10KU4eovyOl87M/exec';
 
         function showUploadStatus(message, type) {
             uploadStatus.style.display = 'block';
@@ -468,59 +468,74 @@
         uploadForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            if (!fileInput.files.length) {
-                showUploadStatus('Сначала выберите файл', 'error');
+            const files = fileInput.files;
+            if (files.length === 0) {
+                showUploadStatus('Выберите хотя бы один файл', 'error');
                 return;
             }
 
-            const file = fileInput.files[0];
-            
-            if (file.size > 100 * 1024 * 1024) {
-                showUploadStatus('Файл слишком большой (максимум 100 МБ)', 'error');
+            // Проверка общего размера (максимум 50 МБ на файл, но ограничим общий размер 100 МБ)
+            let totalSize = 0;
+            for (let f of files) {
+                totalSize += f.size;
+                if (f.size > 50 * 1024 * 1024) {
+                    showUploadStatus(`Файл "${f.name}" слишком большой (максимум 50 МБ)`, 'error');
+                    return;
+                }
+            }
+            if (totalSize > 100 * 1024 * 1024) {
+                showUploadStatus('Общий размер файлов превышает 100 МБ', 'error');
                 return;
             }
 
             uploadBtn.disabled = true;
             uploadBtn.textContent = '⏳ Загрузка...';
-            showUploadStatus('Чтение файла...', 'info');
-            
-            try {
-                const reader = new FileReader();
-                reader.onload = async function(event) {
-                    const base64 = event.target.result.split(',')[1];
-                    const payload = {
-                        fileName: file.name,
-                        fileBase64: base64,
-                        mimeType: file.type
-                    };
-                    
-                    try {
-                        const response = await fetch(SCRIPT_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
+            showUploadStatus('Подготовка файлов...', 'info');
+
+            const fileDataArray = [];
+            const readerPromises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const promise = new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const base64 = event.target.result.split(',')[1];
+                        fileDataArray.push({
+                            fileName: file.name,
+                            fileBase64: base64,
+                            mimeType: file.type
                         });
-                        const result = await response.json();
-                        if (result.success) {
-                            showUploadStatus('✅ Файл успешно загружен! Спасибо!', 'success');
-                            fileInput.value = '';
-                        } else {
-                            showUploadStatus('❌ ' + (result.message || 'Ошибка при загрузке'), 'error');
-                        }
-                    } catch (error) {
-                        console.error('Ошибка:', error);
-                        showUploadStatus('❌ Ошибка соединения. Попробуйте позже.', 'error');
-                    } finally {
-                        uploadBtn.disabled = false;
-                        uploadBtn.textContent = '📤 Отправить файл';
-                    }
-                };
-                reader.readAsDataURL(file);
+                        resolve();
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                readerPromises.push(promise);
+            }
+
+            try {
+                await Promise.all(readerPromises);
+                // Отправляем все файлы
+                const payload = { files: fileDataArray };
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showUploadStatus(`✅ Загружено ${result.data.length} файлов! Спасибо!`, 'success');
+                    fileInput.value = '';
+                } else {
+                    showUploadStatus('❌ ' + (result.message || 'Ошибка при загрузке'), 'error');
+                }
             } catch (error) {
-                console.error('Ошибка чтения файла:', error);
-                showUploadStatus('❌ Не удалось прочитать файл.', 'error');
+                console.error('Ошибка:', error);
+                showUploadStatus('❌ Ошибка соединения. Попробуйте позже.', 'error');
+            } finally {
                 uploadBtn.disabled = false;
-                uploadBtn.textContent = '📤 Отправить файл';
+                uploadBtn.textContent = '📤 Отправить все';
             }
         });
     </script>
