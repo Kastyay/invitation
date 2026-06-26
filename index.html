@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Екатерина & Максим | Приглашение</title>
+    <title>Екатерина & Максим | Свадьба состоялась!</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -62,6 +62,7 @@
             transition: all 0.3s;
             border: 1px solid rgba(230,177,126,0.4);
             pointer-events: auto;
+            color: #4f3527;
         }
         .date-badge:hover { background: rgba(255,255,255,0.95); transform: scale(1.02); border-color: #e6b17e; }
         .timer-section {
@@ -72,11 +73,15 @@
             border-bottom: 1px solid #e6d5c4;
         }
         .timer-title {
-            font-size: 1.2rem;
-            font-weight: 500;
+            font-size: 1.4rem;
+            font-weight: 600;
             color: #b46f3a;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+        .timer-sub {
+            font-size: 1rem;
+            color: #8f6e55;
             margin-bottom: 20px;
         }
         .timer {
@@ -192,6 +197,42 @@
             display: block;
             margin-bottom: 8px;
         }
+        /* Стили для загрузки */
+        .upload-btn {
+            background: #e6b17e;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 4px;
+        }
+        .upload-btn:hover { background: #d49c63; transform: translateY(-2px); }
+        .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .file-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2d4ca;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.8);
+            cursor: pointer;
+        }
+        .status-message {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 0.95rem;
+            padding: 12px;
+            border-radius: 60px;
+        }
+        .status-success { color: #2b7a4b; background: rgba(224,242,233,0.8); }
+        .status-error { color: #c95a49; background: rgba(249,215,205,0.8); }
+        .status-info { color: #b46f3a; background: rgba(230,177,126,0.2); }
         @media (max-width: 550px) {
             .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
@@ -201,28 +242,12 @@
             .timer-number { font-size: 1.4rem; }
             .timer-label { font-size: 0.6rem; }
             .date-badge { font-size: 1rem; padding: 8px 24px; }
-            .info-block {
-                padding: 16px 16px;
-            }
-            .info-block:not(:last-child) {
-                margin-bottom: 12px;
-                padding-bottom: 12px;
-            }
-            .info-header {
-                gap: 8px;
-                margin-bottom: 8px;
-            }
-            .info-icon {
-                font-size: 1.4rem;
-            }
-            .info-header strong {
-                font-size: 1rem;
-            }
-            .info-content p, .verse-line {
-                font-size: 0.85rem;
-                line-height: 1.4;
-                font-weight: normal;
-            }
+            .info-block { padding: 16px 16px; }
+            .info-block:not(:last-child) { margin-bottom: 12px; padding-bottom: 12px; }
+            .info-header { gap: 8px; margin-bottom: 8px; }
+            .info-icon { font-size: 1.4rem; }
+            .info-header strong { font-size: 1rem; }
+            .info-content p, .verse-line { font-size: 0.85rem; line-height: 1.4; font-weight: normal; }
             .verse-line {
                 display: inline-block;
                 padding: 6px 14px;
@@ -230,17 +255,9 @@
                 margin-bottom: 8px;
                 background: rgba(230,177,126,0.1);
             }
-            .verse-line:nth-child(odd) {
-                background: rgba(230,177,126,0.25);
-            }
-            .verse-line:nth-child(even) {
-                background: rgba(230,177,126,0.1);
-            }
-            .dresscode-text, .wish-text {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            .verse-line:nth-child(odd) { background: rgba(230,177,126,0.25); }
+            .verse-line:nth-child(even) { background: rgba(230,177,126,0.1); }
+            .dresscode-text, .wish-text { display: flex; flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
@@ -250,12 +267,14 @@
         <div style="position: relative;">
             <img class="hero-image" src="images/verh.jpeg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
             <div class="hero-overlay">
-                <div class="date-badge" id="calendarTrigger">📅 25 июня 2026, 16:00</div>
+                <div class="date-badge" id="calendarTrigger">📅 25 июня 2026</div>
             </div>
         </div>
 
+        <!-- Таймер "Мы вместе" -->
         <div class="timer-section">
-            <div class="timer-title">До нашей свадьбы осталось</div>
+            <div class="timer-title">❤️ Мы женаты!</div>
+            <div class="timer-sub">Свадьба состоялась 25 июня 2026 года</div>
             <div class="timer" id="timer">
                 <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
                 <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
@@ -265,18 +284,26 @@
         </div>
 
         <div class="content">
+            <!-- Благодарность -->
             <div class="section">
-                <h2>О событии</h2>
+                <h2>Спасибо, что были с нами!</h2>
                 <div class="info-block">
                     <div class="info-header">
-                        <div class="info-icon">📍</div>
-                        <strong>Место проведения</strong>
+                        <div class="info-icon">💖</div>
+                        <strong>Наша благодарность</strong>
                     </div>
                     <div class="info-content">
-                        <p>Ресторан «Fazenda»<br>г. Саранск, Лямбирское ш., 10В</p>
-                        <a href="https://yandex.ru/maps/-/CPVo5C3A" target="_blank" class="map-link">Открыть карту →</a>
+                        <p style="margin-bottom: 12px;">
+                            Дорогие наши гости! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
+                        </p>
+                        <p>Теперь мы вместе навсегда! ❤️</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Дресс-код и пожелания (как было, но теперь это воспоминания) -->
+            <div class="section">
+                <h2>Как это было</h2>
                 <div class="info-block">
                     <div class="info-header">
                         <div class="info-icon">👗</div>
@@ -306,11 +333,39 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Загрузка фото -->
+            <div class="section" id="upload-section">
+                <h2>📸 Поделитесь своими кадрами</h2>
+                <p style="margin-bottom: 20px; opacity: 0.8;">
+                    Загрузите фото и видео с нашей свадьбы – мы соберём их в общий альбом!
+                </p>
+                <div class="info-block">
+                    <div class="info-header">
+                        <div class="info-icon">📤</div>
+                        <strong>Загрузить файл</strong>
+                    </div>
+                    <div class="info-content">
+                        <form id="uploadForm">
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="fileInput" style="font-weight: 500; margin-bottom: 6px; display: block;">
+                                    Выберите фото или видео
+                                </label>
+                                <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" required>
+                            </div>
+                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить файл</button>
+                            <div id="uploadStatus" class="status-message" style="display: none;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="footer">С нетерпением ждём встречи! 💫</div>
+
+        <div class="footer">С любовью, Екатерина и Максим ❤️</div>
     </div>
 
     <script>
+        // === ЛЕПЕСТКИ ===
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
@@ -372,31 +427,103 @@
         initPetals();
         drawPetals();
 
+        // === ТАЙМЕР "МЫ ВМЕСТЕ" ===
         function updateTimer() {
-            const target = new Date(2026, 5, 25, 16, 0, 0);
-            const diff = target - new Date();
-            if (diff <= 0) {
+            const weddingDate = new Date(2026, 5, 25, 16, 0, 0); // 25 июня 2026 16:00
+            const now = new Date();
+            const diff = now - weddingDate;
+
+            if (diff < 0) {
+                // Если вдруг ещё не наступила (хотя уже прошла)
                 document.getElementById('days').innerText = '00';
                 document.getElementById('hours').innerText = '00';
                 document.getElementById('minutes').innerText = '00';
                 document.getElementById('seconds').innerText = '00';
                 return;
             }
+
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((diff / (1000 * 60)) % 60);
             const seconds = Math.floor((diff / 1000) % 60);
+
             document.getElementById('days').innerText = days < 10 ? '0' + days : days;
             document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
+
         updateTimer();
         setInterval(updateTimer, 1000);
 
+        // === КАЛЕНДАРЬ (дата кликабельная) ===
         document.getElementById('calendarTrigger').addEventListener('click', () => {
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Свадьба Екатерины и Максима&dates=20260625T130000Z/20260625T180000Z&details=Приглашаем вас разделить с нами этот день!&location=Ресторан Fazenda, Саранск, Лямбирское ш., 10В`;
             window.open(encodeURI(url), '_blank');
+        });
+
+        // === ЗАГРУЗКА ФАЙЛОВ ===
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        // ⚠️ ВАЖНО: замените URL на ваш (или оставьте, если тот же)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzdO1zVauaMozL7h-EHiee6dqYaLzWGnYuFPr0akYlIdVN2Z9nMJ3b2xlISemLhy3yY/exec';
+
+        function showUploadStatus(message, type) {
+            uploadStatus.style.display = 'block';
+            uploadStatus.className = 'status-message';
+            if (type === 'success') uploadStatus.classList.add('status-success');
+            else if (type === 'error') uploadStatus.classList.add('status-error');
+            else if (type === 'info') uploadStatus.classList.add('status-info');
+            uploadStatus.textContent = message;
+        }
+
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (!fileInput.files.length) {
+                showUploadStatus('Сначала выберите файл', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            
+            // Проверка размера (100 МБ)
+            if (file.size > 100 * 1024 * 1024) {
+                showUploadStatus('Файл слишком большой (максимум 100 МБ)', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = '⏳ Загрузка...';
+            showUploadStatus('Отправка файла...', 'info');
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showUploadStatus('✅ Файл успешно загружен! Спасибо!', 'success');
+                    fileInput.value = '';
+                } else {
+                    showUploadStatus('❌ ' + (result.message || 'Ошибка при загрузке'), 'error');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showUploadStatus('❌ Ошибка соединения. Попробуйте позже.', 'error');
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = '📤 Отправить файл';
+            }
         });
     </script>
 </body>
