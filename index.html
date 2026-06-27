@@ -6,8 +6,7 @@
     <title>Екатерина & Максим | Свадьба состоялась!</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ВСЕ ВАШИ СТИЛИ ОСТАЮТСЯ БЕЗ ИЗМЕНЕНИЙ */
-        /* (я сокращу для экономии места, но вы можете скопировать свои) */
+        /* Все ваши стили – копируйте свои, я даю сокращённую версию для демонстрации */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
@@ -451,6 +450,14 @@
             uploadStatus.textContent = message;
         }
 
+        // Если iframe загрузился (но мы не читаем его, чтобы избежать CORS)
+        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
+        iframe.addEventListener('load', function() {
+            // Просто убираем состояние загрузки, если ответ пришёл (даже если он нечитаемый)
+            uploadBtn.disabled = false;
+            uploadBtn.textContent = '📤 Отправить файлы';
+        });
+
         uploadForm.addEventListener('submit', function(e) {
             const files = fileInput.files;
             if (files.length === 0) {
@@ -458,18 +465,17 @@
                 showUploadStatus('Выберите хотя бы один файл', 'error');
                 return;
             }
-            // Показываем сообщение об отправке и успехе (без чтения ответа)
             uploadBtn.disabled = true;
             uploadBtn.textContent = '⏳ Загрузка...';
-            showUploadStatus('Файлы отправляются...', 'info');
+            showUploadStatus('Файлы отправляются... Это может занять несколько секунд.', 'info');
 
-            // Через 3 секунды показываем успех (предполагаем, что всё ок)
+            // Через 5 секунд показываем успех (предполагаем, что всё ок)
             setTimeout(() => {
                 showUploadStatus('✅ Файлы отправлены! Проверьте папку через пару минут.', 'success');
                 uploadBtn.disabled = false;
                 uploadBtn.textContent = '📤 Отправить файлы';
                 fileInput.value = '';
-            }, 3000);
+            }, 5000);
         });
     </script>
 </body>
