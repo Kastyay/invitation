@@ -120,13 +120,11 @@
             transition: all 0.3s ease;
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            overflow: hidden;
         }
         .info-block:not(:last-child) {
-            border-bottom: 1px solid rgba(230,177,126,0.3);
             margin-bottom: 20px;
-            padding-bottom: 20px;
         }
-        .info-block:last-child { margin-bottom: 0; }
         .info-block:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -157,20 +155,22 @@
             line-height: 1.4;
             margin-top: 4px;
         }
-        .map-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(230,177,126,0.2);
-            padding: 6px 16px;
-            border-radius: 40px;
-            text-decoration: none;
-            color: #b46f3a;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            transition: background 0.2s;
+        
+        /* Стили для адаптивного плеера */
+        .video-wrapper {
+            width: 100%;
+            max-width: 360px; /* Ограничиваем ширину для вертикальных видео, чтобы не было гигантским */
+            margin: 10px auto 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background: #000;
         }
-        .map-link:hover { background: rgba(230,177,126,0.4); }
+        .wedding-video {
+            width: 100%;
+            display: block;
+        }
+
         .footer {
             background: rgba(250,245,237,0.8);
             text-align: center;
@@ -227,7 +227,7 @@
             .timer-number { font-size: 1.4rem; }
             .timer-label { font-size: 0.6rem; }
             .info-block { padding: 16px 16px; }
-            .info-block:not(:last-child) { margin-bottom: 12px; padding-bottom: 12px; }
+            .info-block:not(:last-child) { margin-bottom: 12px; }
             .info-header { gap: 8px; margin-bottom: 8px; }
             .info-icon { font-size: 1.4rem; }
             .info-header strong { font-size: 1rem; }
@@ -276,43 +276,29 @@
                         <p style="margin-bottom: 12px;">
                             Дорогие наши гости! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
                         </p>
-                        <p>Тепер мы вместе навсегда! ❤️</p>
+                        <p>Теперь мы вместе навсегда! ❤️</p>
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2>Как это было</h2>
-                <div class="info-block">
-                    <div class="info-header">
-                        <div class="info-icon">👗</div>
-                        <strong>Дресс-код</strong>
+                <h2>🎬 Свадебный клип</h2>
+                <div class="info-block" style="text-align: center;">
+                    <div class="info-header" style="justify-content: center;">
+                        <div class="info-icon">🎬</div>
+                        <strong>Как это было</strong>
                     </div>
                     <div class="info-content">
-                        <div class="dresscode-text">
-                            <div class="verse-line">👰 Для милых дам — табу на белый цвет,</div>
-                            <div class="verse-line">🤵 Для джентльменов — синий пиджак под запретом.</div>
-                            <div class="verse-line">😎 Во всём ином ограничений нет,</div>
-                            <div class="verse-line">✨ Блистайте красотой и ярким силуэтом!</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="info-block">
-                    <div class="info-header">
-                        <div class="info-icon">🎁</div>
-                        <strong>Пожелания</strong>
-                    </div>
-                    <div class="info-content">
-                        <div class="wish-text">
-                            <div class="verse-line">💐 Если хотели дарить букет, —</div>
-                            <div class="verse-line">🤫 Замените на бутылку: наш вам совет.</div>
-                            <div class="verse-line">🍷 Любимый напиток с собой принесёте,</div>
-                            <div class="verse-line">💖 Выпьете за любовь и нам нальёте.</div>
+                        <p style="margin-bottom: 10px; opacity: 0.8;">Небольшое видео о самом счастливом дне:</p>
+                        <div class="video-wrapper">
+                            <video class="wedding-video" controls playsinline preload="metadata" poster="images/verh3.jpg">
+                                <source src="images/wedding_clip.mp4" type="video/mp4">
+                                Ваш браузер не поддерживает встроенные видео.
+                            </video>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
                 <p style="margin-bottom: 20px; opacity: 0.8;">
@@ -451,7 +437,6 @@
             uploadStatus.textContent = message;
         }
 
-        // Асинхронное чтение файла в Base64
         const readFileAsBase64 = (file) => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -480,7 +465,6 @@
             try {
                 const filesData = [];
                 
-                // Преобразуем каждый файл в Base64 структуру
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     showUploadStatus(`Обработка файла (${i + 1} из ${files.length}): ${file.name}`, 'info');
@@ -495,17 +479,15 @@
 
                 showUploadStatus('Файлы отправляются на Гугл Диск. Пожалуйста, не закрывайте вкладку...', 'info');
 
-                // Отправляем пакет JSON в скрипт
                 await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Позволяет отправлять данные в Google Web App в обход жестких CORS-ограничений
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'text/plain'
                     },
                     body: JSON.stringify({ files: filesData })
                 });
 
-                // Выводим статус успеха
                 showUploadStatus('✅ Файлы успешно отправлены и скоро появятся в альбоме!', 'success');
                 fileInput.value = '';
 
