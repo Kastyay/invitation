@@ -50,18 +50,6 @@
             text-align: center;
             pointer-events: none;
         }
-        .date-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(8px);
-            padding: 12px 32px;
-            border-radius: 60px;
-            font-size: 1.3rem;
-            font-weight: 600;
-            border: 1px solid rgba(230,177,126,0.4);
-            color: #4f3527;
-            pointer-events: none;
-        }
         .timer-section {
             background: rgba(255,255,255,0.6);
             backdrop-filter: blur(4px);
@@ -237,7 +225,6 @@
             .timer-block { padding: 10px 6px; min-width: auto; }
             .timer-number { font-size: 1.4rem; }
             .timer-label { font-size: 0.6rem; }
-            .date-badge { font-size: 1rem; padding: 8px 24px; }
             .info-block { padding: 16px 16px; }
             .info-block:not(:last-child) { margin-bottom: 12px; padding-bottom: 12px; }
             .info-header { gap: 8px; margin-bottom: 8px; }
@@ -337,16 +324,17 @@
                         <strong>Загрузить файлы</strong>
                     </div>
                     <div class="info-content">
-                        <form id="uploadForm">
+                        <form id="uploadForm" action="https://script.google.com/macros/s/AKfycbz2oY51ZC27wee285CLRzn6w0KMgmF-uZiqGsr1GzQwajg8R2oIQJoR49T17bWeHEdZ/exec" method="POST" enctype="multipart/form-data" target="hidden-iframe">
                             <div class="form-group" style="margin-bottom: 12px;">
                                 <label for="fileInput" style="font-weight: 500; margin-bottom: 6px; display: block;">
                                     Выберите файлы (можно несколько)
                                 </label>
                                 <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" multiple required>
                             </div>
-                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить все</button>
+                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить файлы</button>
                             <div id="uploadStatus" class="status-message" style="display: none;"></div>
                         </form>
+                        <iframe name="hidden-iframe" style="display:none;"></iframe>
                     </div>
                 </div>
             </div>
@@ -446,14 +434,12 @@
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // === ЗАГРУЗКА ФАЙЛОВ (несколько) ===
+        // === ЗАГРУЗКА ФАЙЛОВ (через iframe) ===
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
-
-        // ВСТАВЬТЕ СЮДА ВАШ URL (после переразвертывания)
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkrACozEm_suSzmO5h34WD8ymVpbkr7k2Jz2u7l5I6-gvcgE3up10KU4eovyOl87M/exec';
+        const iframe = document.querySelector('iframe[name="hidden-iframe"]');
 
         function showUploadStatus(message, type) {
             uploadStatus.style.display = 'block';
@@ -464,78 +450,42 @@
             uploadStatus.textContent = message;
         }
 
-        uploadForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const files = fileInput.files;
-            if (files.length === 0) {
-                showUploadStatus('Выберите хотя бы один файл', 'error');
-                return;
-            }
-
-            // Проверка общего размера (максимум 50 МБ на файл, но ограничим общий размер 100 МБ)
-            let totalSize = 0;
-            for (let f of files) {
-                totalSize += f.size;
-                if (f.size > 50 * 1024 * 1024) {
-                    showUploadStatus(`Файл "${f.name}" слишком большой (максимум 50 МБ)`, 'error');
+        // Обработчик загрузки iframe (ответ от скрипта)
+        iframe.addEventListener('load', function() {
+            try {
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                let responseText = iframeDoc.body.innerText || iframeDoc.body.textContent;
+                responseText = responseText.trim();
+                if (!responseText) {
+                    showUploadStatus('Пустой ответ от сервера', 'error');
                     return;
                 }
-            }
-            if (totalSize > 100 * 1024 * 1024) {
-                showUploadStatus('Общий размер файлов превышает 100 МБ', 'error');
-                return;
-            }
-
-            uploadBtn.disabled = true;
-            uploadBtn.textContent = '⏳ Загрузка...';
-            showUploadStatus('Подготовка файлов...', 'info');
-
-            const fileDataArray = [];
-            const readerPromises = [];
-
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const promise = new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        const base64 = event.target.result.split(',')[1];
-                        fileDataArray.push({
-                            fileName: file.name,
-                            fileBase64: base64,
-                            mimeType: file.type
-                        });
-                        resolve();
-                    };
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
-                readerPromises.push(promise);
-            }
-
-            try {
-                await Promise.all(readerPromises);
-                // Отправляем все файлы
-                const payload = { files: fileDataArray };
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
+                const result = JSON.parse(responseText);
                 if (result.success) {
-                    showUploadStatus(`✅ Загружено ${result.data.length} файлов! Спасибо!`, 'success');
+                    showUploadStatus('✅ ' + result.message, 'success');
                     fileInput.value = '';
                 } else {
                     showUploadStatus('❌ ' + (result.message || 'Ошибка при загрузке'), 'error');
                 }
-            } catch (error) {
-                console.error('Ошибка:', error);
-                showUploadStatus('❌ Ошибка соединения. Попробуйте позже.', 'error');
+            } catch (e) {
+                console.error('Ошибка парсинга ответа:', e);
+                showUploadStatus('❌ Неизвестная ошибка. Попробуйте позже.', 'error');
             } finally {
                 uploadBtn.disabled = false;
-                uploadBtn.textContent = '📤 Отправить все';
+                uploadBtn.textContent = '📤 Отправить файлы';
             }
+        });
+
+        uploadForm.addEventListener('submit', function(e) {
+            const files = fileInput.files;
+            if (files.length === 0) {
+                e.preventDefault();
+                showUploadStatus('Выберите хотя бы один файл', 'error');
+                return;
+            }
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = '⏳ Загрузка...';
+            showUploadStatus('Отправка файлов...', 'info');
         });
     </script>
 </body>
