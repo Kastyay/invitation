@@ -159,7 +159,7 @@
         /* Стили для адаптивного плеера */
         .video-wrapper {
             width: 100%;
-            max-width: 360px; /* Ограничиваем ширину для вертикальных видео, чтобы не было гигантским */
+            max-width: 360px;
             margin: 10px auto 0 auto;
             border-radius: 24px;
             overflow: hidden;
@@ -177,10 +177,6 @@
             padding: 20px 24px;
             font-size: 0.85rem;
             color: #8f6e55;
-        }
-        .verse-line {
-            display: block;
-            margin-bottom: 8px;
         }
         .upload-btn {
             background: #e6b17e;
@@ -207,6 +203,21 @@
             background: rgba(255,255,255,0.8);
             cursor: pointer;
         }
+        
+        /* Стиль информационного блока для количества файлов */
+        .file-count-info {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #b46f3a;
+            background: rgba(230,177,126,0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+
         .status-message {
             margin-top: 16px;
             text-align: center;
@@ -231,17 +242,7 @@
             .info-header { gap: 8px; margin-bottom: 8px; }
             .info-icon { font-size: 1.4rem; }
             .info-header strong { font-size: 1rem; }
-            .info-content p, .verse-line { font-size: 0.85rem; line-height: 1.4; font-weight: normal; }
-            .verse-line {
-                display: inline-block;
-                padding: 6px 14px;
-                border-radius: 40px;
-                margin-bottom: 8px;
-                background: rgba(230,177,126,0.1);
-            }
-            .verse-line:nth-child(odd) { background: rgba(230,177,126,0.25); }
-            .verse-line:nth-child(even) { background: rgba(230,177,126,0.1); }
-            .dresscode-text, .wish-text { display: flex; flex-direction: column; align-items: flex-start; }
+            .info-content p { font-size: 0.85rem; line-height: 1.4; font-weight: normal; }
         }
     </style>
 </head>
@@ -274,7 +275,7 @@
                     </div>
                     <div class="info-content">
                         <p style="margin-bottom: 12px;">
-                            Дорогие наши гости! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
+                            Дорогие наши гостей! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
                         </p>
                         <p>Теперь мы вместе навсегда! ❤️</p>
                     </div>
@@ -291,7 +292,7 @@
                     <div class="info-content">
                         <p style="margin-bottom: 10px; opacity: 0.8;">Небольшое видео о самом счастливом дне:</p>
                         <div class="video-wrapper">
-                            <video class="wedding-video" controls playsinline preload="metadata" poster="images/verh3.jpg">
+                            <video class="wedding-video" controls playsinline preload="metadata">
                                 <source src="images/wedding_clip.mp4" type="video/mp4">
                                 Ваш браузер не поддерживает встроенные видео.
                             </video>
@@ -299,6 +300,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
                 <p style="margin-bottom: 20px; opacity: 0.8;">
@@ -316,6 +318,7 @@
                                     Выберите файлы (можно несколько)
                                 </label>
                                 <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" multiple required>
+                                <div id="fileCountDisplay" class="file-count-info" style="display: none;"></div>
                             </div>
                             <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить файлы</button>
                             <div id="uploadStatus" class="status-message" style="display: none;"></div>
@@ -420,13 +423,24 @@
         setInterval(updateTimer, 1000);
 
         // === СЛУЖБА ЗАГРУЗКИ ФАЙЛОВ НА GOOGLE DRIVE ===
-        // ВСТАВЬТЕ СЮДА СВОЮ ССЫЛКУ ИЗ GOOGLE APPS SCRIPT ПОСЛЕ "НОВОГО РАЗВЕРТЫВАНИЯ"
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyEE85yyF61W-Qvcjua8lRZunCUgESLct9nMdr3B64SOaytabA2PRKbeCxlGFzg3_PE/exec';
 
         const uploadForm = document.getElementById('uploadForm');
         const fileInput = document.getElementById('fileInput');
+        const fileCountDisplay = document.getElementById('fileCountDisplay');
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
+
+        // Отслеживание выбора файлов для вывода точного количества на смартфонах
+        fileInput.addEventListener('change', function() {
+            const fileCount = fileInput.files.length;
+            if (fileCount > 0) {
+                fileCountDisplay.style.display = 'inline-block';
+                fileCountDisplay.textContent = `📋 Выбрано файлов для отправки: ${fileCount}`;
+            } else {
+                fileCountDisplay.style.display = 'none';
+            }
+        });
 
         function showUploadStatus(message, type) {
             uploadStatus.style.display = 'block';
@@ -490,6 +504,7 @@
 
                 showUploadStatus('✅ Файлы успешно отправлены и скоро появятся в альбоме!', 'success');
                 fileInput.value = '';
+                fileCountDisplay.style.display = 'none'; // Очищаем счетчик после успешной отправки
 
             } catch (error) {
                 console.error(error);
