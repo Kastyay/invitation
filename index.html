@@ -216,7 +216,7 @@
             color: #3b2a23;
         }
         .file-input {
-            display: none; /* Полностью скрываем дефолтный элемент */
+            display: none;
         }
         
         /* Стиль счетчика выбранных файлов */
@@ -442,7 +442,6 @@
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
 
-        // Логика счетчика выбранных файлов
         fileInput.addEventListener('change', function() {
             const fileCount = fileInput.files.length;
             if (fileCount > 0) {
@@ -462,11 +461,10 @@
             uploadStatus.textContent = message;
         }
 
-        // Защищенное чтение файлов (с защитой от зависания iCloud и пустых ссылок)
         const readFileAsBase64 = (file) => {
             return new Promise((resolve, reject) => {
                 if (file.size === 0) {
-                    reject(new Error(`Файл "${file.name}" пустой или еще загружается из iCloud. Пожалуйста, выберите его снова.`));
+                    reject(new Error(`Файл "${file.name}" пустой или недоступен.`));
                     return;
                 }
 
@@ -480,24 +478,20 @@
                     }
                     const base64String = result.split(',')[1];
                     if (!base64String || base64String.trim().length === 0) {
-                        reject(new Error(`Файл "${file.name}" вернул пустые данные (ошибка iOS Медиатеки).`));
+                        reject(new Error(`Файл "${file.name}" вернул пустые данные.`));
                     } else {
                         resolve(base64String);
                     }
                 };
                 
-                reader.onerror = () => {
-                    reject(new Error(`Ошибка ввода-вывода при чтении файла "${file.name}".`));
-                };
-
-                reader.onabort = () => {
-                    reject(new Error(`Чтение файла "${file.name}" было прервано операционной системой.`));
-                };
+                reader.onerror = () => reject(new Error(`Ошибка чтения файла "${file.name}".`));
+                reader.onabort = () => reject(new Error(`Чтение файла "${file.name}" прервано.`));
 
                 reader.readAsDataURL(file);
             });
         };
 
+        // НАДЕЖНАЯ ПООЧЕРЕДНАЯ ОТПРАВКА ДЛЯ ИСКЛЮЧЕНИЯ ИНВАЛИДНОЙ ДЛИНЫ СТРОКИ
         uploadForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -509,47 +503,43 @@
 
             uploadBtn.disabled = true;
             uploadBtn.textContent = '⏳ Загрузка...';
-            showUploadStatus('Подготовка файлов к отправке...', 'info');
 
             try {
-                const filesData = [];
-                
+                // Запускаем цикл последовательной отправки
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    showUploadStatus(`Обработка файла (${i + 1} из ${files.length}): ${file.name}`, 'info');
                     
+                    // Обновляем статус для гостя в реальном времени
+                    showUploadStatus(`🚀 Отправка файла ${i + 1} из ${files.length}: ${file.name}`, 'info');
+                    
+                    // Читаем строго один текущий файл в base64
                     const base64 = await readFileAsBase64(file);
-                    let fileName = file.name;
-
-                    filesData.push({
-                        name: fileName,
+                    
+                    const singleFileData = [{
+                        name: file.name,
                         mimeType: file.type || 'image/jpeg',
                         base64: base64
+                    }];
+
+                    // Отправляем текущий файл на Google Apps Script отдельным быстрым запросом
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'text/plain'
+                        },
+                        body: JSON.stringify({ files: singleFileData })
                     });
                 }
 
-                if (filesData.length === 0) {
-                    throw new Error('Ни один файл не был успешно прочитан.');
-                }
-
-                showUploadStatus('Файлы отправляются на Гугл Диск. Пожалуйста, не закрывайте вкладку...', 'info');
-
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: JSON.stringify({ files: filesData })
-                });
-
-                showUploadStatus('✅ Файлы успешно отправлены и скоро появятся в альбоме!', 'success');
+                // Когда весь цикл завершился без ошибок, выводим окончательный успех
+                showUploadStatus('✅ Все файлы успешно отправлены и скоро появятся в альбоме!', 'success');
                 fileInput.value = '';
                 fileCountDisplay.style.display = 'none';
 
             } catch (error) {
                 console.error('Ошибка загрузки файлов:', error);
-                showUploadStatus('❌ Ошибка: ' + error.message, 'error');
+                showUploadStatus('❌ Ошибка загрузки: ' + error.message, 'error');
             } finally {
                 uploadBtn.disabled = false;
                 uploadBtn.textContent = '📤 Отправить файлы';
