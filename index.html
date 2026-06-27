@@ -193,25 +193,40 @@
         }
         .upload-btn:hover { background: #d49c63; transform: translateY(-2px); }
         .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .file-input {
+        
+        /* Стилизация красивой кнопки выбора вместо стандартного обрубка */
+        .file-input-label {
+            display: block;
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #e2d4ca;
+            padding: 14px 16px;
+            border: 1px dashed #e2d4ca;
             border-radius: 60px;
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
+            font-weight: 500;
+            color: #8f6e55;
             background: rgba(255,255,255,0.8);
             cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .file-input-label:hover {
+            background: #fff;
+            border-color: #e6b17e;
+            color: #3b2a23;
+        }
+        .file-input {
+            display: none; /* Прячем дефолтный инпут, чтобы не дублировать и не резать текст */
         }
         
         /* Стиль информационного блока для количества файлов */
         .file-count-info {
-            margin-top: 10px;
+            margin-top: 12px;
             font-size: 0.95rem;
             font-weight: 600;
             color: #b46f3a;
             background: rgba(230,177,126,0.15);
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 20px;
             display: inline-block;
             text-align: center;
@@ -275,7 +290,7 @@
                     </div>
                     <div class="info-content">
                         <p style="margin-bottom: 12px;">
-                            Дорогие наши гостей! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
+                            Дорогие наши гости! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
                         </p>
                         <p>Теперь мы вместе навсегда! ❤️</p>
                     </div>
@@ -283,18 +298,14 @@
             </div>
 
             <div class="section">
-                <h2>🎬 Свадебный клип</h2>
+                <h2>🎬 Как это было</h2>
                 <div class="info-block" style="text-align: center;">
-                    <div class="info-header" style="justify-content: center;">
-                        <div class="info-icon">🎬</div>
-                        <strong>Как это было</strong>
-                    </div>
                     <div class="info-content">
-                        <p style="margin-bottom: 10px; opacity: 0.8;">Небольшое видео о самом счастливом дне:</p>
+                        <p style="margin-bottom: 15px; opacity: 0.8;">Небольшое видео о самом счастливом дне:</p>
                         <div class="video-wrapper">
                             <video class="wedding-video" controls playsinline preload="metadata">
                                 <source src="images/wedding_clip.mp4" type="video/mp4">
-                                Ваш браузер не поддерживает встроенные видео.
+                                Ваш browser не поддерживает встроенные видео.
                             </video>
                         </div>
                     </div>
@@ -314,8 +325,8 @@
                     <div class="info-content">
                         <form id="uploadForm">
                             <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="fileInput" style="font-weight: 500; margin-bottom: 6px; display: block;">
-                                    Выберите файлы (можно несколько)
+                                <label for="fileInput" class="file-input-label">
+                                    📱 Нажмите, чтобы выбрать фото/видео
                                 </label>
                                 <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" multiple required>
                                 <div id="fileCountDisplay" class="file-count-info" style="display: none;"></div>
@@ -431,7 +442,7 @@
         const uploadStatus = document.getElementById('uploadStatus');
         const uploadBtn = document.getElementById('uploadBtn');
 
-        // Отслеживание выбора файлов для вывода точного количества на смартфонах
+        // Логика кастомного счетчика выбранных файлов
         fileInput.addEventListener('change', function() {
             const fileCount = fileInput.files.length;
             if (fileCount > 0) {
@@ -504,7 +515,7 @@
 
                 showUploadStatus('✅ Файлы успешно отправлены и скоро появятся в альбоме!', 'success');
                 fileInput.value = '';
-                fileCountDisplay.style.display = 'none'; // Очищаем счетчик после успешной отправки
+                fileCountDisplay.style.display = 'none';
 
             } catch (error) {
                 console.error(error);
