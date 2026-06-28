@@ -174,58 +174,25 @@
             font-size: 0.85rem;
             color: #8f6e55;
         }
-        .upload-btn {
+        
+        /* Кнопка вызова плашки Google */
+        .google-upload-btn {
             background: #e6b17e;
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 16px 28px;
             border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
             font-size: 1.1rem;
             font-weight: 600;
             width: 100%;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
-            margin-top: 12px;
+            margin-top: 4px;
+            box-shadow: 0 4px 15px rgba(230,177,126,0.3);
         }
-        .upload-btn:hover { background: #d49c63; transform: translateY(-2px); }
-        .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        
-        .file-input-label {
-            display: block;
-            width: 100%;
-            padding: 20px 16px;
-            border: 2px dashed #e6b17e;
-            border-radius: 30px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-            color: #8f6e55;
-            background: rgba(255,250,245,0.6);
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .file-input-label:hover {
-            background: #fff;
-            border-color: #d49c63;
-            color: #3b2a23;
-        }
-        .file-input {
-            display: none;
-        }
-        
-        .file-count-info {
-            margin-top: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #b46f3a;
-            background: rgba(230,177,126,0.15);
-            padding: 10px 16px;
-            border-radius: 20px;
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-        }
+        .google-upload-btn:hover { background: #d49c63; transform: translateY(-2px); }
+        .google-upload-btn:disabled { background: #ccc; opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
         .status-message {
             margin-top: 16px;
@@ -251,6 +218,9 @@
             .info-content p { font-size: 0.85rem; }
         }
     </style>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
     <canvas id="petals-canvas"></canvas>
@@ -272,7 +242,6 @@
         </div>
 
         <div class="content">
-            <!-- Блок благодарности -->
             <div class="section">
                 <h2>Спасибо, что были с нами!</h2>
                 <div class="info-block">
@@ -289,7 +258,6 @@
                 </div>
             </div>
 
-            <!-- Блок видео -->
             <div class="section">
                 <h2>🎬 Как это было</h2>
                 <div class="info-block" style="text-align: center;">
@@ -305,29 +273,23 @@
                 </div>
             </div>
 
-            <!-- ОБНОВЛЕННЫЙ БЛОК ЗАГРУЗКИ В GOOGLE DRIVE -->
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
                 <div class="info-block">
                     <div class="info-header">
-                        <div class="info-icon">☁️</div>
-                        <strong>Свадебный Google Альбом</strong>
+                        <div class="info-icon">📤</div>
+                        <strong>Загрузить файлы</strong>
                     </div>
                     <div class="info-content">
                         <p style="margin-bottom: 20px; opacity: 0.8;">
-                            Выберите фотографии или видео со своих телефонов — они автоматически сохранятся в наш общий архив на Google Диск.
+                            Нажмите кнопку ниже, чтобы открыть безопасное окно загрузки Google. Вы можете выбрать любые фото и даже самые тяжелые видео в исходном качестве.
                         </p>
-                        <form id="uploadForm">
-                            <label for="fileInput" class="file-input-label">
-                                📱 Выбрать фото и видео
-                            </label>
-                            <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" multiple required>
-                            
-                            <div id="fileCountDisplay" class="file-count-info" style="display: none;"></div>
-                            
-                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Загрузить на Google Диск</button>
-                            <div id="uploadStatus" class="status-message" style="display: none;"></div>
-                        </form>
+                        
+                        <button type="button" id="googleBtn" class="google-upload-btn" disabled onclick="handleAuthClick()">
+                            ⏳ Инициализация Google...
+                        </button>
+                        
+                        <div id="uploadStatus" class="status-message" style="display: none;"></div>
                     </div>
                 </div>
             </div>
@@ -390,20 +352,14 @@
             requestAnimationFrame(drawPetals);
         }
 
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            initPetals();
-        });
-        resizeCanvas();
-        initPetals();
-        drawPetals();
+        window.addEventListener('resize', () => { resizeCanvas(); initPetals(); });
+        resizeCanvas(); initPetals(); drawPetals();
 
         // === ТАЙМЕР ===
         function updateTimer() {
             const weddingDate = new Date(2026, 5, 25, 16, 0, 0);
             const now = new Date();
             const diff = now - weddingDate;
-
             if (diff < 0) return;
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -416,128 +372,81 @@
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-        updateTimer();
-        setInterval(updateTimer, 1000);
+        updateTimer(); setInterval(updateTimer, 1000);
 
-        // === СКРИПТ ЗАГРУЗКИ В GOOGLE DRIVE ===
-        // Убедитесь, что эта ссылка ведет на ваш развернутый Google Web App
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyEE85yyF61W-Qvcjua8lRZunCUgESLct9nMdr3B64SOaytabA2PRKbeCxlGFzg3_PE/exec';
+        // === ИНТЕГРАЦИЯ GOOGLE PICKER (ВСПЛЫВАЮЩЕЙ ПЛАШКИ) ===
+        const API_KEY = 'AIzaSyBnQ0_akQUyhcjCFDpW6J9MF-Fg2qVhexE';
+        const CLIENT_ID = '848812135939-clhf1th7u72mu9u10pe2vu3r518m9s07.apps.googleusercontent.com';
+        const FOLDER_ID = '1irxVmfUx1yxvtAzmKijeon0cNtBdNSF6';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
-        const uploadForm = document.getElementById('uploadForm');
-        const fileInput = document.getElementById('fileInput');
-        const fileCountDisplay = document.getElementById('fileCountDisplay');
+        let tokenClient;
+        let accessToken = null;
+        const googleBtn = document.getElementById('googleBtn');
         const uploadStatus = document.getElementById('uploadStatus');
-        const uploadBtn = document.getElementById('uploadBtn');
 
-        fileInput.addEventListener('change', function() {
-            const fileCount = fileInput.files.length;
-            if (fileCount > 0) {
-                fileCountDisplay.style.display = 'inline-block';
-                fileCountDisplay.textContent = `📋 Выбрано файлов: ${fileCount}`;
-            } else {
-                fileCountDisplay.style.display = 'none';
-            }
-        });
-
-        function showUploadStatus(message, type) {
-            uploadStatus.style.display = 'block';
-            uploadStatus.className = 'status-message';
-            if (type === 'success') uploadStatus.classList.add('status-success');
-            else if (type === 'error') uploadStatus.classList.add('status-error');
-            else if (type === 'info') uploadStatus.classList.add('status-info');
-            uploadStatus.textContent = message;
-        }
-
-        const readFileAsBase64 = (file) => {
-            return new Promise((resolve, reject) => {
-                if (file.size === 0) {
-                    reject(new Error(`Файл "${file.name}" пустой.`));
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const result = reader.result;
-                    if (!result || !result.includes(',')) {
-                        reject(new Error(`Ошибка чтения "${file.name}".`));
-                        return;
-                    }
-                    resolve(result.split(',')[1]);
-                };
-                reader.onerror = () => reject(new Error(`Ошибка чтения "${file.name}".`));
-                reader.readAsDataURL(file);
+        // Автоматический запуск при загрузке страницы
+        window.onload = function() {
+            gapi.load('client:picker', () => {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: CLIENT_ID,
+                    scope: SCOPES,
+                    callback: '', 
+                });
+                googleBtn.disabled = false;
+                googleBtn.textContent = '📱 Открыть окно загрузки';
             });
         };
 
-        uploadForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const files = fileInput.files;
-            if (files.length === 0) {
-                showUploadStatus('Пожалуйста, выберите файлы.', 'error');
-                return;
+        function showStatus(message, type) {
+            uploadStatus.style.display = 'block';
+            uploadStatus.className = 'status-message';
+            if (type === 'success') uploadStatus.classList.add('status-success');
+            if (type === 'error') uploadStatus.classList.add('status-error');
+            if (type === 'info') uploadStatus.classList.add('status-info');
+            uploadStatus.textContent = message;
+        }
+
+        // Клик по кнопке — проверка авторизации и вызов плашки
+        function handleAuthClick() {
+            tokenClient.callback = async (response) => {
+                if (response.error !== undefined) {
+                    showStatus('Ошибка доступа: ' + response.error, 'error');
+                    return;
+                }
+                accessToken = response.access_token;
+                openPickerWindow();
+            };
+
+            if (accessToken === null) {
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            } else {
+                tokenClient.requestAccessToken({ prompt: '' });
             }
+        }
 
-            uploadBtn.disabled = true;
-            uploadBtn.textContent = '⏳ Загрузка на диск...';
-            
-            let wakeLock = null;
-            let successCount = 0;
-            let failCount = 0;
+        // Генерация ТОЙ САМОЙ всплывающей плашки загрузки Google
+        function openPickerWindow() {
+            const uploadView = new google.picker.DocsUploadView().setParent(FOLDER_ID);
+            const picker = new google.picker.PickerBuilder()
+                .addView(uploadView)
+                .setOAuthToken(accessToken)
+                .setDeveloperKey(API_KEY)
+                .setCallback(pickerCallback)
+                .setTitle('Загрузка медиа в свадебный альбом')
+                .build();
+            picker.setVisible(true);
+        }
 
-            try {
-                if ('wakeLock' in navigator) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                }
-            } catch (err) { console.warn('Wake Lock не поддерживается'); }
-
-            try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    showUploadStatus(`🚀 Загрузка ${i + 1} из ${files.length}: ${file.name}\n⚠️ Не выключайте экран телефона!`, 'info');
-                    
-                    try {
-                        const base64 = await readFileAsBase64(file);
-                        const singleFileData = [{
-                            name: file.name,
-                            mimeType: file.type || 'image/jpeg',
-                            base64: base64
-                        }];
-
-                        await fetch(WEB_APP_URL, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'text/plain' },
-                            body: JSON.stringify({ files: singleFileData })
-                        });
-                        
-                        successCount++;
-                    } catch (fileError) {
-                        console.error(fileError);
-                        failCount++;
-                    }
-                }
-
-                if (successCount === files.length) {
-                    showUploadStatus(`✅ Успешно! Все файлы (${successCount}) сохранены на Google Диск!`, 'success');
-                    fileInput.value = '';
-                    fileCountDisplay.style.display = 'none';
-                } else if (successCount > 0) {
-                    showUploadStatus(`⚠️ Загружено частично.\nУспешно: ${successCount}\nОшибка: ${failCount}. Попробуйте отправить оставшиеся файлы ещё раз.`, 'info');
-                    fileInput.value = '';
-                    fileCountDisplay.style.display = 'none';
-                } else {
-                    throw new Error('Не удалось отправить файлы. Попробуйте выбрать меньшее количество.');
-                }
-
-            } catch (error) {
-                showUploadStatus('❌ Ошибка: ' + error.message, 'error');
-            } finally {
-                if (wakeLock !== null) {
-                    try { await wakeLock.release(); } catch (e) {}
-                }
-                uploadBtn.disabled = false;
-                uploadBtn.textContent = '📤 Загрузить на Google Диск';
+        // Результат выбора/загрузки файлов внутри плашки
+        function pickerCallback(data) {
+            if (data.action === google.picker.Action.PICKED) {
+                const documents = data[google.picker.Response.DOCUMENTS];
+                showStatus(`🎉 Успешно! Вы загрузили ${documents.length} файлов прямо в свадебный альбом!`, 'success');
+            } else if (data.action === google.picker.Action.CANCEL) {
+                showStatus('Загрузка была отменена.', 'info');
             }
-        });
+        }
     </script>
 </body>
 </html>
