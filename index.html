@@ -2,292 +2,591 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Приглашение на свадьбу</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Екатерина & Максим | Свадьба состоялась!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #b39283; /* Свадебный пастельный цвет */
-            --text-color: #4a4a4a;
-            --bg-color: #f9f6f0;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Playfair Display', Georgia, serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #fef7f0 0%, #f9efe5 100%);
+            padding: 24px 16px;
+            min-height: 100vh;
+            position: relative;
         }
-
-        .wedding-card {
-            background: #ffffff;
-            padding: 40px 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        #petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 500px;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.6;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(2px);
+            border-radius: 48px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 0 2px rgba(230,177,126,0.2), 0 0 0 6px rgba(245,210,160,0.1), 0 0 0 12px rgba(245,210,160,0.05), 0 25px 45px rgba(0,0,0,0.1);
+        }
+        .hero-image {
+            width: 100%;
+            display: block;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+        .hero-overlay {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
+            padding: 32px 24px;
             text-align: center;
-            box-sizing: border-box;
+            pointer-events: none;
         }
-
-        h1 {
-            font-size: 28px;
+        .timer-section {
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(4px);
+            padding: 32px 20px;
+            text-align: center;
+            border-bottom: 1px solid #e6d5c4;
+        }
+        .timer-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #b46f3a;
+            letter-spacing: 1px;
             margin-bottom: 10px;
-            color: var(--primary-color);
         }
-
-        .description {
-            font-size: 16px;
-            margin-bottom: 30px;
-            font-style: italic;
-        }
-
-        .form-group {
-            text-align: left;
+        .timer-sub {
+            font-size: 1rem;
+            color: #8f6e55;
             margin-bottom: 20px;
         }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: nowrap;
         }
-
-        input[type="text"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
-            box-sizing: border-box;
-            background-color: #fafafa;
+        .timer-block {
+            background: rgba(255,250,245,0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 16px 12px;
+            min-width: 70px;
+            flex: 1;
+            border: 1px solid rgba(230,177,126,0.2);
+            transition: transform 0.3s;
         }
-
-        /* Кнопка загрузки медиа (Google Picker) */
-        .picker-btn {
-            background-color: #ffffff;
-            color: var(--primary-color);
-            border: 2px dashed var(--primary-color);
-            padding: 12px;
-            width: 100%;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: bold;
+        .timer-block:hover { transform: translateY(-4px); border-color: #e6b17e; }
+        .timer-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b2a23;
+            line-height: 1;
+        }
+        .timer-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #8f6e55;
+            margin-top: 6px;
+        }
+        .content { padding: 32px 28px; }
+        .section { margin-bottom: 36px; }
+        .section:last-of-type { margin-bottom: 0; }
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 500;
+            color: #3b2a23;
+            border-left: 4px solid #e6b17e;
+            padding-left: 16px;
+            margin-bottom: 24px;
+        }
+        .info-block {
+            background: rgba(255,245,235,0.85);
+            backdrop-filter: blur(2px);
+            border-radius: 40px;
+            padding: 20px 24px;
+            border: 1px solid rgba(230,177,126,0.5);
             transition: all 0.3s ease;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+        .info-block:not(:last-child) {
+            margin-bottom: 20px;
+        }
+        .info-block:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            background: rgba(255,245,235,0.95);
+            border-color: #e6b17e;
+        }
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .info-icon {
+            font-size: 1.6rem;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+        .info-block:hover .info-icon {
+            transform: scale(1.1) rotate(3deg);
+        }
+        .info-header strong {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #3b2a23;
+        }
+        .info-content {
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        
+        /* Стили для адаптивного плеера */
+        .video-wrapper {
+            width: 100%;
+            max-width: 360px;
+            margin: 10px auto 0 auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            background: #000;
+        }
+        .wedding-video {
+            width: 100%;
+            display: block;
         }
 
-        .picker-btn:hover {
-            background-color: var(--primary-color);
-            color: white;
+        .footer {
+            background: rgba(250,245,237,0.8);
+            text-align: center;
+            padding: 20px 24px;
+            font-size: 0.85rem;
+            color: #8f6e55;
         }
-
-        .picker-btn:disabled {
-            border-color: #ccc;
-            color: #ccc;
-            cursor: not-allowed;
-            background: none;
-        }
-
-        /* Финальная кнопка отправки всей формы */
-        .submit-btn {
-            background-color: var(--primary-color);
+        .upload-btn {
+            background: #e6b17e;
             color: white;
             border: none;
-            padding: 15px;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 1.1rem;
+            font-weight: 600;
             width: 100%;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(179, 146, 131, 0.3);
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 4px;
+        }
+        .upload-btn:hover { background: #d49c63; transform: translateY(-2px); }
+        .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        
+        /* Стилизация красивой кнопки выбора файлов */
+        .file-input-label {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px dashed #e2d4ca;
+            border-radius: 60px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #8f6e55;
+            background: rgba(255,255,255,0.8);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .file-input-label:hover {
+            background: #fff;
+            border-color: #e6b17e;
+            color: #3b2a23;
+        }
+        .file-input {
+            display: none;
+        }
+        
+        /* Стиль счетчика выбранных файлов */
+        .file-count-info {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #b46f3a;
+            background: rgba(230,177,126,0.15);
+            padding: 10px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
         }
 
-        .submit-btn:hover {
-            background-color: #9e7f71;
+        .status-message {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 0.95rem;
+            padding: 12px;
+            border-radius: 60px;
+            white-space: pre-line; /* Чтобы переносы строк красиво отображались */
         }
-
-        #file-status {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        #form-status {
-            margin-top: 15px;
-            font-size: 14px;
-            font-weight: bold;
+        .status-success { color: #2b7a4b; background: rgba(224,242,233,0.8); }
+        .status-error { color: #c95a49; background: rgba(249,215,205,0.8); }
+        .status-info { color: #b46f3a; background: rgba(230,177,126,0.2); }
+        
+        @media (max-width: 550px) {
+            .hero-image { aspect-ratio: 1/1; }
+            .content { padding: 24px 20px; }
+            .section h2 { font-size: 1.5rem; }
+            .timer { gap: 8px; }
+            .timer-block { padding: 10px 6px; min-width: auto; }
+            .timer-number { font-size: 1.4rem; }
+            .timer-label { font-size: 0.6rem; }
+            .info-block { padding: 16px 16px; }
+            .info-block:not(:last-child) { margin-bottom: 12px; }
+            .info-header { gap: 8px; margin-bottom: 8px; }
+            .info-icon { font-size: 1.4rem; }
+            .info-header strong { font-size: 1rem; }
+            .info-content p { font-size: 0.85rem; line-height: 1.4; font-weight: normal; }
         }
     </style>
-
-    <!-- Подключаем скрипты Google API для Пикера -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
-
-<div class="wedding-card">
-    <h1>Максим & Анна</h1>
-    <p class="description">Будем рады видеть вас на нашем празднике! Пожалуйста, заполните анкету гостя.</p>
-
-    <form id="weddingForm" onsubmit="sendForm(event)">
-        <!-- Поля анкеты -->
-        <div class="form-group">
-            <label for="guestName">Ваше имя и фамилия:</label>
-            <input type="text" id="guestName" name="name" placeholder="Иван Иванов" required>
+    <canvas id="petals-canvas"></canvas>
+    <div class="container">
+        <div style="position: relative;">
+            <img class="hero-image" src="images/verh3.jpg" alt="Екатерина и Максим" onerror="this.src='https://via.placeholder.com/800x800?text=Ваше+фото'">
+            <div class="hero-overlay"></div>
         </div>
 
-        <div class="form-group">
-            <label for="attendance">Придете ли вы?</label>
-            <select id="attendance" name="attendance">
-                <option value="Да, с удовольствием">Да, с удовольствием приду</option>
-                <option value="Приду с парой">Приду с парой</option>
-                <option value="К сожалению, не смогу">К сожалению, не смогу</option>
-            </select>
+        <div class="timer-section">
+            <div class="timer-title">❤️ Мы женаты!</div>
+            <div class="timer-sub">Свадьба состоялась 25 июня 2026 года</div>
+            <div class="timer" id="timer">
+                <div class="timer-block"><span class="timer-number" id="days">00</span><div class="timer-label">дней</div></div>
+                <div class="timer-block"><span class="timer-number" id="hours">00</span><div class="timer-label">часов</div></div>
+                <div class="timer-block"><span class="timer-number" id="minutes">00</span><div class="timer-label">минут</div></div>
+                <div class="timer-block"><span class="timer-number" id="seconds">00</span><div class="timer-label">секунд</div></div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="alcohol">Что предпочитаете из напитков?</label>
-            <select id="alcohol" name="alcohol">
-                <option value="Вино красное">Вино красное</option>
-                <option value="Вино белое">Вино белое</option>
-                <option value="Крепкие напитки">Что-то покрепче</option>
-                <option value="Безалкогольные">Не пью алкоголь</option>
-            </select>
+        <div class="content">
+            <div class="section">
+                <h2>Спасибо, что были с нами!</h2>
+                <div class="info-block">
+                    <div class="info-header">
+                        <div class="info-icon">💖</div>
+                        <strong>Наша благодарность</strong>
+                    </div>
+                    <div class="info-content">
+                        <p style="margin-bottom: 12px;">
+                            Дорогие наши гости! Спасибо, что разделили с нами этот важный день. Ваши улыбки, тёплые слова и поддержка сделали нашу свадьбу по-настоящему волшебной. Мы бесконечно счастливы, что вы были рядом!
+                        </p>
+                        <p>Теперь мы вместе навсегда! ❤️</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🎬 Как это было</h2>
+                <div class="info-block" style="text-align: center;">
+                    <div class="info-content">
+                        <p style="margin-bottom: 15px; opacity: 0.8;">Небольшое видео о самом счастливом дне:</p>
+                        <div class="video-wrapper">
+                            <video class="wedding-video" controls playsinline preload="metadata">
+                                <source src="images/wedding_clip.mp4" type="video/mp4">
+                                Ваш браузер не поддерживает встроенные видео.
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="upload-section">
+                <h2>📸 Поделитесь своими кадрами</h2>
+                <p style="margin-bottom: 20px; opacity: 0.8;">
+                    Выберите одно или несколько фото/видео – они будут сохранены в наш альбом.
+                </p>
+                <div class="info-block">
+                    <div class="info-header">
+                        <div class="info-icon">📤</div>
+                        <strong>Загрузить файлы</strong>
+                    </div>
+                    <div class="info-content">
+                        <form id="uploadForm">
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label for="fileInput" class="file-input-label">
+                                    📱 Нажмите, чтобы выбрать фото/видео
+                                </label>
+                                <input type="file" id="fileInput" name="file" accept="image/jpeg,image/png,video/mp4,video/quicktime" class="file-input" multiple required>
+                                <div id="fileCountDisplay" class="file-count-info" style="display: none;"></div>
+                            </div>
+                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить файлы</button>
+                            <div id="uploadStatus" class="status-message" style="display: none;"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- СЕКЦИЯ ЗАГРУЗКИ ФАЙЛОВ -->
-        <div class="form-group">
-            <label>Поделитесь фото или видео с нами:</label>
-            <!-- Кнопка вызывает Picker, пока модули грузятся — она выключена -->
-            <button type="button" id="upload-trigger" class="picker-btn" disabled onclick="handleAuthClick()">
-                📸 Выбрать фото и тяжелые видео
-            </button>
-            <div id="file-status"></div>
-        </div>
+        <div class="footer">С любовью, Екатерина и Максим ❤️</div>
+    </div>
 
-        <!-- Скрытое поле, куда JavaScript запишет ссылки на файлы для отправки в Таблицу -->
-        <input type="hidden" id="uploadedLinks" name="fileLinks" value="Файлы не прикреплены">
+    <script>
+        // === ЛЕПЕСТКИ ===
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
+        let animationId = null;
 
-        <!-- Кнопка отправки всей формы -->
-        <button type="submit" class="submit-btn">Отправить анкету</button>
-        
-        <div id="form-status"></div>
-    </form>
-</div>
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
 
-<script>
-    // Твои настройки Google Cloud
-    const API_KEY = 'AIzaSyBnQ0_akQUyhcjCFDpW6J9MF-Fg2qVhexE';
-    const CLIENT_ID = '848812135939-clhf1th7u72mu9u10pe2vu3r518m9s07.apps.googleusercontent.com';
-    const FOLDER_ID = '1irxVmfUx1yxvtAzmKijeon0cNtBdNSF6';
-    
-    // Сюда вставь URL своего развернутого Google Apps Script (Web App)
-    const WEB_APP_URL = 'https://script.google.com/macros/s/.../exec'; 
+        function drawPetal(x, y, size, angle, color) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(size * 0.6, size * 0.4, 0, size);
+            ctx.quadraticCurveTo(-size * 0.6, size * 0.4, 0, 0);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.restore();
+        }
 
-    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-    let tokenClient;
-    let accessToken = null;
+        function initPetals() {
+            petals = [];
+            for (let i = 0; i < 35; i++) {
+                petals.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 12 + 6,
+                    angle: Math.random() * Math.PI * 2,
+                    speedY: Math.random() * 0.6 + 0.3,
+                    speedRotate: (Math.random() - 0.5) * 0.02,
+                    color: `rgba(230, 177, 126, ${Math.random() * 0.4 + 0.2})`
+                });
+            }
+        }
 
-    // Инициализация скриптов Google
-    window.onload = function () {
-        gapi.load('client:picker', () => {
-            tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: CLIENT_ID,
-                scope: SCOPES,
-                callback: '', 
-            });
-            document.getElementById('upload-trigger').disabled = false;
+        function drawPetals() {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let p of petals) {
+                drawPetal(p.x, p.y, p.size, p.angle, p.color);
+                p.y += p.speedY;
+                p.angle += p.speedRotate;
+                if (p.y > canvas.height + 20) {
+                    p.y = -20;
+                    p.x = Math.random() * canvas.width;
+                }
+            }
+            animationId = requestAnimationFrame(drawPetals);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initPetals();
         });
-    };
+        resizeCanvas();
+        initPetals();
+        drawPetals();
 
-    // Авторизация при клике на скрепку/кнопку медиа
-    function handleAuthClick() {
-        tokenClient.callback = async (response) => {
-            if (response.error !== undefined) {
-                alert('Ошибка доступа: ' + response.error);
+        // === ТАЙМЕР "МЫ ВМЕСТЕ" ===
+        function updateTimer() {
+            const weddingDate = new Date(2026, 5, 25, 16, 0, 0);
+            const now = new Date();
+            const diff = now - weddingDate;
+
+            if (diff < 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
                 return;
             }
-            accessToken = response.access_token;
-            openGooglePicker();
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // === СЛУЖБА ЗАГРУЗКИ ФАЙЛОВ НА GOOGLE DRIVE ===
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyEE85yyF61W-Qvcjua8lRZunCUgESLct9nMdr3B64SOaytabA2PRKbeCxlGFzg3_PE/exec';
+
+        const uploadForm = document.getElementById('uploadForm');
+        const fileInput = document.getElementById('fileInput');
+        const fileCountDisplay = document.getElementById('fileCountDisplay');
+        const uploadStatus = document.getElementById('uploadStatus');
+        const uploadBtn = document.getElementById('uploadBtn');
+
+        fileInput.addEventListener('change', function() {
+            const fileCount = fileInput.files.length;
+            if (fileCount > 0) {
+                fileCountDisplay.style.display = 'inline-block';
+                fileCountDisplay.textContent = `📋 Выбрано файлов для отправки: ${fileCount}`;
+            } else {
+                fileCountDisplay.style.display = 'none';
+            }
+        });
+
+        function showUploadStatus(message, type) {
+            uploadStatus.style.display = 'block';
+            uploadStatus.className = 'status-message';
+            if (type === 'success') uploadStatus.classList.add('status-success');
+            else if (type === 'error') uploadStatus.classList.add('status-error');
+            else if (type === 'info') uploadStatus.classList.add('status-info');
+            uploadStatus.textContent = message;
+        }
+
+        const readFileAsBase64 = (file) => {
+            return new Promise((resolve, reject) => {
+                if (file.size === 0) {
+                    reject(new Error(`Файл "${file.name}" пустой или недоступен.`));
+                    return;
+                }
+
+                const reader = new FileReader();
+                
+                reader.onload = () => {
+                    const result = reader.result;
+                    if (!result || !result.includes(',')) {
+                        reject(new Error(`Не удалось прочитать данные файла "${file.name}".`));
+                        return;
+                    }
+                    const base64String = result.split(',')[1];
+                    if (!base64String || base64String.trim().length === 0) {
+                        reject(new Error(`Файл "${file.name}" вернул пустые данные.`));
+                    } else {
+                        resolve(base64String);
+                    }
+                };
+                
+                reader.onerror = () => reject(new Error(`Ошибка чтения файла "${file.name}".`));
+                reader.onabort = () => reject(new Error(`Чтение файла "${file.name}" прервано.`));
+
+                reader.readAsDataURL(file);
+            });
         };
 
-        if (accessToken === null) {
-            tokenClient.requestAccessToken({ prompt: 'consent' });
-        } else {
-            tokenClient.requestAccessToken({ prompt: '' });
-        }
-    }
+        // НАДЕЖНАЯ ПООЧЕРЕДНАЯ ОТПРАВКА С ЗАЩИТОЙ ОТ ЗАСЫПАНИЯ ЭКРАНА И БЕЗОПАСНЫМ ПРОПУСКОМ ОШИБОК
+        uploadForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-    // Открытие окна загрузки Google
-    function openGooglePicker() {
-        const uploadView = new google.picker.DocsUploadView().setParent(FOLDER_ID);
-        const picker = new google.picker.PickerBuilder()
-            .addView(uploadView)
-            .setOAuthToken(accessToken)
-            .setDeveloperKey(API_KEY)
-            .setCallback(pickerCallback)
-            .setTitle('Загрузка в свадебный альбом')
-            .build();
-        picker.setVisible(true);
-    }
+            const files = fileInput.files;
+            if (files.length === 0) {
+                showUploadStatus('Выберите хотя бы один файл', 'error');
+                return;
+            }
 
-    // Обработка загруженных файлов
-    function pickerCallback(data) {
-        if (data.action === google.picker.Action.PICKED) {
-            const documents = data[google.picker.Response.DOCUMENTS];
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = '⏳ Загрузка...';
             
-            // Собираем все ссылки на загруженные файлы в одну строку
-            const links = documents.map(doc => doc.url).join(', ');
-            
-            // Записываем ссылки в скрытое поле формы
-            document.getElementById('uploadedLinks').value = links;
-            
-            // Выводим гостю статус, что файлы внутри формы
-            document.getElementById('file-status').innerText = `✅ Успешно прикреплено файлов: ${documents.length} шт.`;
-        }
-    }
+            let wakeLock = null;
+            let successCount = 0;
+            let failCount = 0;
 
-    // Отправка ВСЕЙ формы (Анкета + Ссылки) в твою Google Таблицу
-    function sendForm(event) {
-        event.preventDefault();
-        const statusDiv = document.getElementById('form-status');
-        statusDiv.style.color = '#333';
-        statusDiv.innerText = 'Отправка анкеты...';
+            // Включаем Wake Lock, чтобы экран Айфона не тух во время загрузки (поддерживается современными iOS и Android)
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.warn('Wake Lock не поддерживается или заблокирован:', err);
+            }
 
-        const formData = new FormData(document.getElementById('weddingForm'));
-        
-        // Переводим данные в URL-строку для Apps Script
-        const searchParams = new URLSearchParams();
-        for (const pair of formData) {
-            searchParams.append(pair[0], pair[1]);
-        }
+            try {
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    
+                    // Показываем четкий прогресс и важную просьбу не выключать экран
+                    showUploadStatus(
+                        `🚀 Отправка файла ${i + 1} из ${files.length}: ${file.name}\n⚠️ Пожалуйста, не гасите экран и не закрывайте вкладку!`, 
+                        'info'
+                    );
+                    
+                    try {
+                        const base64 = await readFileAsBase64(file);
+                        
+                        const singleFileData = [{
+                            name: file.name,
+                            mimeType: file.type || 'image/jpeg',
+                            base64: base64
+                        }];
 
-        // Отправляем в твой старый скрипт одной посылкой
-        fetch(WEB_APP_URL, {
-            method: 'POST',
-            body: searchParams,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        })
-        .then(res => res.json())
-        .then(data => {
-            statusDiv.style.color = '#27ae60';
-            statusDiv.innerText = '🎉 Спасибо! Ваша анкета успешно отправлена.';
-            document.getElementById('weddingForm').reset();
-            document.getElementById('file-status').innerText = '';
-        })
-        .catch(err => {
-            statusDiv.style.color = '#c0392b';
-            statusDiv.innerText = 'Ошибка при отправке. Пожалуйста, попробуйте еще раз.';
-            console.error(err);
+                        await fetch(WEB_APP_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'text/plain'
+                            },
+                            body: JSON.stringify({ files: singleFileData })
+                        });
+                        
+                        successCount++; // Файл ушел успешно
+                        
+                    } catch (fileError) {
+                        console.error(`Ошибка при чтении/отправке файла ${file.name}:`, fileError);
+                        failCount++; // Этот конкретный файл сломался (например, упал по таймауту из iCloud), идем дальше
+                    }
+                }
+
+                // Логика вывода финального результата
+                if (successCount === files.length) {
+                    showUploadStatus(`✅ Все файлы (${successCount}) успешно отправлены и скоро появятся в альбоме!`, 'success');
+                    fileInput.value = '';
+                    fileCountDisplay.style.display = 'none';
+                } else if (successCount > 0) {
+                    // Ситуация, когда часть загрузилась, а часть выдала ошибку (iCloud/сеть)
+                    showUploadStatus(
+                        `⚠️ Загрузка завершена частично!\nУспешно отправлено файлов: ${successCount}\nНе удалось прочитать/отправить: ${failCount} (возможно, они выгружены в iCloud или прервалась сеть). Попробуйте отправить оставшиеся файлы еще раз.`, 
+                        'info'
+                    );
+                    fileInput.value = '';
+                    fileCountDisplay.style.display = 'none';
+                } else {
+                    // Абсолютно все файлы упали
+                    throw new Error('Не удалось отправить ни один файл. Пожалуйста, убедитесь, что экран не гаснет, и попробуйте меньшее количество файлов за раз.');
+                }
+
+            } catch (error) {
+                console.error('Критическая ошибка загрузки:', error);
+                showUploadStatus('❌ Ошибка загрузки: ' + error.message, 'error');
+            } finally {
+                // Отпускаем блокировку экрана, теперь ему можно засыпать
+                if (wakeLock !== null) {
+                    try {
+                        await wakeLock.release();
+                        wakeLock = null;
+                    } catch (releaseErr) {
+                        console.error(releaseErr);
+                    }
+                }
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = '📤 Отправить файлы';
+            }
         });
-    }
-</script>
-
-</body>
-</html>
+    </script>
