@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Екатерина & Максим | Свадьба состоялась!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght=400;500;600;700&family=Montserrat:wght=300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -69,29 +69,6 @@
         .wedding-video { width: 100%; display: block; }
         .footer { background: rgba(250,245,237,0.8); text-align: center; padding: 20px 24px; font-size: 0.85rem; color: #8f6e55; }
         
-        /* Кнопка загрузки через DriveUploader */
-        .drive-upload-btn {
-            display: inline-block;
-            background: #e6b17e;
-            color: white;
-            text-decoration: none;
-            padding: 18px 28px;
-            border-radius: 60px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-align: center;
-            width: 100%;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 15px rgba(230,177,126,0.3);
-        }
-        .drive-upload-btn:hover {
-            background: #d49c63;
-            transform: translateY(-2px);
-        }
-        .drive-upload-btn:active {
-            transform: translateY(0);
-        }
-        
         @media (max-width: 550px) {
             .content { padding: 24px 20px; }
             .section h2 { font-size: 1.5rem; }
@@ -153,20 +130,12 @@
 
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
-                <div class="info-block">
-                    <div class="info-header">
-                        <div class="info-icon">📤</div>
-                        <strong>Загрузить фотографии и видео</strong>
-                    </div>
-                    <div class="info-content">
-                        <p style="margin-bottom: 20px; opacity: 0.8;">
-                            Нажмите на кнопку ниже, чтобы открыть безопасное окно отправки. Вы сможете выбрать и загрузить сразу много фото и тяжелых видеороликов в оригинальном качестве. Вход в аккаунты не требуется!
-                        </p>
-                        
-                        <a href="https://driveuploader.com/upload/sxaGsQRmCl/" target="_blank" class="drive-upload-btn">
-                            📱 Открыть окно загрузки
-                        </a>
-                    </div>
+                <div class="info-block" style="padding: 12px; overflow: hidden;">
+                    <iframe src="https://embed.driveuploader.com/v1/uploader/sxaGsQRmCl/embed" 
+                            width="100%" 
+                            height="380" 
+                            style="border:0; border-radius:32px; display:block; background: transparent;">
+                    </iframe>
                 </div>
             </div>
         </div>
