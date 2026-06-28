@@ -122,9 +122,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
             overflow: hidden;
         }
-        .info-block:not(:last-child) {
-            margin-bottom: 20px;
-        }
         .info-block:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
@@ -156,7 +153,6 @@
             margin-top: 4px;
         }
         
-        /* Стили для адаптивного плеера */
         .video-wrapper {
             width: 100%;
             max-width: 360px;
@@ -189,37 +185,35 @@
             width: 100%;
             cursor: pointer;
             transition: background 0.2s, transform 0.1s;
-            margin-top: 4px;
+            margin-top: 12px;
         }
         .upload-btn:hover { background: #d49c63; transform: translateY(-2px); }
         .upload-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
         
-        /* Стилизация красивой кнопки выбора файлов */
         .file-input-label {
             display: block;
             width: 100%;
-            padding: 14px 16px;
-            border: 1px dashed #e2d4ca;
-            border-radius: 60px;
+            padding: 20px 16px;
+            border: 2px dashed #e6b17e;
+            border-radius: 30px;
             font-family: 'Montserrat', sans-serif;
             font-size: 1rem;
             font-weight: 500;
             color: #8f6e55;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,250,245,0.6);
             cursor: pointer;
             text-align: center;
             transition: all 0.2s;
         }
         .file-input-label:hover {
             background: #fff;
-            border-color: #e6b17e;
+            border-color: #d49c63;
             color: #3b2a23;
         }
         .file-input {
             display: none;
         }
         
-        /* Стиль счетчика выбранных файлов */
         .file-count-info {
             margin-top: 12px;
             font-size: 0.95rem;
@@ -239,14 +233,13 @@
             font-size: 0.95rem;
             padding: 12px;
             border-radius: 60px;
-            white-space: pre-line; /* Чтобы переносы строк красиво отображались */
+            white-space: pre-line;
         }
         .status-success { color: #2b7a4b; background: rgba(224,242,233,0.8); }
         .status-error { color: #c95a49; background: rgba(249,215,205,0.8); }
         .status-info { color: #b46f3a; background: rgba(230,177,126,0.2); }
         
         @media (max-width: 550px) {
-            .hero-image { aspect-ratio: 1/1; }
             .content { padding: 24px 20px; }
             .section h2 { font-size: 1.5rem; }
             .timer { gap: 8px; }
@@ -254,11 +247,8 @@
             .timer-number { font-size: 1.4rem; }
             .timer-label { font-size: 0.6rem; }
             .info-block { padding: 16px 16px; }
-            .info-block:not(:last-child) { margin-bottom: 12px; }
-            .info-header { gap: 8px; margin-bottom: 8px; }
-            .info-icon { font-size: 1.4rem; }
             .info-header strong { font-size: 1rem; }
-            .info-content p { font-size: 0.85rem; line-height: 1.4; font-weight: normal; }
+            .info-content p { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -282,6 +272,7 @@
         </div>
 
         <div class="content">
+            <!-- Блок благодарности -->
             <div class="section">
                 <h2>Спасибо, что были с нами!</h2>
                 <div class="info-block">
@@ -298,6 +289,7 @@
                 </div>
             </div>
 
+            <!-- Блок видео -->
             <div class="section">
                 <h2>🎬 Как это было</h2>
                 <div class="info-block" style="text-align: center;">
@@ -313,26 +305,27 @@
                 </div>
             </div>
 
+            <!-- ОБНОВЛЕННЫЙ БЛОК ЗАГРУЗКИ В GOOGLE DRIVE -->
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
-                <p style="margin-bottom: 20px; opacity: 0.8;">
-                    Выберите одно или несколько фото/видео – они будут сохранены в наш альбом.
-                </p>
                 <div class="info-block">
                     <div class="info-header">
-                        <div class="info-icon">📤</div>
-                        <strong>Загрузить файлы</strong>
+                        <div class="info-icon">☁️</div>
+                        <strong>Свадебный Google Альбом</strong>
                     </div>
                     <div class="info-content">
+                        <p style="margin-bottom: 20px; opacity: 0.8;">
+                            Выберите фотографии или видео со своих телефонов — они автоматически сохранятся в наш общий архив на Google Диск.
+                        </p>
                         <form id="uploadForm">
-                            <div class="form-group" style="margin-bottom: 12px;">
-                                <label for="fileInput" class="file-input-label">
-                                    📱 Нажмите, чтобы выбрать фото/видео
-                                </label>
-                                <input type="file" id="fileInput" name="file" accept="image/jpeg,image/png,video/mp4,video/quicktime" class="file-input" multiple required>
-                                <div id="fileCountDisplay" class="file-count-info" style="display: none;"></div>
-                            </div>
-                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Отправить файлы</button>
+                            <label for="fileInput" class="file-input-label">
+                                📱 Выбрать фото и видео
+                            </label>
+                            <input type="file" id="fileInput" name="file" accept="image/*,video/*" class="file-input" multiple required>
+                            
+                            <div id="fileCountDisplay" class="file-count-info" style="display: none;"></div>
+                            
+                            <button type="submit" id="uploadBtn" class="upload-btn">📤 Загрузить на Google Диск</button>
                             <div id="uploadStatus" class="status-message" style="display: none;"></div>
                         </form>
                     </div>
@@ -348,7 +341,6 @@
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
         let petals = [];
-        let animationId = null;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -395,7 +387,7 @@
                     p.x = Math.random() * canvas.width;
                 }
             }
-            animationId = requestAnimationFrame(drawPetals);
+            requestAnimationFrame(drawPetals);
         }
 
         window.addEventListener('resize', () => {
@@ -406,19 +398,13 @@
         initPetals();
         drawPetals();
 
-        // === ТАЙМЕР "МЫ ВМЕСТЕ" ===
+        // === ТАЙМЕР ===
         function updateTimer() {
             const weddingDate = new Date(2026, 5, 25, 16, 0, 0);
             const now = new Date();
             const diff = now - weddingDate;
 
-            if (diff < 0) {
-                document.getElementById('days').innerText = '00';
-                document.getElementById('hours').innerText = '00';
-                document.getElementById('minutes').innerText = '00';
-                document.getElementById('seconds').innerText = '00';
-                return;
-            }
+            if (diff < 0) return;
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -430,11 +416,11 @@
             document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
             document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
         }
-
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // === СЛУЖБА ЗАГРУЗКИ ФАЙЛОВ НА GOOGLE DRIVE ===
+        // === СКРИПТ ЗАГРУЗКИ В GOOGLE DRIVE ===
+        // Убедитесь, что эта ссылка ведет на ваш развернутый Google Web App
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyEE85yyF61W-Qvcjua8lRZunCUgESLct9nMdr3B64SOaytabA2PRKbeCxlGFzg3_PE/exec';
 
         const uploadForm = document.getElementById('uploadForm');
@@ -447,7 +433,7 @@
             const fileCount = fileInput.files.length;
             if (fileCount > 0) {
                 fileCountDisplay.style.display = 'inline-block';
-                fileCountDisplay.textContent = `📋 Выбрано файлов для отправки: ${fileCount}`;
+                fileCountDisplay.textContent = `📋 Выбрано файлов: ${fileCount}`;
             } else {
                 fileCountDisplay.style.display = 'none';
             }
@@ -465,72 +451,51 @@
         const readFileAsBase64 = (file) => {
             return new Promise((resolve, reject) => {
                 if (file.size === 0) {
-                    reject(new Error(`Файл "${file.name}" пустой или недоступен.`));
+                    reject(new Error(`Файл "${file.name}" пустой.`));
                     return;
                 }
-
                 const reader = new FileReader();
-                
                 reader.onload = () => {
                     const result = reader.result;
                     if (!result || !result.includes(',')) {
-                        reject(new Error(`Не удалось прочитать данные файла "${file.name}".`));
+                        reject(new Error(`Ошибка чтения "${file.name}".`));
                         return;
                     }
-                    const base64String = result.split(',')[1];
-                    if (!base64String || base64String.trim().length === 0) {
-                        reject(new Error(`Файл "${file.name}" вернул пустые данные.`));
-                    } else {
-                        resolve(base64String);
-                    }
+                    resolve(result.split(',')[1]);
                 };
-                
-                reader.onerror = () => reject(new Error(`Ошибка чтения файла "${file.name}".`));
-                reader.onabort = () => reject(new Error(`Чтение файла "${file.name}" прервано.`));
-
+                reader.onerror = () => reject(new Error(`Ошибка чтения "${file.name}".`));
                 reader.readAsDataURL(file);
             });
         };
 
-        // НАДЕЖНАЯ ПООЧЕРЕДНАЯ ОТПРАВКА С ЗАЩИТОЙ ОТ ЗАСЫПАНИЯ ЭКРАНА И БЕЗОПАСНЫМ ПРОПУСКОМ ОШИБОК
         uploadForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-
             const files = fileInput.files;
             if (files.length === 0) {
-                showUploadStatus('Выберите хотя бы один файл', 'error');
+                showUploadStatus('Пожалуйста, выберите файлы.', 'error');
                 return;
             }
 
             uploadBtn.disabled = true;
-            uploadBtn.textContent = '⏳ Загрузка...';
+            uploadBtn.textContent = '⏳ Загрузка на диск...';
             
             let wakeLock = null;
             let successCount = 0;
             let failCount = 0;
 
-            // Включаем Wake Lock, чтобы экран Айфона не тух во время загрузки (поддерживается современными iOS и Android)
             try {
                 if ('wakeLock' in navigator) {
                     wakeLock = await navigator.wakeLock.request('screen');
                 }
-            } catch (err) {
-                console.warn('Wake Lock не поддерживается или заблокирован:', err);
-            }
+            } catch (err) { console.warn('Wake Lock не поддерживается'); }
 
             try {
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    
-                    // Показываем четкий прогресс и важную просьбу не выключать экран
-                    showUploadStatus(
-                        `🚀 Отправка файла ${i + 1} из ${files.length}: ${file.name}\n⚠️ Пожалуйста, не гасите экран и не закрывайте вкладку!`, 
-                        'info'
-                    );
+                    showUploadStatus(`🚀 Загрузка ${i + 1} из ${files.length}: ${file.name}\n⚠️ Не выключайте экран телефона!`, 'info');
                     
                     try {
                         const base64 = await readFileAsBase64(file);
-                        
                         const singleFileData = [{
                             name: file.name,
                             mimeType: file.type || 'image/jpeg',
@@ -540,53 +505,39 @@
                         await fetch(WEB_APP_URL, {
                             method: 'POST',
                             mode: 'no-cors',
-                            headers: {
-                                'Content-Type': 'text/plain'
-                            },
+                            headers: { 'Content-Type': 'text/plain' },
                             body: JSON.stringify({ files: singleFileData })
                         });
                         
-                        successCount++; // Файл ушел успешно
-                        
+                        successCount++;
                     } catch (fileError) {
-                        console.error(`Ошибка при чтении/отправке файла ${file.name}:`, fileError);
-                        failCount++; // Этот конкретный файл сломался (например, упал по таймауту из iCloud), идем дальше
+                        console.error(fileError);
+                        failCount++;
                     }
                 }
 
-                // Логика вывода финального результата
                 if (successCount === files.length) {
-                    showUploadStatus(`✅ Все файлы (${successCount}) успешно отправлены и скоро появятся в альбоме!`, 'success');
+                    showUploadStatus(`✅ Успешно! Все файлы (${successCount}) сохранены на Google Диск!`, 'success');
                     fileInput.value = '';
                     fileCountDisplay.style.display = 'none';
                 } else if (successCount > 0) {
-                    // Ситуация, когда часть загрузилась, а часть выдала ошибку (iCloud/сеть)
-                    showUploadStatus(
-                        `⚠️ Загрузка завершена частично!\nУспешно отправлено файлов: ${successCount}\nНе удалось прочитать/отправить: ${failCount} (возможно, они выгружены в iCloud или прервалась сеть). Попробуйте отправить оставшиеся файлы еще раз.`, 
-                        'info'
-                    );
+                    showUploadStatus(`⚠️ Загружено частично.\nУспешно: ${successCount}\nОшибка: ${failCount}. Попробуйте отправить оставшиеся файлы ещё раз.`, 'info');
                     fileInput.value = '';
                     fileCountDisplay.style.display = 'none';
                 } else {
-                    // Абсолютно все файлы упали
-                    throw new Error('Не удалось отправить ни один файл. Пожалуйста, убедитесь, что экран не гаснет, и попробуйте меньшее количество файлов за раз.');
+                    throw new Error('Не удалось отправить файлы. Попробуйте выбрать меньшее количество.');
                 }
 
             } catch (error) {
-                console.error('Критическая ошибка загрузки:', error);
-                showUploadStatus('❌ Ошибка загрузки: ' + error.message, 'error');
+                showUploadStatus('❌ Ошибка: ' + error.message, 'error');
             } finally {
-                // Отпускаем блокировку экрана, теперь ему можно засыпать
                 if (wakeLock !== null) {
-                    try {
-                        await wakeLock.release();
-                        wakeLock = null;
-                    } catch (releaseErr) {
-                        console.error(releaseErr);
-                    }
+                    try { await wakeLock.release(); } catch (e) {}
                 }
                 uploadBtn.disabled = false;
-                uploadBtn.textContent = '📤 Отправить файлы';
+                uploadBtn.textContent = '📤 Загрузить на Google Диск';
             }
         });
     </script>
+</body>
+</html>
