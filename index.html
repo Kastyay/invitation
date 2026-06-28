@@ -3,129 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Загрузка медиа без ограничений</title>
+    <title>Приглашение на свадьбу</title>
     <style>
+        :root {
+            --primary-color: #b39283; /* Свадебный пастельный цвет */
+            --text-color: #4a4a4a;
+            --bg-color: #f9f6f0;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Playfair Display', Georgia, serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
         }
-        .upload-container {
+
+        .wedding-card {
             background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             text-align: center;
             box-sizing: border-box;
         }
-        h2 {
-            margin-top: 0;
-            color: #2c3e50;
-            font-size: 22px;
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
         }
-        p {
+
+        .description {
+            font-size: 16px;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
             font-size: 14px;
-            color: #7f8c8d;
-            line-height: 1.5;
-            margin-bottom: 25px;
         }
-        .btn {
+
+        input[type="text"], select {
             width: 100%;
-            padding: 14px;
-            background-color: #3498db;
-            color: white;
-            border: none;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
             font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+
+        /* Кнопка загрузки медиа (Google Picker) */
+        .picker-btn {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border: 2px dashed var(--primary-color);
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .picker-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .picker-btn:disabled {
+            border-color: #ccc;
+            color: #ccc;
+            cursor: not-allowed;
+            background: none;
+        }
+
+        /* Финальная кнопка отправки всей формы */
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.1s ease;
-            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
-        }
-        .btn:hover {
-            background-color: #2980b9;
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
-        .btn:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-        #status {
             margin-top: 20px;
-            font-size: 14px;
-            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(179, 146, 131, 0.3);
         }
-        .success { color: #27ae60; }
-        .error { color: #c0392b; }
+
+        .submit-btn:hover {
+            background-color: #9e7f71;
+        }
+
+        #file-status {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        #form-status {
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
     </style>
 
+    <!-- Подключаем скрипты Google API для Пикера -->
     <script src="https://apis.google.com/js/api.js"></script>
     <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
 
-<div class="upload-container">
-    <h2>Загрузка фото и видео</h2>
-    <p>Вы можете загрузить любые фотографии и тяжелые видеоролики в оригинальном качестве без ограничений по размеру.</p>
-    
-    <button id="picker-btn" class="btn" disabled onclick="handleAuthClick()">Выбрать и загрузить файлы</button>
-    
-    <div id="status">Загрузка модулей Google...</div>
+<div class="wedding-card">
+    <h1>Максим & Анна</h1>
+    <p class="description">Будем рады видеть вас на нашем празднике! Пожалуйста, заполните анкету гостя.</p>
+
+    <form id="weddingForm" onsubmit="sendForm(event)">
+        <!-- Поля анкеты -->
+        <div class="form-group">
+            <label for="guestName">Ваше имя и фамилия:</label>
+            <input type="text" id="guestName" name="name" placeholder="Иван Иванов" required>
+        </div>
+
+        <div class="form-group">
+            <label for="attendance">Придете ли вы?</label>
+            <select id="attendance" name="attendance">
+                <option value="Да, с удовольствием">Да, с удовольствием приду</option>
+                <option value="Приду с парой">Приду с парой</option>
+                <option value="К сожалению, не смогу">К сожалению, не смогу</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="alcohol">Что предпочитаете из напитков?</label>
+            <select id="alcohol" name="alcohol">
+                <option value="Вино красное">Вино красное</option>
+                <option value="Вино белое">Вино белое</option>
+                <option value="Крепкие напитки">Что-то покрепче</option>
+                <option value="Безалкогольные">Не пью алкоголь</option>
+            </select>
+        </div>
+
+        <!-- СЕКЦИЯ ЗАГРУЗКИ ФАЙЛОВ -->
+        <div class="form-group">
+            <label>Поделитесь фото или видео с нами:</label>
+            <!-- Кнопка вызывает Picker, пока модули грузятся — она выключена -->
+            <button type="button" id="upload-trigger" class="picker-btn" disabled onclick="handleAuthClick()">
+                📸 Выбрать фото и тяжелые видео
+            </button>
+            <div id="file-status"></div>
+        </div>
+
+        <!-- Скрытое поле, куда JavaScript запишет ссылки на файлы для отправки в Таблицу -->
+        <input type="hidden" id="uploadedLinks" name="fileLinks" value="Файлы не прикреплены">
+
+        <!-- Кнопка отправки всей формы -->
+        <button type="submit" class="submit-btn">Отправить анкету</button>
+        
+        <div id="form-status"></div>
+    </form>
 </div>
 
 <script>
-    // Твои конфигурационные данные из Google Cloud
+    // Твои настройки Google Cloud
     const API_KEY = 'AIzaSyBnQ0_akQUyhcjCFDpW6J9MF-Fg2qVhexE';
     const CLIENT_ID = '848812135939-clhf1th7u72mu9u10pe2vu3r518m9s07.apps.googleusercontent.com';
     const FOLDER_ID = '1irxVmfUx1yxvtAzmKijeon0cNtBdNSF6';
+    
+    // Сюда вставь URL своего развернутого Google Apps Script (Web App)
+    const WEB_APP_URL = 'https://script.google.com/macros/s/.../exec'; 
 
-    // Области доступа: разрешаем загрузку файлов в Диск
     const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-
     let tokenClient;
     let accessToken = null;
 
-    // Инициализация при загрузке страницы
-    function gapiLoaded() {
-        gapi.load('client:picker', initializePicker);
-    }
-
-    function initializePicker() {
-        document.getElementById('status').innerText = 'Модули готовы. Инициализация авторизации...';
-        tokenClient = google.accounts.oauth2.initTokenClient({
-            client_id: CLIENT_ID,
-            scope: SCOPES,
-            callback: '', // обрабатывается динамически ниже
+    // Инициализация скриптов Google
+    window.onload = function () {
+        gapi.load('client:picker', () => {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '', 
+            });
+            document.getElementById('upload-trigger').disabled = false;
         });
-        
-        // Включаем кнопку загрузки
-        const btn = document.getElementById('picker-btn');
-        btn.disabled = false;
-        document.getElementById('status').innerText = '';
-    }
+    };
 
-    // Хэндлер нажатия на кнопку
+    // Авторизация при клике на скрепку/кнопку медиа
     function handleAuthClick() {
         tokenClient.callback = async (response) => {
             if (response.error !== undefined) {
-                document.getElementById('status').innerHTML = `<span class="error">Ошибка авторизации: ${response.error}</span>`;
+                alert('Ошибка доступа: ' + response.error);
                 return;
             }
             accessToken = response.access_token;
-            createPicker();
+            openGooglePicker();
         };
 
-        // Запрашиваем токен (если гость не авторизован, откроется окно входа в Google)
         if (accessToken === null) {
             tokenClient.requestAccessToken({ prompt: 'consent' });
         } else {
@@ -133,45 +224,69 @@
         }
     }
 
-    // Создание и отображение Google Picker
-    function createPicker() {
-        // Настраиваем отображение только для загрузки файлов (DocsUploadView)
-        const uploadView = new google.picker.DocsUploadView()
-            .setParent(FOLDER_ID); // Указываем твою целевую папку свадьбы
-
+    // Открытие окна загрузки Google
+    function openGooglePicker() {
+        const uploadView = new google.picker.DocsUploadView().setParent(FOLDER_ID);
         const picker = new google.picker.PickerBuilder()
             .addView(uploadView)
             .setOAuthToken(accessToken)
             .setDeveloperKey(API_KEY)
             .setCallback(pickerCallback)
-            .setTitle('Загрузка файлов в свадебный альбом')
+            .setTitle('Загрузка в свадебный альбом')
             .build();
-            
         picker.setVisible(true);
     }
 
-    // Колбэк, который срабатывает при действиях в окне Пикера
+    // Обработка загруженных файлов
     function pickerCallback(data) {
-        const statusDiv = document.getElementById('status');
-        
         if (data.action === google.picker.Action.PICKED) {
             const documents = data[google.picker.Response.DOCUMENTS];
-            const count = documents.length;
             
-            statusDiv.innerHTML = `<span class="success">🎉 Успешно загружено файлов: ${count} шт.!</span>`;
-            console.log('Загруженные файлы:', documents);
+            // Собираем все ссылки на загруженные файлы в одну строку
+            const links = documents.map(doc => doc.url).join(', ');
             
-            // Здесь при необходимости можно сделать fetch к твоему Web App, 
-            // чтобы просто передать массив имен файлов для записи в таблицу.
-        } else if (data.action === google.picker.Action.CANCEL) {
-            statusDiv.innerText = 'Загрузка отменена.';
+            // Записываем ссылки в скрытое поле формы
+            document.getElementById('uploadedLinks').value = links;
+            
+            // Выводим гостю статус, что файлы внутри формы
+            document.getElementById('file-status').innerText = `✅ Успешно прикреплено файлов: ${documents.length} шт.`;
         }
     }
 
-    // Запускаем загрузку скриптов Google при старте страницы
-    window.onload = function () {
-        gapiLoaded();
-    };
+    // Отправка ВСЕЙ формы (Анкета + Ссылки) в твою Google Таблицу
+    function sendForm(event) {
+        event.preventDefault();
+        const statusDiv = document.getElementById('form-status');
+        statusDiv.style.color = '#333';
+        statusDiv.innerText = 'Отправка анкеты...';
+
+        const formData = new FormData(document.getElementById('weddingForm'));
+        
+        // Переводим данные в URL-строку для Apps Script
+        const searchParams = new URLSearchParams();
+        for (const pair of formData) {
+            searchParams.append(pair[0], pair[1]);
+        }
+
+        // Отправляем в твой старый скрипт одной посылкой
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: searchParams,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            statusDiv.style.color = '#27ae60';
+            statusDiv.innerText = '🎉 Спасибо! Ваша анкета успешно отправлена.';
+            document.getElementById('weddingForm').reset();
+            document.getElementById('file-status').innerText = '';
+        })
+        .catch(err => {
+            statusDiv.style.color = '#c0392b';
+            statusDiv.innerText = 'Ошибка при отправке. Пожалуйста, попробуйте еще раз.';
+            console.error(err);
+        });
+    }
 </script>
 
 </body>
