@@ -82,11 +82,12 @@
         .progress-container { margin-top: 20px; display: none; }
         .progress-bar-bg { width: 100%; background: #eee; height: 12px; border-radius: 6px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: #e6b17e; transition: width 0.1s ease; }
-        .progress-text { text-align: center; font-size: 0.9rem; color: #8f6e55; margin-top: 8px; font-weight: 500; }
+        .progress-text { text-align: center; font-size: 0.9rem; color: #8f6e55; margin-top: 8px; font-weight: 500; line-height: 1.3; }
 
-        .status-message { margin-top: 16px; text-align: center; font-size: 0.95rem; padding: 14px; border-radius: 60px; display: none; }
-        .status-success { color: #2b7a4b; background: rgba(224,242,233,0.8); }
-        .status-error { color: #c95a49; background: rgba(249,215,205,0.8); }
+        .status-message { margin-top: 16px; font-size: 0.95rem; padding: 16px 20px; border-radius: 24px; display: none; line-height: 1.4; }
+        .status-success { color: #2b7a4b; background: rgba(224,242,233,0.9); border: 1px solid rgba(43,122,75,0.2); }
+        .status-error { color: #c95a49; background: rgba(249,215,205,0.9); border: 1px solid rgba(201,90,73,0.2); }
+        .failed-list { margin-top: 8px; padding-left: 20px; font-size: 0.85rem; text-align: left; word-break: break-all; }
         
         @media (max-width: 550px) {
             .content { padding: 24px 20px; }
@@ -147,7 +148,6 @@
                 </div>
             </div>
 
-            <!-- НАДЁЖНАЯ НА ТИВНАЯ ЗАГРУЗКА В ЯНДЕКС.ДИСК -->
             <div class="section" id="upload-section">
                 <h2>📸 Поделитесь своими кадрами</h2>
                 <div class="info-block">
@@ -156,8 +156,9 @@
                         <strong>Загрузить медиафайлы</strong>
                     </div>
                     <div class="info-content">
-                        <p style="margin-bottom: 20px; opacity: 0.8;">
-                            Выберите фотографии или видеоролики любого размера со своего смартфона. Они сохранятся в оригинальном качестве без сжатия и без каких-либо регистраций!
+                        <p style="margin-bottom: 20px; opacity: 0.8; font-size: 0.95rem;">
+                            Выберите фотографии или видеоролики. Они сохранятся в оригинальном качестве. 
+                            <br><span style="color: #b46f3a; font-weight: 500;">🔒 Пока идет загрузка, экран телефона погаснуть не сможет!</span>
                         </p>
                         
                         <label for="fileInput" class="upload-label" id="uploadLabel">📱 Выбрать фото или видео</label>
@@ -167,7 +168,7 @@
                             <div class="progress-bar-bg">
                                 <div class="progress-bar" id="progressBar"></div>
                             </div>
-                            <div class="progress-text" id="progressText">Ожидание...</div>
+                            <div class="progress-text" id="progressText">Подготовка...</div>
                         </div>
                         
                         <div id="uploadStatus" class="status-message"></div>
@@ -182,33 +183,69 @@
     <script>
         // === НАСТРОЙКА ЯНДЕКС.ДИСК API ===
         const YANDEX_TOKEN = "y0__wgBENvi0Z0CGPvPRCCFgo6NGHVu0jVTONksu_NGco3WhvRemd7G";
+        let wakeLock = null;
+
+        // Блокировка засыпания экрана
+        async function activateWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.log(`Не удалось активировать WakeLock: ${err.message}`);
+            }
+        }
+
+        // Отключение блокировки
+        function deactivateWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => { wakeLock = null; });
+            }
+        }
 
         async function handleFiles() {
             const fileInput = document.getElementById('fileInput');
             if (!fileInput.files.length) return;
 
             const files = Array.from(fileInput.files);
+            let successfulCount = 0;
+            let failedFiles = [];
+
             toggleUI(true);
+            await activateWakeLock(); // Удерживаем экран включенным
 
             for(let i = 0; i < files.length; i++) {
                 const file = files[i];
                 const uniqueFileName = Date.now() + "_" + Math.floor(Math.random() * 1000) + "_" + file.name;
                 
-                updateProgress(0, `Подготовка файла ${i+1} из ${files.length}...`);
+                updateProgress(0, `Отправка: ${i+1} из ${files.length}\n${file.name}`);
                 
                 try {
                     const uploadUrl = await getUploadLink(uniqueFileName);
                     await uploadToYandex(uploadUrl, file, (percent) => {
-                        updateProgress(percent, `Загрузка файла ${i+1} из ${files.length}: ${percent}%`);
+                        updateProgress(percent, `Загрузка файла ${i+1} из ${files.length}: ${percent}% \n(${file.name})`);
                     });
+                    successfulCount++;
                 } catch (error) {
-                    showStatus(`Ошибка при загрузке ${file.name}: ${error.message}`, 'error');
-                    toggleUI(false);
-                    return;
+                    console.error(error);
+                    failedFiles.push(file.name); // Запоминаем имя файла, который не долетел
                 }
             }
 
-            showStatus('🎉 Все кадры успешно сохранены! Спасибо!', 'success');
+            deactivateWakeLock(); // Разрешаем экрану гаснуть обратно
+
+            // Выводим финальный вердикт гостю
+            if (failedFiles.length === 0) {
+                showStatus(`🎉 Все кадры (${successfulCount} шт.) успешно сохранены! Спасибо!`, 'success');
+            } else if (successfulCount > 0 && failedFiles.length > 0) {
+                let html = `Частично успешно! Отправлено: ${successfulCount} шт.<br><br>🚨 <strong>Не удалось загрузить (${failedFiles.length} шт.):</strong><br><ul class="failed-list">`;
+                failedFiles.forEach(name => html += `<li>• ${name}</li>`);
+                html += `</ul><br>Пожалуйста, выберите и закиньте эти файлы заново.`;
+                showStatus(html, 'error');
+            } else {
+                showStatus(`❌ Ни один файл не загрузился. Проверьте соединение с интернетом.`, 'error');
+            }
+
             toggleUI(false);
         }
 
@@ -217,7 +254,7 @@
             const response = await fetch(`https://cloud-api.yandex.net/v1/disk/resources/upload?path=${path}&overwrite=true`, {
                 headers: { 'Authorization': `OAuth ${YANDEX_TOKEN}` }
             });
-            if (!response.ok) throw new Error('Не удалось получить доступ к Диску');
+            if (!response.ok) throw new Error('Диск отказал в доступе');
             const data = await response.json();
             return data.href;
         }
@@ -238,11 +275,11 @@
                     if (xhr.status === 201 || xhr.status === 202 || xhr.status === 200) {
                         resolve();
                     } else {
-                        reject(new Error(`Код ответа: ${xhr.status}`));
+                        reject(new Error(`Код: ${xhr.status}`));
                     }
                 };
 
-                xhr.onerror = () => reject(new Error('Ошибка сети'));
+                xhr.onerror = () => reject(new Error('Сбой сети'));
                 xhr.send(file);
             });
         }
@@ -269,14 +306,14 @@
 
         function updateProgress(percent, text) {
             document.getElementById('progressBar').style.width = percent + '%';
-            document.getElementById('progressText').textContent = text;
+            document.getElementById('progressText').innerHTML = text.replace(/\n/g, '<br>');
         }
 
-        function showStatus(text, type) {
+        function showStatus(htmlContent, type) {
             const statusMsg = document.getElementById('uploadStatus');
             statusMsg.style.display = 'block';
             statusMsg.className = `status-message status-${type}`;
-            statusMsg.textContent = text;
+            statusMsg.innerHTML = htmlContent;
         }
 
         // === ЛЕПЕСТКИ ===
