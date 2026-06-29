@@ -68,6 +68,25 @@
         }
         .wedding-video { width: 100%; display: block; }
         .footer { background: rgba(250,245,237,0.8); text-align: center; padding: 20px 24px; font-size: 0.85rem; color: #8f6e55; }
+
+        /* Стили новой формы загрузки */
+        .upload-label {
+            display: block; background: #e6b17e; color: white;
+            padding: 18px 28px; border-radius: 60px; font-size: 1.1rem; font-weight: 600;
+            text-align: center; cursor: pointer; transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 15px rgba(230,177,126,0.3);
+        }
+        .upload-label:hover { background: #d49c63; transform: translateY(-2px); }
+        #fileInput { display: none; }
+
+        .progress-container { margin-top: 20px; display: none; }
+        .progress-bar-bg { width: 100%; background: #eee; height: 12px; border-radius: 6px; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: #e6b17e; transition: width 0.1s ease; }
+        .progress-text { text-align: center; font-size: 0.9rem; color: #8f6e55; margin-top: 8px; font-weight: 500; }
+
+        .status-message { margin-top: 16px; text-align: center; font-size: 0.95rem; padding: 14px; border-radius: 60px; display: none; }
+        .status-success { color: #2b7a4b; background: rgba(224,242,233,0.8); }
+        .status-error { color: #c95a49; background: rgba(249,215,205,0.8); }
         
         @media (max-width: 550px) {
             .content { padding: 24px 20px; }
@@ -128,43 +147,138 @@
                 </div>
             </div>
 
-<div class="section" id="upload-section">
-    <h2>📸 Поделитесь своими кадрами</h2>
-    <div class="info-block">
-        <div class="info-header">
-            <div class="info-icon">📤</div>
-            <strong>Загрузить фотографии и видео</strong>
-        </div>
-        <div class="info-content">
-            <p style="margin-bottom: 20px; opacity: 0.8;">
-                Нажмите на кнопку ниже, чтобы отправить фото и видео. Вы сможете выбрать сразу много файлов и тяжелых роликов в оригинальном качестве. Вход в аккаунты не требуется!
-            </p>
-            
-            <a href="https://driveuploader.com/upload/RaMVBzVJTf/" target="_blank" class="drive-upload-btn" style="
-                display: inline-block;
-                background: #e6b17e;
-                color: white;
-                text-decoration: none;
-                padding: 18px 28px;
-                border-radius: 60px;
-                font-size: 1.1rem;
-                font-weight: 600;
-                text-align: center;
-                width: 100%;
-                transition: background 0.2s, transform 0.1s;
-                box-shadow: 0 4px 15px rgba(230,177,126,0.3);
-            ">
-                📱 Открыть окно загрузки
-            </a>
-        </div>
-    </div>
-</div>
+            <!-- НАДЁЖНАЯ НА ТИВНАЯ ЗАГРУЗКА В ЯНДЕКС.ДИСК -->
+            <div class="section" id="upload-section">
+                <h2>📸 Поделитесь своими кадрами</h2>
+                <div class="info-block">
+                    <div class="info-header">
+                        <div class="info-icon">📥</div>
+                        <strong>Загрузить медиафайлы</strong>
+                    </div>
+                    <div class="info-content">
+                        <p style="margin-bottom: 20px; opacity: 0.8;">
+                            Выберите фотографии или видеоролики любого размера со своего смартфона. Они сохранятся в оригинальном качестве без сжатия и без каких-либо регистраций!
+                        </p>
+                        
+                        <label for="fileInput" class="upload-label" id="uploadLabel">📱 Выбрать фото или видео</label>
+                        <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="handleFiles()">
+                        
+                        <div class="progress-container" id="progressContainer">
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar" id="progressBar"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">Ожидание...</div>
+                        </div>
+                        
+                        <div id="uploadStatus" class="status-message"></div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="footer">С любовью, Екатерина и Максим ❤️</div>
     </div>
 
     <script>
+        // === НАСТРОЙКА ЯНДЕКС.ДИСК API ===
+        const YANDEX_TOKEN = "y0__wgBENvi0Z0CGPvPRCCFgo6NGHVu0jVTONksu_NGco3WhvRemd7G";
+
+        async function handleFiles() {
+            const fileInput = document.getElementById('fileInput');
+            if (!fileInput.files.length) return;
+
+            const files = Array.from(fileInput.files);
+            toggleUI(true);
+
+            for(let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const uniqueFileName = Date.now() + "_" + Math.floor(Math.random() * 1000) + "_" + file.name;
+                
+                updateProgress(0, `Подготовка файла ${i+1} из ${files.length}...`);
+                
+                try {
+                    const uploadUrl = await getUploadLink(uniqueFileName);
+                    await uploadToYandex(uploadUrl, file, (percent) => {
+                        updateProgress(percent, `Загрузка файла ${i+1} из ${files.length}: ${percent}%`);
+                    });
+                } catch (error) {
+                    showStatus(`Ошибка при загрузке ${file.name}: ${error.message}`, 'error');
+                    toggleUI(false);
+                    return;
+                }
+            }
+
+            showStatus('🎉 Все кадры успешно сохранены! Спасибо!', 'success');
+            toggleUI(false);
+        }
+
+        async function getUploadLink(fileName) {
+            const path = encodeURIComponent(`/${fileName}`);
+            const response = await fetch(`https://cloud-api.yandex.net/v1/disk/resources/upload?path=${path}&overwrite=true`, {
+                headers: { 'Authorization': `OAuth ${YANDEX_TOKEN}` }
+            });
+            if (!response.ok) throw new Error('Не удалось получить доступ к Диску');
+            const data = await response.json();
+            return data.href;
+        }
+
+        function uploadToYandex(url, file, onProgress) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('PUT', url, true);
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        onProgress(percent);
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 201 || xhr.status === 202 || xhr.status === 200) {
+                        resolve();
+                    } else {
+                        reject(new Error(`Код ответа: ${xhr.status}`));
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error('Ошибка сети'));
+                xhr.send(file);
+            });
+        }
+
+        function toggleUI(isLoading) {
+            const fileInput = document.getElementById('fileInput');
+            const uploadLabel = document.getElementById('uploadLabel');
+            const progressContainer = document.getElementById('progressContainer');
+            const statusMsg = document.getElementById('uploadStatus');
+
+            fileInput.disabled = isLoading;
+            if (isLoading) {
+                uploadLabel.style.pointerEvents = 'none';
+                uploadLabel.style.background = '#ccc';
+                progressContainer.style.display = 'block';
+                statusMsg.style.display = 'none';
+            } else {
+                uploadLabel.style.pointerEvents = 'auto';
+                uploadLabel.style.background = '#e6b17e';
+                progressContainer.style.display = 'none';
+                fileInput.value = '';
+            }
+        }
+
+        function updateProgress(percent, text) {
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = text;
+        }
+
+        function showStatus(text, type) {
+            const statusMsg = document.getElementById('uploadStatus');
+            statusMsg.style.display = 'block';
+            statusMsg.className = `status-message status-${type}`;
+            statusMsg.textContent = text;
+        }
+
         // === ЛЕПЕСТКИ ===
         const canvas = document.getElementById('petals-canvas');
         const ctx = canvas.getContext('2d');
