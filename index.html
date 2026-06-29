@@ -250,10 +250,21 @@
         }
 
         async function getUploadLink(fileName) {
-            const path = encodeURIComponent(`/${fileName}`);
+            // Название папки, которая автоматически создастся внутри "Приложений"
+            const folderName = "Свадебные фото"; 
+            
+            // 1. Сначала пробуем создать эту папку (если её ещё нет)
+            await fetch(`https://cloud-api.yandex.net/v1/disk/resources?path=${encodeURIComponent('/' + folderName)}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `OAuth ${YANDEX_TOKEN}` }
+            });
+
+            // 2. Генерируем ссылку для загрузки файла внутрь созданной папки
+            const path = encodeURIComponent(`/${folderName}/${fileName}`);
             const response = await fetch(`https://cloud-api.yandex.net/v1/disk/resources/upload?path=${path}&overwrite=true`, {
                 headers: { 'Authorization': `OAuth ${YANDEX_TOKEN}` }
             });
+            
             if (!response.ok) throw new Error('Диск отказал в доступе');
             const data = await response.json();
             return data.href;
